@@ -1,5 +1,6 @@
-package com.deadpineapple.rabbitmq;
+package com.deadpineapple.rabbitmq.test;
 
+import com.deadpineapple.rabbitmq.RabbitConnection;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
@@ -8,24 +9,19 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by 15256 on 27/02/2016.
  */
-public class Recv {
-    private final static String QUEUE_NAME = "hello";
+public class RecvMessage {
+    private final static String QUEUE_NAME = "hello1";
 
     public static void main(String[] argv)
             throws java.io.IOException,
             java.lang.InterruptedException, TimeoutException {
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("lzi.space");
-        factory.setUsername("rab1");
-        factory.setPassword("rab1pass");
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        RabbitConnection rabbitConnection = new RabbitConnection();
 
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        rabbitConnection.declareQueue(QUEUE_NAME);
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
-        Consumer consumer = new DefaultConsumer(channel) {
+        Consumer consumer = new DefaultConsumer(rabbitConnection.getChannel()) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
                     throws IOException {
@@ -33,7 +29,7 @@ public class Recv {
                 System.out.println(" [x] Received '" + message + "'");
             }
         };
-        channel.basicConsume(QUEUE_NAME, true, consumer);
+        rabbitConnection.consumeQueue(QUEUE_NAME, consumer);
 
     }
 }
