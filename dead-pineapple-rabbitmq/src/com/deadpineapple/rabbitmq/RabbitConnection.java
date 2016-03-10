@@ -35,7 +35,9 @@ public class RabbitConnection {
     public void consumeQueue(String queueName, Consumer consumer) throws IOException {
         channel.basicConsume(queueName, true, consumer);
     }
-
+    public void publishOnQueue(String queueName, byte[] bytes) throws IOException {
+        channel.basicPublish("", queueName, MessageProperties.BASIC, bytes);
+    }
     public void publishOnQueue(String queueName, String message) throws IOException {
         channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
     }
