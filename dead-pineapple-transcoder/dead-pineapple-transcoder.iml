@@ -7,5 +7,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="dead-pineapple-rabbitmq" exported="" />
+    <orderEntry type="module" module-name="dead-pineapple-dal" exported="" />
   </component>
 </module>
