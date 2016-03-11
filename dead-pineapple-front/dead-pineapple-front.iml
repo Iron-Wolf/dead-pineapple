@@ -16,6 +16,7 @@
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/web/spring/dispatcher-servlet.xml</file>
           <file>file://$MODULE_DIR$/web/spring/applicationContext.xml</file>
+          <file>file://$MODULE_DIR$/web/WEB-INF/spring/dispatcher-servlet.xml</file>
         </fileset>
         <fileset id="web dispatcher servlet context" name="MVC dispatcher servlet context" removed="true">
           <dependency>web application context</dependency>

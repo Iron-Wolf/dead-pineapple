@@ -1,6 +1,11 @@
 package com.deadpineapple.transcoder.FfmpegHelper;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringWriter;
 
 /**
  * Created by 15256 on 11/03/2016.
@@ -9,36 +14,33 @@ public class LaunchConvertion {
     private Process process;
     private String filePath;
     private String fileDestinationPath;
-    private ConvertionType convertionType;
 
     public LaunchConvertion() {
 
     }
 
-    public LaunchConvertion(String filePath, String fileDestinationPath, ConvertionType convertionType) {
+    public LaunchConvertion(String filePath, String fileDestinationPath) {
         this.filePath = filePath;
         this.fileDestinationPath = fileDestinationPath;
-        this.convertionType = convertionType;
     }
 
-    public Boolean start() throws IOException {
+    public Boolean start() throws IOException, InterruptedException {
         process = Runtime.getRuntime().exec(generateFfmpegCommand());
-        process.getOutputStream();
-        return false;
+        return process.waitFor() == 0;
     }
 
     private String generateFfmpegCommand() {
         String cmd = "ffmpeg";
 
-        String globalOptions = " ";
+        String globalOptions = " -y -nostats -loglevel 0";
         String inputFileOptions = " ";
         String outputFileOptions = " ";
 
         cmd += globalOptions;
         cmd += inputFileOptions;
-        cmd += " -i " + getFilePath();
-        cmd += " " + outputFileOptions;
-        cmd += " " + getFileDestinationPath();
+        cmd += "-i \"" + getFilePath() + "\"";
+        cmd += outputFileOptions;
+        cmd += "\"" + getFileDestinationPath() + "\"";
         return cmd;
     }
 
@@ -62,11 +64,4 @@ public class LaunchConvertion {
         this.fileDestinationPath = fileDestinationPath;
     }
 
-    public ConvertionType getConvertionType() {
-        return convertionType;
-    }
-
-    public void setConvertionType(ConvertionType convertionType) {
-        this.convertionType = convertionType;
-    }
 }
