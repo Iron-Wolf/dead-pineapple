@@ -18,7 +18,7 @@ public class SendMessage {
 
     public static void main(String[] args) {
         RabbitInit rabbitInit = new RabbitInit();
-        rabbitInit.getFileUploadedSender().send(new FileIsUploaded(12,"converted.xml","efzf"));
+        rabbitInit.getFileToConvertSender().send(new FileToConvert(12,"C:\\Users\\15256\\Videos\\01_02-How to Access Your Working Files.mp4",".oma"));
         rabbitInit.closeAll();
     }
 }

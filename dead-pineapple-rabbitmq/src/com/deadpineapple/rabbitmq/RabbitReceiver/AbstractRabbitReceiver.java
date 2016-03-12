@@ -34,7 +34,7 @@ public abstract class AbstractRabbitReceiver<T> {
         return rabbitConnection;
     }
 
-    public void receiver(final IReceiver<T> receiver) throws IOException {
+    public void receiver(final IReceiver<T> receiver)  {
         getRabbitConnection().declareQueue(getQueueName());
         Consumer consumer = new DefaultConsumer(getRabbitConnection().getChannel()) {
             @Override
@@ -44,7 +44,11 @@ public abstract class AbstractRabbitReceiver<T> {
                 receiver.execute(obj);
             }
         };
-        rabbitConnection.consumeQueue(getQueueName(), consumer);
+        try {
+            rabbitConnection.consumeQueue(getQueueName(), consumer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

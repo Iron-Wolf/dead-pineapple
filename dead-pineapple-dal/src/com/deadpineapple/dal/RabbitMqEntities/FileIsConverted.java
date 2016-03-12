@@ -10,17 +10,17 @@ public class FileIsConverted implements Serializable {
     private String newFileName;
     private Date creationDate;
     private Boolean wasSuccessFull;
-    private String newFileType;
+    private String conversionError;
 private Long fileId;
 
     public FileIsConverted() {
     }
 
-    public FileIsConverted(long fileId,String newFileName,  Boolean wasSuccessFull, String newFileType) {
+    public FileIsConverted(long fileId, String newFileName, Boolean wasSuccessfull, String conversionError) {
         this.newFileName = newFileName;
         this.creationDate = new Date();
-        this.wasSuccessFull = wasSuccessFull;
-        this.newFileType = newFileType;
+        this.wasSuccessFull = wasSuccessfull;
+        this.conversionError = conversionError;
         this.fileId = fileId;
     }
 
@@ -48,12 +48,12 @@ private Long fileId;
         this.wasSuccessFull = wasSuccessFull;
     }
 
-    public String getNewFileType() {
-        return newFileType;
+    public String getConversionError() {
+        return conversionError;
     }
 
-    public void setNewFileType(String newFileType) {
-        this.newFileType = newFileType;
+    public void setConversionError(String conversionError) {
+        this.conversionError = conversionError;
     }
 
     @Override
@@ -61,8 +61,8 @@ private Long fileId;
         return "FileIsConverted{" +
                 "newFileName='" + newFileName + '\'' +
                 ", creationDate=" + creationDate +
-                ", wasSuccessFull=" + wasSuccessFull +
-                ", newFileType='" + newFileType + '\'' +
+                ", wasSuccessfull=" + wasSuccessFull +
+                ", conversionError='" + conversionError + '\'' +
                 ", fileId=" + fileId +
                 '}';
     }
