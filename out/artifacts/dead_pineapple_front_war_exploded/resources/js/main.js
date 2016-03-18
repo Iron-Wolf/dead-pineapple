@@ -32,8 +32,8 @@ $(function () {
         // Demo settings:
         */
         $('#fileupload').fileupload('option', {
-            url: '//localhost:8089/jQuery-File-Upload-Java/imgs/',
-            maxFileSize: 5000000,
+            url: '/upload/add',
+            maxFileSize: 50000000000,
             acceptFileTypes: /(\.|\/)(avi|jpe?g|mp4|wma|wmv|flv|swf|dv|mov|mkv)$/i,
             process: [
                 {
@@ -51,10 +51,11 @@ $(function () {
                 }
             ]
         });
+    /*
         // Upload server status check for browsers with CORS support:
         if ($.support.cors) {
             $.ajax({
-                url: '//localhost:8089/jQuery-File-Upload-Java/imgs/',
+                url: '/upload/add',
                 type: 'HEAD'
             }).fail(function () {
                 $('<span class="alert alert-error"/>')
@@ -63,6 +64,7 @@ $(function () {
                     .appendTo('#fileupload');
             });
         }
+
     /*
     } else {
         // Load existing files:
