@@ -121,6 +121,7 @@ public class UploadController {
             List<FileItem> items = uploadHandler.parseRequest(request);
             for (FileItem item : items) {
                 if (!item.isFormField()) {
+                    new File(request.getServletContext().getRealPath("/")+"upload/").mkdirs();
                     File file = new File(request.getServletContext().getRealPath("/")+"upload/", item.getName());
                     item.write(file);
                     JSONObject jsono = new JSONObject();
