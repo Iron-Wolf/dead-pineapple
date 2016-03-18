@@ -170,8 +170,6 @@
         </tr>
         {% } %}
     </script>
-
-    <script src="<spring:url value='/resources/js/jquery-1.8.2.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/vendor/jquery.ui.widget.js'/>"></script>
     <script src="<spring:url value='/resources/js/tmpl.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/load-image.min.js'/>"></script>

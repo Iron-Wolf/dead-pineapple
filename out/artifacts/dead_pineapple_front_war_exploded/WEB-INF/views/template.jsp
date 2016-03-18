@@ -10,6 +10,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="<spring:url value='/resources/css/styles.css'/>" type="text/css">
+    <script src="<spring:url value='/resources/js/jquery-2.1.1.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/myscript.js'/>"></script>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap.min.css'/>" type="text/css">

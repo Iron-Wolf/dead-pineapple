@@ -27,13 +27,14 @@ $(function () {
             '/cors/result.html?%s'
         )
     );
-
+/*
     if (window.location.hostname === 'localhost:8089') {
         // Demo settings:
+        */
         $('#fileupload').fileupload('option', {
             url: '//localhost:8089/jQuery-File-Upload-Java/imgs/',
             maxFileSize: 5000000,
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            acceptFileTypes: /(\.|\/)(avi|jpe?g|mp4|wma|wmv|flv|swf|dv|mov|mkv)$/i,
             process: [
                 {
                     action: 'load',
@@ -62,6 +63,7 @@ $(function () {
                     .appendTo('#fileupload');
             });
         }
+    /*
     } else {
         // Load existing files:
         $('#fileupload').each(function () {
@@ -73,6 +75,8 @@ $(function () {
                 }
             });
         });
+
     }
+    */
 
 });
