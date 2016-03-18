@@ -27,7 +27,7 @@ public class UploadController {
     @RequestMapping(method= RequestMethod.GET)
     public String addUser(){
         System.out.println("Invoking User");
-        return "upload";
+        return "upload1";
     }
     // Prepare the upload
     @RequestMapping(value="/add", method= RequestMethod.GET)
