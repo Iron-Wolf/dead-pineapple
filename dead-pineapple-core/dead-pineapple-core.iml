@@ -9,5 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="Java EE 6-Java EE 6 (2)" level="project" />
+    <orderEntry type="module" module-name="dead-pineapple-rabbitmq" />
+    <orderEntry type="module" module-name="dead-pineapple-dal" />
   </component>
 </module>
