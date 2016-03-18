@@ -24,20 +24,20 @@ public class EmailSender {
         // Get system properties & Setup mail server
         Properties props = System.getProperties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "false");
-        props.put("mail.smtp.host", "lzi.space");//// TODO: 13/03/2016 faire les changements pour l'envoie
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "email-smtp.eu-west-1.amazonaws.com");//// TODO: 13/03/2016 faire les changements pour l'envoie
 
         // Get the default Session subject & auth
         Session session = Session.getDefaultInstance(props,new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("transcoder@lzi.space", "transPa55");//// TODO: 13/03/2016 mettre a jour avec un vrai user
+                return new PasswordAuthentication("AKIAICQVR7DNANEOASQQ", "AtTn1/ji1PktPCDAzhNI58YxUNLhtG6AQBwIoFom6mc3");
             }
         });
 
         try{
             // Create a default MimeMessage
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("transcoder@lzi.space","noreply deadpineapple"));
+            message.setFrom(new InternetAddress("lucas@zientek.fr","noreply deadpineapple"));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(getDestination()));
             message.setSubject(getSubject());
 

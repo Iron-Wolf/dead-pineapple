@@ -15,7 +15,6 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap.min.css'/>" type="text/css">
     <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
-
 </head>
 <body>
 <header>

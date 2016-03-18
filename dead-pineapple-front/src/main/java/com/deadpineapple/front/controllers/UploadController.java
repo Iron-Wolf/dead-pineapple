@@ -24,24 +24,25 @@ import java.util.List;
 @Controller
 @RequestMapping("/upload")
 public class UploadController {
-    @RequestMapping(method= RequestMethod.GET)
-    public String addUser(){
+    @RequestMapping(method = RequestMethod.GET)
+    public String addUser() {
         System.out.println("Invoking User");
-        return "upload1";
+        return "upload";
     }
+
     // Prepare the upload
-    @RequestMapping(value="/add", method= RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public void prepareUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getParameter("getfile") != null && !request.getParameter("getfile").isEmpty()) {
             // Where the file will be save ?!
-            File file = new File(request.getServletContext().getRealPath("/")+"videos/"+request.getParameter("getfile"));
+            File file = new File(request.getServletContext().getRealPath("/") + "videos/" + request.getParameter("getfile"));
             if (file.exists()) {
                 int bytes = 0;
                 ServletOutputStream op = response.getOutputStream();
 
                 response.setContentType(getMimeType(file));
                 response.setContentLength((int) file.length());
-                response.setHeader( "Content-Disposition", "inline; filename=\"" + file.getName() + "\"" );
+                response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
 
                 byte[] bbuf = new byte[1024];
                 DataInputStream in = new DataInputStream(new FileInputStream(file));
@@ -55,49 +56,28 @@ public class UploadController {
                 op.close();
             }
         } else if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
-            File file = new File(request.getServletContext().getRealPath("/")+"upload/"+ request.getParameter("delfile"));
+            File file = new File(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("delfile"));
             if (file.exists()) {
                 file.delete(); // TODO:check and report success
             }
         } else if (request.getParameter("getthumb") != null && !request.getParameter("getthumb").isEmpty()) {
-            File file = new File(request.getServletContext().getRealPath("/")+"upload/"+request.getParameter("getthumb"));
+            File file = new File(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("getthumb"));
             if (file.exists()) {
                 System.out.println(file.getAbsolutePath());
                 // Set a previsualisation image to the video and display it on the client size
                 // "response.setContentType("image/png");"
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 ServletOutputStream srvos = response.getOutputStream();
-                /*
-                String mimetype = getMimeType(file);
 
-                if (mimetype.endsWith("png") || mimetype.endsWith("jpeg")|| mimetype.endsWith("jpg") || mimetype.endsWith("gif")) {
-                    BufferedImage im = ImageIO.read(file);
-                    if (im != null) {
-                        BufferedImage thumb = Scalr.resize(im, 75);
-                        ByteArrayOutputStream os = new ByteArrayOutputStream();
-                        if (mimetype.endsWith("png")) {
-                            ImageIO.write(thumb, "PNG" , os);
-                            response.setContentType("image/png");
-                        } else if (mimetype.endsWith("jpeg")) {
-                            ImageIO.write(thumb, "jpg" , os);
-                            response.setContentType("image/jpeg");
-                        } else if (mimetype.endsWith("jpg")) {
-                            ImageIO.write(thumb, "jpg" , os);
-                            response.setContentType("image/jpeg");
-                        } else {
-                            ImageIO.write(thumb, "GIF" , os);
-                            response.setContentType("image/gif");
-                        }
-                        ServletOutputStream srvos = response.getOutputStream();
-                        */
-                        response.setContentLength(os.size());
-                        response.setHeader( "Content-Disposition", "inline; filename=\"" + file.getName() + "\"" );
-                        os.writeTo(srvos);
-                        srvos.flush();
-                        srvos.close();
-                    }
-               // }
-           // } // TODO: check and report success
+
+                response.setContentLength(os.size());
+                response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+                os.writeTo(srvos);
+                srvos.flush();
+                srvos.close();
+            }
+            // }
+            // } // TODO: check and report success
         } else {
             PrintWriter writer = response.getWriter();
             writer.write("call POST with multipart form data");
@@ -105,7 +85,7 @@ public class UploadController {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(value="/add", method= RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void uploadVideo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (!ServletFileUpload.isMultipartContent(request)) {
@@ -121,8 +101,8 @@ public class UploadController {
             List<FileItem> items = uploadHandler.parseRequest(request);
             for (FileItem item : items) {
                 if (!item.isFormField()) {
-                    new File(request.getServletContext().getRealPath("/")+"upload/").mkdirs();
-                    File file = new File(request.getServletContext().getRealPath("/")+"upload/", item.getName());
+                    new File(request.getServletContext().getRealPath("/") + "upload/").mkdirs();
+                    File file = new File(request.getServletContext().getRealPath("/") + "upload/", item.getName());
                     item.write(file);
                     JSONObject jsono = new JSONObject();
                     jsono.put("name", item.getName());
@@ -150,20 +130,19 @@ public class UploadController {
         if (file.exists()) {
             if (getSuffix(file.getName()).equalsIgnoreCase("png")) {
                 mimetype = "image/png";
-            }else if(getSuffix(file.getName()).equalsIgnoreCase("jpg")){
+            } else if (getSuffix(file.getName()).equalsIgnoreCase("jpg")) {
                 mimetype = "image/jpg";
-            }else if(getSuffix(file.getName()).equalsIgnoreCase("jpeg")){
+            } else if (getSuffix(file.getName()).equalsIgnoreCase("jpeg")) {
                 mimetype = "image/jpeg";
-            }else if(getSuffix(file.getName()).equalsIgnoreCase("gif")){
+            } else if (getSuffix(file.getName()).equalsIgnoreCase("gif")) {
                 mimetype = "image/gif";
-            }else {
+            } else {
                 javax.activation.MimetypesFileTypeMap mtMap = new javax.activation.MimetypesFileTypeMap();
-                mimetype  = mtMap.getContentType(file);
+                mimetype = mtMap.getContentType(file);
             }
         }
         return mimetype;
     }
-
 
 
     private String getSuffix(String filename) {

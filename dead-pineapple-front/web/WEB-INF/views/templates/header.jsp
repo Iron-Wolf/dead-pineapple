@@ -7,13 +7,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
+
 
 Header here... Templates / header.jsp <br/>
 <a href="<spring:url value='/user/add'/>"> Ajouter un utilisateur </a>
 <a href="<spring:url value='/upload'/>"> Uploader une video </a>
-</body>
-</html>
