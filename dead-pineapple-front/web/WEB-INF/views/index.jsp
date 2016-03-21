@@ -7,10 +7,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-  <head>
-    <title>deadpineapple - Index</title>
-  </head>
-  <body>
-  Index hello
-  </body>
+    <head>
+        <title>deadpineapple - Index</title>
+    </head>
+
+    <body>
+
+    Index hello <br/>
+
+    </body>
+
 </html>
