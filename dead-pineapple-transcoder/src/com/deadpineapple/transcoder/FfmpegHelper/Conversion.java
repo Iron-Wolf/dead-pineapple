@@ -101,7 +101,7 @@ public class Conversion {
             return " -c:v libvpx -b:v 1M -c:a libvorbis";
         } else if (fileCodec.equals("vp9")) {
             return " -c:v libvpx-vp9 -b:v 1M -c:a libvorbis";
-        }else if (fileCodec.equals("vp9")) {
+        }else if (fileCodec.equals("xvid")) {
             return " -c:v mpeg4 -vtag xvid";
         }
         return "";
