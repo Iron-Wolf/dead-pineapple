@@ -2,7 +2,7 @@ package com.deadpineapple.dal.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,7 +16,13 @@ public class UserAccount implements Serializable {
 
     private String email;
 
-    private Timestamp creationDate;
+    private String password;
+
+    private Date creationDate;
+
+    private String firstName;
+
+    private String lastName;
 
     @OneToMany
     @JoinColumn
@@ -38,11 +44,11 @@ public class UserAccount implements Serializable {
         this.convertedFiles = convertedFiles;
     }
 
-    public Timestamp getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -52,5 +58,29 @@ public class UserAccount implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
