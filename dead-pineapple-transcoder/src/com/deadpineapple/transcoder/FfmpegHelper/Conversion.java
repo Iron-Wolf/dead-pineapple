@@ -15,6 +15,7 @@ import java.util.List;
 public class Conversion {
 
 
+    private String fileCodec;
     private Process process;
     private String filePath;
     private String fileDestinationPath;
@@ -25,13 +26,13 @@ public class Conversion {
 
     }
 
-    public Conversion(String filePath, String fileDestinationPath, String fileType) {
+    public Conversion(String filePath, String fileDestinationPath, String fileType, String encoding) {
         this.filePath = filePath;
         this.fileDestinationPath = fileDestinationPath;
         this.fileType = fileType;
+        this.fileCodec = encoding;
         this.outputFileOptionDictionnary = getOutputOptionDictionnary();
     }
-
 
 
     public Boolean start() throws IOException, InterruptedException, FfmpegException {
@@ -40,20 +41,24 @@ public class Conversion {
     }
 
     private String generateFfmpegCommand() throws FfmpegException {
-        if ( !Arrays.asList(Constante.AcceptedConversionTypes).contains(fileType)){
+        if (!Arrays.asList(Constante.AcceptedConversionTypes).contains(fileType)) {
             throw new FfmpegException("Unvalid type");
+        }
+        if (!Arrays.asList(Constante.AcceptedCodec).contains(fileCodec)){
+            throw new FfmpegException("Unvalid encoding");
         }
         String cmd = "ffmpeg";
 
         String globalOptions = " -y -nostats -loglevel 0";
         String inputFileOptions = " ";
-        String outputFileOptions = " ";
+        String outputFileOptions = " -threads 2 ";
         if (outputFileOptionDictionnary.get(fileType) != null) {
             outputFileOptions += outputFileOptionDictionnary.get(fileType);
         }
         cmd += globalOptions;
         cmd += inputFileOptions;
         cmd += "-i \"" + getFilePath() + "\"";
+        cmd += GetEncodingOutput();
         cmd += outputFileOptions;
         cmd += "\"" + getFileDestinationPath() + "\"";
         return cmd;
@@ -85,6 +90,21 @@ public class Conversion {
         dico.put(".swf", "-ar 22050 -crf 28 ");
         dico.put(".dv", "-target pal-dv ");
         return dico;
+    }
+
+    String GetEncodingOutput() {
+        if (fileCodec.equals("ffv1")) {
+            return " -vcodec   ffv1 -level 3";
+        } else if (fileCodec.equals("h.264")) {
+            return " -c:v libx264 -preset ultrafast -qp 0";
+        } else if (fileCodec.equals("vp8")) {
+            return " -c:v libvpx -b:v 1M -c:a libvorbis";
+        } else if (fileCodec.equals("vp9")) {
+            return " -c:v libvpx-vp9 -b:v 1M -c:a libvorbis";
+        }else if (fileCodec.equals("vp9")) {
+            return " -c:v mpeg4 -vtag xvid";
+        }
+        return "";
     }
 
 }

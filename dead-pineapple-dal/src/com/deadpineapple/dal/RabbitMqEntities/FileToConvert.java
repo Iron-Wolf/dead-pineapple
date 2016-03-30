@@ -11,14 +11,24 @@ public class FileToConvert implements Serializable {
     private Long fileId;
     public String fileName;
     public String convertionType;
+    public String convertionEncoding;
 
     public FileToConvert() {
     }
 
-    public FileToConvert(long fileId, String fileName, String convertionType) {
+    public FileToConvert(long fileId, String fileName, String convertionType,String convertionEncoding) {
         this.fileId = fileId;
         this.fileName = fileName;
         this.convertionType = convertionType;
+        this.convertionEncoding = convertionEncoding;
+    }
+
+    public String getConvertionEncoding() {
+        return convertionEncoding;
+    }
+
+    public void setConvertionEncoding(String convertionEncoding) {
+        this.convertionEncoding = convertionEncoding;
     }
 
     public Long getFileId() {

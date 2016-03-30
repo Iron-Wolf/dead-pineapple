@@ -29,7 +29,8 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
 
     @Override
     public void execute(FileToConvert result) {
-        Conversion conv = new Conversion(result.getFileName(), generateNewFileName(result), result.getConvertionType());
+        Conversion conv = new Conversion(result.getFileName(), generateNewFileName(result)
+                , result.getConvertionType(), result.getConvertionEncoding());
         FileIsConverted convertedReport = null;
 
         try {
@@ -54,7 +55,6 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
             if (convertedReport != null) {
                 rabbitInit.getFileIsConvertedSender().send(convertedReport);
             }
-
         }
     }
 

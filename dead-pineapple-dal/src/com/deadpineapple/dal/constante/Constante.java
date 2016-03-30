@@ -16,4 +16,7 @@ public class Constante {
             ".wmv", ".flv", ".swf",
             ".dv", ".mov", ".mkv"};
 
+    public final static String[] AcceptedCodec ={
+            "ffv1","h.264","vp8","vp9","xvid",""
+    };
 }
