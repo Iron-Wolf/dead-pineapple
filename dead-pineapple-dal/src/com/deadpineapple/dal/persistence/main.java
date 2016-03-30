@@ -20,14 +20,14 @@ import java.util.Date;
 @Transactional
 public class main {
 
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("spring-jpa");
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("deadpineapple-jpa");
     private static EntityManager em = emf.createEntityManager();
 
     public static void main(String[] args) {
 
         UserAccount u = new UserAccount();
         u.setEmail("email@email.com");
-        u.setCreationDate(new Timestamp(new Date().getTime()));
+        u.setCreationDate(new Date());
 
         try {
             em.getTransaction().begin();
@@ -40,8 +40,6 @@ public class main {
         finally {
             em.close();
         }
-
-        System.out.println("launch DAL");
 
 
     }
