@@ -1,18 +1,17 @@
 package com.deadpineapple.dal.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by 15256 on 02/03/2016.
  */
-public class SplitFile {
+@Entity
+public class SplitFile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany
-    @JoinColumn
-    private ConvertedFile mainFile;
 
     private int size;
 
@@ -36,14 +35,6 @@ public class SplitFile {
 
     public void setWorkerServerNumber(int workerServerNumber) {
         this.workerServerNumber = workerServerNumber;
-    }
-
-    public ConvertedFile getMainFile() {
-        return mainFile;
-    }
-
-    public void setMainFile(ConvertedFile mainFile) {
-        this.mainFile = mainFile;
     }
 
     public int getSize() {

@@ -1,24 +1,25 @@
 package com.deadpineapple.dal.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
  * Created by 15256 on 01/03/2016.
  */
 @Entity
-public class UserAccount {
+public class UserAccount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String email;
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date creationDate;
+    private Timestamp creationDate;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany
+    @JoinColumn
     private List<ConvertedFile> convertedFiles;
 
     public Long getId() {
@@ -37,11 +38,11 @@ public class UserAccount {
         this.convertedFiles = convertedFiles;
     }
 
-    public Date getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 

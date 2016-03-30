@@ -1,13 +1,15 @@
 package com.deadpineapple.dal.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by 15256 on 01/03/2016.
  */
-public class ConvertedFile {
+@Entity
+public class ConvertedFile implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,9 +17,6 @@ public class ConvertedFile {
 
     @OneToMany
     @JoinColumn
-    private UserAccount user;
-
-    @OneToMany(mappedBy = "mainFile")
     private List<SplitFile> splitFiles;
 
     private int size;
@@ -32,10 +31,8 @@ public class ConvertedFile {
 
     private String newType;
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date creationDate;
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date convertedDate;
 
     public Long getId() {
@@ -52,14 +49,6 @@ public class ConvertedFile {
 
     public void setSplitFiles(List<SplitFile> splitFiles) {
         this.splitFiles = splitFiles;
-    }
-
-    public UserAccount getUser() {
-        return user;
-    }
-
-    public void setUser(UserAccount user) {
-        this.user = user;
     }
 
     public int getSize() {
