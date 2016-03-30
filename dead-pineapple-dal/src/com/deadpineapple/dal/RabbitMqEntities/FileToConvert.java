@@ -16,7 +16,7 @@ public class FileToConvert implements Serializable {
     public FileToConvert() {
     }
 
-    public FileToConvert(long fileId, String fileName, String convertionType,String convertionEncoding) {
+    public FileToConvert(long fileId, String fileName, String convertionType,String convertionEncoding ) {
         this.fileId = fileId;
         this.fileName = fileName;
         this.convertionType = convertionType;
