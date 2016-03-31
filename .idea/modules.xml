@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/dead-pineapple-front/dead-pineapple-front.iml" filepath="$PROJECT_DIR$/dead-pineapple-front/dead-pineapple-front.iml" />
       <module fileurl="file://$PROJECT_DIR$/dead-pineapple-rabbitmq/dead-pineapple-rabbitmq.iml" filepath="$PROJECT_DIR$/dead-pineapple-rabbitmq/dead-pineapple-rabbitmq.iml" />
       <module fileurl="file://$PROJECT_DIR$/dead-pineapple-transcoder/dead-pineapple-transcoder.iml" filepath="$PROJECT_DIR$/dead-pineapple-transcoder/dead-pineapple-transcoder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dead-pineapple-videoHelper/dead-pineapple-videoHelper.iml" filepath="$PROJECT_DIR$/dead-pineapple-videoHelper/dead-pineapple-videoHelper.iml" />
     </modules>
   </component>
 </project>

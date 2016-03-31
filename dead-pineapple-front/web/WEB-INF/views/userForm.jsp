@@ -1,5 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <%--
   Created by IntelliJ IDEA.
@@ -14,21 +15,21 @@
     <title>Title</title>
 </head>
 <body>
-        <form method="POST" action="<spring:url value='/user/add'/>" id="subscribeForm" data-toggle="validator">
+        <form:form method="POST" action="/user/add" id="subscribeForm" data-toggle="validator" modelAttribute="userAccount">
             <div class="form-group">
                 <h2>Créer un compte</h2>
             </div>
             <div class="form-group">
-                <label class="control-label" for="signupName">Votre nom</label>
-                <input id="signupName" type="text" name="name" value="<c:out value="${user.lastName}"/>" placeholder="Nom" maxlength="50" class="form-control" required="true">
+                <form:label path="lastName" class="control-label">Votre nom</form:label>
+                <form:input path="lastName" id="name" type="text" name="name" placeholder="Nom" maxlength="50" class="form-control" required="true"/>
             </div>
             <div class="form-group">
-                <label class="control-label" for="signupFirstName">Votre prénom</label>
-                <input id="signupFirstName" type="text" name="firstname" value="<c:out value="${user.firstName}"/>"placeholder="Prenom" maxlength="50" class="form-control" required="true">
+                <form:label class="control-label" path="firstName">Votre prénom</form:label>
+                <form:input path="firstName" id="firstName" type="text" name="firstname" placeholder="Prenom" maxlength="50" class="form-control" required="true"/>
             </div>
             <div class="form-group">
-                <label class="control-label" for="signupEmail">Email</label>
-                <input id="signupEmail" type="email" maxlength="50" placeholder="Email" name="mail" class="form-control" required="true">
+                <form:label class="control-label" path="email">Email</form:label>
+                <form:input path="email" id="signupEmail" type="email" maxlength="50" placeholder="Email" name="mail" class="form-control" required="true"/>
                 <span class="erreur">${ erreurs['emailCheck']}</span>
             </div>
             <div class="form-group">
@@ -62,6 +63,6 @@
             <p class="form-group">By creating an account, you agree to our <a href="/bartering/termsOfService.jsp">Terms of Use</a> and our <a href="/bartering/privacypolicy.jsp">Privacy Policy</a>.</p>
             <hr> Déja un compte? Connectez vous <a href="#">Sign in</a></p>
 
-        </form>
+        </form:form>
 </body>
 </html>
