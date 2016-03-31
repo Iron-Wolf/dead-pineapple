@@ -1,5 +1,6 @@
 package com.deadpineapple.videoHelper;
 
+import com.deadpineapple.videoHelper.fileEdit.FileSplitter;
 import com.deadpineapple.videoHelper.information.VideoInformation;
 
 /**
@@ -7,6 +8,11 @@ import com.deadpineapple.videoHelper.information.VideoInformation;
  */
 public class TestLauncher {
     public static void main(String[] args) {
-        VideoInformation vid = new VideoInformation("D:\\serie\\into badlands\\s1\\Into.The.Badlands.S01E01.FASTSUB.VOSTFR.1080p.WEB-DL.HEVC.H265-Yn1D.mkv");
+        FileSplitter vid = new FileSplitter("D:\\serie\\into badlands\\s1\\Into.The.Badlands.S01E01.FASTSUB.VOSTFR.1080p.WEB-DL.HEVC.H265-Yn1D.mkv");
+        try {
+            vid.splitFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

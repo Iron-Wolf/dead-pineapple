@@ -46,9 +46,9 @@
       <list>
         <option value="$PROJECT_DIR$/dead-pineapple-front/pom.xml" />
         <option value="$PROJECT_DIR$/dead-pineapple-dal/pom.xml" />
+        <option value="$PROJECT_DIR$/dead-pineapple-transcoder/pom.xml" />
         <option value="$PROJECT_DIR$/dead-pineapple-core/pom.xml" />
         <option value="$PROJECT_DIR$/dead-pineapple-rabbitmq/pom.xml" />
-        <option value="$PROJECT_DIR$/dead-pineapple-transcoder/pom.xml" />
         <option value="$PROJECT_DIR$/dead-pineapple-videoHelper/pom.xml" />
       </list>
     </option>
