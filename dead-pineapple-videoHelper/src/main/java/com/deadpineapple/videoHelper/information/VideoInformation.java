@@ -70,7 +70,6 @@ public class VideoInformation {
             }
 
             int exitVal = proc.waitFor();
-            System.out.println("Process exitValue: " + exitVal);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

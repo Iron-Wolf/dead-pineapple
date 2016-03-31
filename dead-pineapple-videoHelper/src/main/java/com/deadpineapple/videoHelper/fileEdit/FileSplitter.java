@@ -25,14 +25,19 @@ public class FileSplitter {
         int splitFileIndex = 0;
         String resultPath;
         TimeSpan startTime = new TimeSpan();
-        TimeSpan duree = new TimeSpan(0,3,0);
+        TimeSpan duree = new TimeSpan(0, 3, 0);
         VideoInformation videoInformation = new VideoInformation(filePath);
 
         do {
-            resultPath = new File(filePath).getParent() + File.separator + splitFileIndex + "_" + file.getName();
+            String extention = file.getName().substring(file.getName().lastIndexOf('.'));
+            resultPath = new File(filePath).getParent() + File.separator
+                    + splitFileIndex + "_" + file.getName().replace(extention, "")
+                    .replace('.',' ')
+                    .replace('-', ' ').replace('(', ' ').replace(')', ' ')
+                    + extention;
             File resultFile = new File(resultPath);
             String ffmpeg = "ffmpeg -v quiet -y -i \"" + filePath + "\" -vcodec copy -acodec copy -ss "
-                    + startTime + " -t " + duree + " -sn \"" + resultFile+"\"";
+                    + startTime + " -t " + duree + " -sn \"" + resultFile + "\"";
 
             Process proc = Runtime.getRuntime().exec(ffmpeg);
             proc.waitFor();
