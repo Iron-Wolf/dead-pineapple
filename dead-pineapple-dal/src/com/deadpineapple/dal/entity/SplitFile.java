@@ -12,14 +12,12 @@ public class SplitFile implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
-    private int size;
+    private long size;
 
     private Boolean isConverted;
 
     private String splitFilePath;
 
-    private int workerServerNumber;
 
     public Long getId() {
         return id;
@@ -29,19 +27,11 @@ public class SplitFile implements Serializable {
         this.id = id;
     }
 
-    public int getWorkerServerNumber() {
-        return workerServerNumber;
-    }
-
-    public void setWorkerServerNumber(int workerServerNumber) {
-        this.workerServerNumber = workerServerNumber;
-    }
-
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 

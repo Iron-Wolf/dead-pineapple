@@ -9,11 +9,13 @@ public class FileIsUploaded implements Serializable {
     private Long fileId;
     private String fileName;
     private String newFileType;
+    private String newEncoding;
 
-    public FileIsUploaded(long fileId, String fileName, String newFileType) {
+    public FileIsUploaded(long fileId, String fileName, String newFileType, String newEncoding) {
         this.fileId = fileId;
         this.fileName = fileName;
         this.newFileType = newFileType;
+        this.newEncoding = newEncoding;
     }
 
     public Long getFileId() {
@@ -47,5 +49,13 @@ public class FileIsUploaded implements Serializable {
                 ", fileName='" + fileName + '\'' +
                 ", newFileType='" + newFileType + '\'' +
                 '}';
+    }
+
+    public String getNewEncoding() {
+        return newEncoding;
+    }
+
+    public void setNewEncoding(String newEncoding) {
+        this.newEncoding = newEncoding;
     }
 }

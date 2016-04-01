@@ -9,9 +9,10 @@ import java.io.Serializable;
 
 public class FileToConvert implements Serializable {
     private Long fileId;
-    public String fileName;
-    public String convertionType;
-    public String convertionEncoding;
+    private Long splitFileId;
+    private String fileName;
+    private String convertionType;
+    private String convertionEncoding;
 
     public FileToConvert() {
     }
@@ -62,5 +63,13 @@ public class FileToConvert implements Serializable {
                 ", fileName='" + fileName + '\'' +
                 ", convertionType='" + convertionType + '\'' +
                 '}';
+    }
+
+    public Long getSplitFileId() {
+        return splitFileId;
+    }
+
+    public void setSplitFileId(Long splitFileId) {
+        this.splitFileId = splitFileId;
     }
 }

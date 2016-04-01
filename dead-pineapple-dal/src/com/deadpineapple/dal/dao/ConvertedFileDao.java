@@ -35,6 +35,12 @@ public class ConvertedFileDao implements IConvertedFileDao {
     }
 
     @Override
+    public ConvertedFile findById(long id){
+        return em.find(ConvertedFile.class, id);
+    }
+
+
+    @Override
     public ConvertedFile updateFile(ConvertedFile newFile) {
         return null;
     }
