@@ -1,5 +1,6 @@
 package com.deadpineapple.videoHelper.information;
 
+import com.deadpineapple.videoHelper.TimeSpan;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 
 import java.io.BufferedReader;
@@ -13,7 +14,7 @@ import java.io.InputStreamReader;
 public class VideoInformation {
     private String filePath;
     private String ffmpegResult;
-    private String duration;
+    private TimeSpan duration;
     private String encoding;
     private String resolution;
 
@@ -21,7 +22,7 @@ public class VideoInformation {
         return filePath;
     }
 
-    public String getDuration() {
+    public TimeSpan getDuration() {
         return duration;
     }
 
@@ -55,7 +56,7 @@ public class VideoInformation {
                 ffmpegResult += line + "\n\r";
                 if (line.contains("Duration:")) {
                     int durIndex = line.indexOf("Duration: ") + "Duration: ".length();
-                    duration = line.substring(durIndex, durIndex + 11);
+                    duration = new TimeSpan(line.substring(durIndex, durIndex + 11).trim());
                 }
                 if (line.contains("Stream #0:0(eng): Video:")) {
                     String[] videoInformations = line.split(", ");
@@ -69,7 +70,6 @@ public class VideoInformation {
             }
 
             int exitVal = proc.waitFor();
-            System.out.println("Process exitValue: " + exitVal);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -78,6 +78,11 @@ public class VideoInformation {
 
     }
 
+    /**
+     * récupère l'image d'une video
+     * @param imagePath chemin ou enregistrer votre image
+     * @return sucess
+     */
     public boolean generateAThumbnailImage(String imagePath) {
         Runtime rt = Runtime.getRuntime();
         Process proc = null;
