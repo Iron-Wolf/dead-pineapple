@@ -44,7 +44,6 @@
     <orderEntry type="library" name="Maven: commons-fileupload:commons-fileupload:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.2" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20160212" level="project" />
-    <orderEntry type="library" name="Maven: javax:javaee-api:6.0" level="project" />
     <orderEntry type="module" module-name="dead-pineapple-dal" />
     <orderEntry type="library" name="Maven: org.eclipse.persistence:javax.persistence:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-entitymanager:4.2.2.Final" level="project" />
@@ -57,5 +56,6 @@
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:4.2.2.Final" level="project" />
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:5.1.38" level="project" />
+    <orderEntry type="library" name="Maven: javax:javaee-api:6.0" level="project" />
   </component>
 </module>
