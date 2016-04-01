@@ -1,0 +1,15 @@
+<hibernate-mapping>
+    <class name="com.deadpineapple.dal.entity.UserAccount" table="UserAccount" catalog="deadpineapple">
+        <id name="id" type="java.lang.Long">
+            <column name="STOCK_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="firstName" type="string">
+            <column name="firstName" length="20" not-null="true" unique="true" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="lastName" length="20" not-null="true" unique="true" />
+        </property>
+
+    </class>
+</hibernate-mapping>

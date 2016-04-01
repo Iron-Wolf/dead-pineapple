@@ -34,7 +34,7 @@ public class UploadController {
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public void prepareUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getParameter("getfile") != null && !request.getParameter("getfile").isEmpty()) {
-            // Where the file will be save ?!
+            // Save location
             File file = new File(request.getServletContext().getRealPath("/") + "videos/" + request.getParameter("getfile"));
             if (file.exists()) {
                 int bytes = 0;

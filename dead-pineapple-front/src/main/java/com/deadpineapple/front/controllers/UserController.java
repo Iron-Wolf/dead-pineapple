@@ -20,7 +20,7 @@ import javax.ejb.EJB;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
+    @EJB
     UserDao userBdd;
     @RequestMapping(value="/add", method= RequestMethod.GET)
     public ModelAndView addUser(){
@@ -31,7 +31,7 @@ public class UserController {
     public String saveUser(@ModelAttribute("user")UserAccount user,
                            BindingResult result, ModelMap model){
         userBdd = new UserDao();
-        //userBdd.createUser(user);
+        userBdd.createUser(user);
         return "index";
     }
     @RequestMapping(value="/add", method=RequestMethod.POST, params={"age = 60", "notExpert"})
