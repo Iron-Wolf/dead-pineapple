@@ -89,7 +89,7 @@ public class ConversionLauncher {
     }
 
 
-    public File joinFile(List<File> files) {
+    public File joinFile(List<File> files) throws IOException, InterruptedException {
         // TODO: 31/03/2016 a faire pas dévellopé
         FileJoiner joiner = new FileJoiner(files, "newName");
         return joiner.joinFiles();
