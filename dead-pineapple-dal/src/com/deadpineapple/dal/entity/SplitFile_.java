@@ -9,6 +9,8 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(SplitFile.class)
 public class SplitFile_ {
     public static volatile SingularAttribute<SplitFile, Long> id;
+    public static volatile SingularAttribute<SplitFile, Long> convertedFileId;
+    public static volatile SingularAttribute<SplitFile, ConvertedFile> convertedFile;
     public static volatile SingularAttribute<SplitFile, Integer> size;
     public static volatile SingularAttribute<SplitFile, Boolean> isConverted;
     public static volatile SingularAttribute<SplitFile, String> splitFilePath;

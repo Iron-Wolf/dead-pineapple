@@ -1,5 +1,6 @@
 package com.deadpineapple.dal.entity;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.List;
 @StaticMetamodel(ConvertedFile.class)
 public class ConvertedFile_ {
     public static volatile SingularAttribute<ConvertedFile, Long> id;
-    public static volatile SingularAttribute<ConvertedFile, List<SplitFile>> splitFiles;
+    public static volatile ListAttribute<ConvertedFile, SplitFile> splitFiles;
     public static volatile SingularAttribute<ConvertedFile, Integer> size;
     public static volatile SingularAttribute<ConvertedFile, Boolean> isConverted;
     public static volatile SingularAttribute<ConvertedFile, String> filePath;
@@ -20,4 +21,5 @@ public class ConvertedFile_ {
     public static volatile SingularAttribute<ConvertedFile, String> newType;
     public static volatile SingularAttribute<ConvertedFile, Date> creationDate;
     public static volatile SingularAttribute<ConvertedFile, Date> convertedDate;
+    public static volatile SingularAttribute<ConvertedFile, UserAccount> userAccount;
 }

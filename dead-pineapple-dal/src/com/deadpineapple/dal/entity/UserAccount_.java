@@ -1,5 +1,7 @@
 package com.deadpineapple.dal.entity;
 
+import javax.persistence.metamodel.ListAttribute;
+import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import java.util.Date;
@@ -16,5 +18,5 @@ public class UserAccount_ {
     public static volatile SingularAttribute<UserAccount, Date> creationDate;
     public static volatile SingularAttribute<UserAccount, String> firstName;
     public static volatile SingularAttribute<UserAccount, String> lastName;
-    public static volatile SingularAttribute<UserAccount, List<ConvertedFile>> convertedFiles;
+    public static volatile ListAttribute<UserAccount, ConvertedFile> convertedFiles;
 }

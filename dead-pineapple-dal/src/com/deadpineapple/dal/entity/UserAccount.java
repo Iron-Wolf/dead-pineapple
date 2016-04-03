@@ -28,8 +28,7 @@ public class UserAccount implements Serializable {
 
     private String lastName;
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(mappedBy = "userAccount")
     private List<ConvertedFile> convertedFiles;
 
     public Long getId() {

@@ -15,9 +15,12 @@ public class ConvertedFile implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(mappedBy = "convertedFile", targetEntity = SplitFile.class)
     private List<SplitFile> splitFiles;
+
+    @ManyToOne(targetEntity = UserAccount.class)
+    @JoinColumn(name = "userAccountId")
+    private UserAccount userAccount;
 
     private int size;
 

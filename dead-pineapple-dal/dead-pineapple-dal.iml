@@ -12,7 +12,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
         <datasource-mapping>
-          <factory-entry name="deadpineapple-jpa" />
+          <factory-entry name="deadpineapple-jpa" value="cbd53c0a-f73b-4686-9d6e-2971fa254958" />
           <factory-entry name="jsf01" />
           <factory-entry name="spring-jpa" />
         </datasource-mapping>

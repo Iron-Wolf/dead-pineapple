@@ -18,6 +18,28 @@ public class SplitFile implements Serializable {
 
     private String splitFilePath;
 
+    @ManyToOne(targetEntity = ConvertedFile.class, optional = false)
+    @JoinColumn(name = "convertedFileId")
+    private ConvertedFile convertedFile;
+
+    @Column(insertable = false,updatable = false)
+    private Long convertedFileId;
+
+    public Long getConvertedFileId() {
+        return convertedFileId;
+    }
+
+    public void setConvertedFileId(Long convertedFileId) {
+        this.convertedFileId = convertedFileId;
+    }
+
+    public ConvertedFile getConvertedFile() {
+        return convertedFile;
+    }
+
+    public void setConvertedFile(ConvertedFile convertedFile) {
+        this.convertedFile = convertedFile;
+    }
 
     public Long getId() {
         return id;
