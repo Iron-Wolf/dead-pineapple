@@ -4,7 +4,7 @@
              version="2.0">
 
     <persistence-unit name="deadpineapple-jpa" transaction-type="RESOURCE_LOCAL">
-
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>com.deadpineapple.dal.entity.UserAccount</class>
         <class>com.deadpineapple.dal.entity.ConvertedFile</class>
         <class>com.deadpineapple.dal.entity.SplitFile</class>

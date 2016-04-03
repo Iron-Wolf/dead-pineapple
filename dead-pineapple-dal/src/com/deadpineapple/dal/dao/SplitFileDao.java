@@ -20,12 +20,12 @@ public class SplitFileDao implements ISplitFileDao {
 
     @Override
     public SplitFile createFile(SplitFile file) {
-        try{
+        try {
             em.getTransaction().begin();
             em.persist(file);
             em.getTransaction().commit();
 
-        }catch(Exception e){
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -35,5 +35,10 @@ public class SplitFileDao implements ISplitFileDao {
     @Override
     public SplitFile updateFile(SplitFile newFile) {
         return null;
+    }
+
+    @Override
+    public SplitFile findById(Long splitFileId) {
+        return em.find(SplitFile.class, splitFileId);
     }
 }

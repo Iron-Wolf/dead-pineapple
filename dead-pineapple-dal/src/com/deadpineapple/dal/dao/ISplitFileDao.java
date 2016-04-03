@@ -8,4 +8,6 @@ import com.deadpineapple.dal.entity.SplitFile;
 public interface ISplitFileDao {
     public SplitFile createFile(SplitFile file);
     public SplitFile updateFile(SplitFile newFile);
+
+    SplitFile findById(Long splitFileId);
 }

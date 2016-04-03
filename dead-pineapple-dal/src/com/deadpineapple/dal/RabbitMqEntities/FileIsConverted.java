@@ -11,16 +11,26 @@ public class FileIsConverted implements Serializable {
     private Date creationDate;
     private Boolean wasSuccessFull;
     private String conversionError;
-private Long fileId;
+    private Long fileId;
+    private Long splitFileId;
 
     public FileIsConverted() {
     }
 
-    public FileIsConverted(long fileId, String newFileName, Boolean wasSuccessfull, String conversionError) {
+    public FileIsConverted(long fileId, String newFileName, Boolean wasSuccessfull, String conversionError, Long splitFileId) {
         this.newFileName = newFileName;
+        this.splitFileId = splitFileId;
         this.creationDate = new Date();
         this.wasSuccessFull = wasSuccessfull;
         this.conversionError = conversionError;
+        this.fileId = fileId;
+    }
+
+    public Long getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(Long fileId) {
         this.fileId = fileId;
     }
 
@@ -65,5 +75,13 @@ private Long fileId;
                 ", conversionError='" + conversionError + '\'' +
                 ", fileId=" + fileId +
                 '}';
+    }
+
+    public Long getSplitFileId() {
+        return splitFileId;
+    }
+
+    public void setSplitFileId(Long splitFileId) {
+        this.splitFileId = splitFileId;
     }
 }
