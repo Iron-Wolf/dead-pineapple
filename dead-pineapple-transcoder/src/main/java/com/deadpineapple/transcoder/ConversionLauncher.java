@@ -3,12 +3,16 @@ package com.deadpineapple.transcoder;
 
 import com.deadpineapple.dal.RabbitMqEntities.FileIsConverted;
 import com.deadpineapple.dal.RabbitMqEntities.FileToConvert;
+import com.deadpineapple.dal.dao.ConvertedFileDao;
+import com.deadpineapple.dal.dao.SplitFileDao;
+import com.deadpineapple.dal.entity.SplitFile;
 import com.deadpineapple.rabbitmq.RabbitInit;
 import com.deadpineapple.rabbitmq.RabbitReceiver.IReceiver;
 import com.deadpineapple.videoHelper.FfmpegException;
 import com.deadpineapple.videoHelper.converter.Conversion;
 
 
+import javax.ejb.EJB;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,10 +27,10 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
 
     public RabbitInit rabbitInit = new RabbitInit();
 
+    private SplitFileDao splitFileDao;
+
     public void start() {
         rabbitInit.getFileToConvertReceiver().receiver(this);
-
-
     }
 
     @Override
@@ -37,22 +41,25 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
 
         try {
             Boolean conversionSuccess = conv.start();
+            SplitFile file = splitFileDao.findById(result.getSplitFileId());
+            file.setConverted(conversionSuccess);
+            splitFileDao.updateFile(file);
             convertedReport = new FileIsConverted(
                     result.getFileId()
                     , conv.getFileDestinationPath()
                     , conversionSuccess
-                    , !conversionSuccess ? "FFMPEG conversion error" : null);
+                    , !conversionSuccess ? "FFMPEG conversion error" : null, result.getSplitFileId());
             System.out.println(result);
             System.out.println(conversionSuccess);
         } catch (IOException e) {
             convertedReport = new FileIsConverted(result.getFileId(), conv.getFileDestinationPath()
-                    , false, "IO error :" + e.getMessage());
+                    , false, "IO error :" + e.getMessage(), result.getSplitFileId());
         } catch (InterruptedException e) {
             convertedReport = new FileIsConverted(result.getFileId(), conv.getFileDestinationPath()
-                    , false, "Iterrupt error :" + e.getMessage());
+                    , false, "Interrupt error :" + e.getMessage(), result.getSplitFileId());
         } catch (FfmpegException e) {
             convertedReport = new FileIsConverted(result.getFileId(), conv.getFileDestinationPath()
-                    , false, "Conversion error :" + e.getMessage());
+                    , false, "Conversion error :" + e.getMessage(), result.getSplitFileId());
         } finally {
             if (convertedReport != null) {
                 rabbitInit.getFileIsConvertedSender().send(convertedReport);

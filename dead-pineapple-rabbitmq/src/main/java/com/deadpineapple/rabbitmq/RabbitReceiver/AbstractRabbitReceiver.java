@@ -36,7 +36,6 @@ public abstract class AbstractRabbitReceiver<T> {
     }
 
     public void receiver(final IReceiver<T> receiver)  {
-        getRabbitConnection().declareQueue(getQueueName());
         Consumer consumer = new DefaultConsumer(getRabbitConnection().getChannel()) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)

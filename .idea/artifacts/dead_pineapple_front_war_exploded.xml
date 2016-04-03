@@ -10,7 +10,6 @@
           <element id="module-output" name="dead-pineapple-dal" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Hibernate 4.2.2-4.2.2" />
           <element id="file-copy" path="$PROJECT_DIR$/dead-pineapple-rabbitmq/lib/junit.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/dead-pineapple-rabbitmq/lib/hamcrest-core.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/dead-pineapple-rabbitmq/lib/commons-io-1.2.jar" />
