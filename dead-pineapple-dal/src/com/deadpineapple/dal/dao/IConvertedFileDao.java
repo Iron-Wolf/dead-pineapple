@@ -7,10 +7,6 @@ import com.deadpineapple.dal.entity.ConvertedFile;
  */
 public interface IConvertedFileDao {
     public ConvertedFile createFile(ConvertedFile file);
-
-    ConvertedFile findById(long id);
-
-    public ConvertedFile updateFile(ConvertedFile newFile);
-    public Long totalConvertedFile();
-    public ConvertedFile findByOriginalName (String name);
+    public ConvertedFile updateFile(ConvertedFile file);
+    public ConvertedFile findById(Long id);
 }

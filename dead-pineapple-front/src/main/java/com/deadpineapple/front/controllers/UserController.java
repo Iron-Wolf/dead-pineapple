@@ -1,5 +1,6 @@
 package com.deadpineapple.front.controllers;
 
+import com.deadpineapple.dal.dao.IUserDao;
 import com.deadpineapple.dal.dao.UserDao;
 import com.deadpineapple.dal.entity.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import javax.ejb.EJB;
 
@@ -19,9 +21,15 @@ import javax.ejb.EJB;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
-    @EJB
-    UserDao userBdd;
+public class UserController extends MultiActionController {
+
+    @Autowired
+    private IUserDao userBdd;
+
+    public void setUserDAO(IUserDao userDAO) {
+        this.userBdd = userDAO;
+    }
+
     @RequestMapping(value="/add", method= RequestMethod.GET)
     public ModelAndView addUser(){
         System.out.println("Invoking User");
@@ -30,8 +38,8 @@ public class UserController {
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String saveUser(@ModelAttribute("user")UserAccount user,
                            BindingResult result, ModelMap model){
-        userBdd = new UserDao();
-        userBdd.createUser(user);
+        //userBdd = new UserDao();
+        userBdd.saveUser(user);
         return "index";
     }
     @RequestMapping(value="/add", method=RequestMethod.POST, params={"age = 60", "notExpert"})
