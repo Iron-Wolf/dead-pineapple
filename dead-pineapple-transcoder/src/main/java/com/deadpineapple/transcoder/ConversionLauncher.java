@@ -12,7 +12,6 @@ import com.deadpineapple.videoHelper.FfmpegException;
 import com.deadpineapple.videoHelper.converter.Conversion;
 
 
-import javax.ejb.EJB;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
