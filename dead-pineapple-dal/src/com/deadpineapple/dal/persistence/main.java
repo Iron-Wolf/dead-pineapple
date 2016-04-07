@@ -2,9 +2,6 @@ package com.deadpineapple.dal.persistence;
 
 import com.deadpineapple.dal.entity.UserAccount;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,7 +14,6 @@ import java.util.Date;
  * Created by mikael on 30/03/16.
  */
 @Service
-@Transactional
 public class main {
 
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("deadpineapple-jpa");
