@@ -7,11 +7,6 @@
       <schema-pattern>supfitness.*</schema-pattern>
       <default-schemas>supfitness.* suprails.*</default-schemas>
     </data-source>
-    <data-source name="MySQL - spring_jpa@localhost" uuid="47b33cd8-1a3f-4226-9333-14115211314d">
-      <secret-storage>master_key</secret-storage>
-      <user-name>root</user-name>
-      <schema-pattern>spring_jpa.*</schema-pattern>
-      <default-schemas>spring_jpa.*</default-schemas>
-    </data-source>
+    <data-source name="MySQL - spring_jpa@localhost" uuid="47b33cd8-1a3f-4226-9333-14115211314d" />
   </component>
 </project>

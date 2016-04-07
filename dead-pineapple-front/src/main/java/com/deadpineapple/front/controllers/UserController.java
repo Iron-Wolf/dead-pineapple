@@ -3,6 +3,8 @@ package com.deadpineapple.front.controllers;
 import com.deadpineapple.dal.dao.IUserDao;
 import com.deadpineapple.dal.dao.UserDao;
 import com.deadpineapple.dal.entity.UserAccount;
+import com.deadpineapple.front.HibernateUtil;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.hibernate.*;
 
 import javax.ejb.EJB;
 
@@ -21,15 +24,12 @@ import javax.ejb.EJB;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController extends MultiActionController {
+public class UserController {
 
-    @Autowired
-    private IUserDao userBdd;
-
+    IUserDao userBdd;
     public void setUserDAO(IUserDao userDAO) {
         this.userBdd = userDAO;
     }
-
     @RequestMapping(value="/add", method= RequestMethod.GET)
     public ModelAndView addUser(){
         System.out.println("Invoking User");
@@ -38,8 +38,10 @@ public class UserController extends MultiActionController {
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String saveUser(@ModelAttribute("user")UserAccount user,
                            BindingResult result, ModelMap model){
-        //userBdd = new UserDao();
-        userBdd.saveUser(user);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(user);
+        session.getTransaction().commit();
         return "index";
     }
     @RequestMapping(value="/add", method=RequestMethod.POST, params={"age = 60", "notExpert"})
