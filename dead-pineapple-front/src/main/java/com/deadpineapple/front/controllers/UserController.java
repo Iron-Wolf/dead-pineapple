@@ -26,6 +26,7 @@ import javax.ejb.EJB;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
     IUserDao userBdd;
     public void setUserDAO(IUserDao userDAO) {
         this.userBdd = userDAO;
@@ -38,10 +39,7 @@ public class UserController {
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String saveUser(@ModelAttribute("user")UserAccount user,
                            BindingResult result, ModelMap model){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(user);
-        session.getTransaction().commit();
+        userBdd.saveUser(user);
         return "index";
     }
     @RequestMapping(value="/add", method=RequestMethod.POST, params={"age = 60", "notExpert"})
