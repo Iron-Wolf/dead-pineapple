@@ -15,9 +15,8 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    @RequestMapping(method= RequestMethod.GET)
-    public String index(){
-
+    @RequestMapping(method = RequestMethod.GET)
+    public String index() {
         return "index";
     }
 
