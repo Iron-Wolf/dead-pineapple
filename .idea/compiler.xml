@@ -22,7 +22,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="dead-pineapple-front" />
         <module name="dead-pineapple-videoHelper" />
       </profile>
       <profile default="false" name="Annotation profile for dead-pineapple-transcoder" enabled="true">
@@ -53,11 +52,18 @@
         <processorPath useClasspath="true" />
         <module name="dead-pineapple-dal" />
       </profile>
+      <profile default="false" name="Annotation profile for dead-pineapple-front" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="dead-pineapple-front" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="dead-pineapple-core" target="1.6" />
       <module name="dead-pineapple-dal" target="1.6" />
-      <module name="dead-pineapple-front" target="1.5" />
+      <module name="dead-pineapple-front" target="1.6" />
       <module name="dead-pineapple-rabbitmq" target="1.6" />
       <module name="dead-pineapple-transcoder" target="1.6" />
       <module name="dead-pineapple-videoHelper" target="1.5" />
