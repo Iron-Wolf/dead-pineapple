@@ -21,6 +21,7 @@ import org.hibernate.*;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Locale;
 
 /**
@@ -68,8 +69,10 @@ public class UserController {
         }
     }
     @RequestMapping(value="/logOff", method = RequestMethod.GET)
-    public String logOff(){
-
+    public String logOff(Model model, LoginForm loginform, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.removeAttribute("LOGGEDIN_USER");
+        model.addAttribute("loginAttribute", loginform);
         return "index";
     }
 

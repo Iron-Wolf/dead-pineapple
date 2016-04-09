@@ -6,6 +6,7 @@
         <element id="directory" name="classes">
           <element id="module-output" name="dead-pineapple-front" />
           <element id="module-output" name="dead-pineapple-dal" />
+          <element id="module-output" name="dead-pineapple-videoHelper" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />

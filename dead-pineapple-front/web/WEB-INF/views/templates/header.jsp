@@ -53,7 +53,7 @@ Header here... Templates / header.jsp <br/>
             Bienvenue <c:out value="${LOGGEDIN_USER.username}"/> !
         </div>
         <div class="col-lg-6 col-sm-offset-6">
-            <a href="${logoff}" class="btn btn-warning">Se déconnecter</a>
+            <a href="<spring:url value='/user/logOff'/>" class="btn btn-warning">Se déconnecter</a>
         </div>
     </c:otherwise>
 </c:choose>

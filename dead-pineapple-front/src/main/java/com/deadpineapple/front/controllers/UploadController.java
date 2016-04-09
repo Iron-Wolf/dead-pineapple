@@ -1,5 +1,6 @@
 package com.deadpineapple.front.controllers;
 
+import com.deadpineapple.videoHelper.information.VideoInformation;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -24,6 +25,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/upload")
 public class UploadController {
+    VideoInformation videoInformation;
     @RequestMapping(method = RequestMethod.GET)
     public String addUser() {
         System.out.println("Invoking User");
@@ -65,6 +67,8 @@ public class UploadController {
             if (file.exists()) {
                 System.out.println(file.getAbsolutePath());
                 // Set a previsualisation image to the video and display it on the client size
+                videoInformation = new VideoInformation(file.getAbsolutePath());
+                //videoInformation.generateAThumbnailImage(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("getthumb"));
                 // "response.setContentType("image/png");"
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 ServletOutputStream srvos = response.getOutputStream();
@@ -107,6 +111,7 @@ public class UploadController {
                     JSONObject jsono = new JSONObject();
                     jsono.put("name", item.getName());
                     jsono.put("size", item.getSize());
+                    //jsono.put("duration", item.)
                     jsono.put("url", "UploadServlet?getfile=" + item.getName());
                     jsono.put("thumbnail_url", "UploadServlet?getthumb=" + item.getName());
                     jsono.put("delete_url", "UploadServlet?delfile=" + item.getName());
