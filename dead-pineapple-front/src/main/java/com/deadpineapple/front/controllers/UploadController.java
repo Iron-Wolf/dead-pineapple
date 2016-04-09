@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
@@ -116,6 +117,8 @@ public class UploadController {
             File file = new File(thumb);
             if (file.exists()) {
                 System.out.println(file.getAbsolutePath());
+                BufferedImage resizeImagePng = resizeImage(ImageIO.read(file));
+                ImageIO.write(resizeImagePng, "png", new File(thumb));
                 // Set a previsualisation image to the video and display it on the client size
                 int bytes = 0;
                 ServletOutputStream op = response.getOutputStream();
@@ -173,5 +176,13 @@ public class UploadController {
             suffix = filename.substring(pos + 1);
         }
         return suffix;
+    }
+    private static BufferedImage resizeImage(BufferedImage originalImage) {
+        BufferedImage resizedImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, 100, 100, null);
+        g.dispose();
+
+        return resizedImage;
     }
 }
