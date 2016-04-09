@@ -56,32 +56,7 @@ public class UploadController {
                 in.close();
                 op.flush();
                 op.close();
-            }
-        } else if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
-            File file = new File(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("delfile"));
-            if (file.exists()) {
-                file.delete(); // TODO:check and report success
-            }
-        } else if (request.getParameter("getthumb") != null && !request.getParameter("getthumb").isEmpty()) {
-            File file = new File(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("getthumb"));
-            if (file.exists()) {
-                System.out.println(file.getAbsolutePath());
-                // Set a previsualisation image to the video and display it on the client size
-                videoInformation = new VideoInformation(file.getAbsolutePath());
-                //videoInformation.generateAThumbnailImage(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("getthumb"));
-                // "response.setContentType("image/png");"
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                ServletOutputStream srvos = response.getOutputStream();
-
-
-                response.setContentLength(os.size());
-                response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
-                os.writeTo(srvos);
-                srvos.flush();
-                srvos.close();
-            }
-            // }
-            // } // TODO: check and report success
+            }  // } // TODO: check and report success
         } else {
             PrintWriter writer = response.getWriter();
             writer.write("call POST with multipart form data");
@@ -113,8 +88,8 @@ public class UploadController {
                     jsono.put("size", item.getSize());
                     //jsono.put("duration", item.)
                     jsono.put("url", "UploadServlet?getfile=" + item.getName());
-                    jsono.put("thumbnail_url", "UploadServlet?getthumb=" + item.getName());
-                    jsono.put("delete_url", "UploadServlet?delfile=" + item.getName());
+                    jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + item.getName());
+                    jsono.put("delete_url", "/upload/deleteFile?delfile=" + item.getName());
                     jsono.put("delete_type", "GET");
                     json.put(jsono);
                     System.out.println(json.toString());
@@ -129,7 +104,48 @@ public class UploadController {
             writer.close();
         }
     }
+    @RequestMapping(value = "/getThumb", method = RequestMethod.GET)
+    public void getThumb(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (request.getParameter("getthumb") != null && !request.getParameter("getthumb").isEmpty()) {
+            String imageName = request.getParameter("getthumb");
+            imageName = imageName.substring(0, imageName.lastIndexOf('.'))+".png";
+            String thumb = request.getServletContext().getRealPath("/") + "upload/" + "thumb_" + imageName;
 
+            videoInformation = new VideoInformation(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("getthumb"));
+            videoInformation.generateAThumbnailImage(thumb);
+            File file = new File(thumb);
+            if (file.exists()) {
+                System.out.println(file.getAbsolutePath());
+                // Set a previsualisation image to the video and display it on the client size
+                int bytes = 0;
+                ServletOutputStream op = response.getOutputStream();
+
+                response.setContentType(getMimeType(file));
+                response.setContentLength((int) file.length());
+                response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+
+                byte[] bbuf = new byte[1024];
+                DataInputStream in = new DataInputStream(new FileInputStream(file));
+
+                while ((in != null) && ((bytes = in.read(bbuf)) != -1)) {
+                    op.write(bbuf, 0, bytes);
+                }
+
+                in.close();
+                op.flush();
+                op.close();
+            }
+        }
+    }
+    @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)
+    public void deleteFile(HttpServletRequest request){
+        if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
+            File file = new File(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("delfile"));
+            if (file.exists()) {
+                file.delete(); // TODO:check and report success
+            }
+        }
+    }
     private String getMimeType(File file) {
         String mimetype = "";
         if (file.exists()) {
