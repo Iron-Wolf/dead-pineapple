@@ -22,42 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="dead-pineapple-videoHelper" />
-      </profile>
-      <profile default="false" name="Annotation profile for dead-pineapple-transcoder" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dead-pineapple-transcoder" />
-      </profile>
-      <profile default="false" name="Annotation profile for dead-pineapple-rabbitmq" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dead-pineapple-rabbitmq" />
-      </profile>
-      <profile default="false" name="Annotation profile for dead-pineapple-core" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="dead-pineapple-core" />
-      </profile>
-      <profile default="false" name="Annotation profile for dead-pineapple-dal" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="dead-pineapple-dal" />
-      </profile>
-      <profile default="false" name="Annotation profile for dead-pineapple-front" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="dead-pineapple-front" />
+        <module name="dead-pineapple-rabbitmq" />
+        <module name="dead-pineapple-transcoder" />
+        <module name="dead-pineapple-videoHelper" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

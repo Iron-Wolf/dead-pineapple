@@ -4,7 +4,6 @@ import com.deadpineapple.dal.dao.IUserDao;
 import com.deadpineapple.dal.dao.UserDao;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
-import com.deadpineapple.front.HibernateUtil;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
