@@ -115,6 +115,7 @@
         <tr class="template-upload fade">
             <td class="preview"><span class="fade"></span></td>
             <td class="name"><span>{%=file.name%}</span></td>
+            <td class="duration"><span>{%=file.duration%}</span></td>
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
             {% if (file.error) { %}
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
@@ -157,6 +158,7 @@
                 <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
             </td>
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td class="duration"><span>{%=file.duration%}</span></td>
             <td colspan="2"></td>
             {% } %}
             <td class="delete">
