@@ -14,6 +14,13 @@ public class SplitFileDao implements ISplitFileDao {
 
     private SessionFactory sessFact;
 
+    public SplitFileDao(){}
+
+    public SplitFileDao (SessionFactory sessionFactory)
+    {
+        this.sessFact = sessionFactory;
+    }
+
     public void setSessionFactory(SessionFactory sessionFactory)
     {
         this.sessFact = sessionFactory;

@@ -15,6 +15,13 @@ public class UserDao implements IUserDao {
     //private HibernateTemplate hibernateTemplate;
     private SessionFactory sessFact;
 
+    public UserDao(){}
+
+    public UserDao (SessionFactory sessionFactory)
+    {
+        this.sessFact = sessionFactory;
+    }
+
     public void setSessionFactory(SessionFactory sessionFactory)
     {
         //this.hibernateTemplate = new HibernateTemplate(sessionFactory);

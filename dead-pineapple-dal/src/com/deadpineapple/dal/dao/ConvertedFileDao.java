@@ -15,6 +15,13 @@ public class ConvertedFileDao implements IConvertedFileDao {
 
     private SessionFactory sessFact;
 
+    public ConvertedFileDao(){}
+
+    public ConvertedFileDao (SessionFactory sessionFactory)
+    {
+        this.sessFact = sessionFactory;
+    }
+
     public void setSessionFactory(SessionFactory sessionFactory)
     {
         this.sessFact = sessionFactory;
