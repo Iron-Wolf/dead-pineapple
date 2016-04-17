@@ -9,4 +9,6 @@ public interface ISplitFileDao {
     public SplitFile createFile(SplitFile file);
     public SplitFile updateFile(SplitFile file);
     public SplitFile findById(Long id);
+    public void deleteFile(SplitFile splitFile);
+    public void deleteFileById(Long id);
 }

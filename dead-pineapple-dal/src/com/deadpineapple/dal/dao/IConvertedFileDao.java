@@ -9,4 +9,6 @@ public interface IConvertedFileDao {
     public ConvertedFile createFile(ConvertedFile file);
     public ConvertedFile updateFile(ConvertedFile file);
     public ConvertedFile findById(Long id);
+    public void deleteFile(ConvertedFile convertedFile);
+    public void deleteFileById(Long id);
 }

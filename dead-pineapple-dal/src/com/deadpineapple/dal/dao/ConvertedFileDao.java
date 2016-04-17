@@ -64,4 +64,29 @@ public class ConvertedFileDao implements IConvertedFileDao {
 
         return cFile;
     }
+
+    @Override
+    public void deleteFile(ConvertedFile convertedFile)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+        sess.delete(convertedFile);
+        tx.commit();
+        sess.close();
+    }
+
+    @Override
+    public void deleteFileById(Long id)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+
+        // only need to specify the ID to delete it
+        ConvertedFile splitFile = (ConvertedFile) sess.createCriteria(ConvertedFile.class)
+                .add(Restrictions.eq("id", id)).uniqueResult();
+        sess.delete(splitFile);
+
+        tx.commit();
+        sess.close();
+    }
 }

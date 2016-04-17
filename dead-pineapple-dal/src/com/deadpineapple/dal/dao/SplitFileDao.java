@@ -65,4 +65,29 @@ public class SplitFileDao implements ISplitFileDao {
         return sFile;
     }
 
+    @Override
+    public void deleteFile(SplitFile splitFile)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+        sess.delete(splitFile);
+        tx.commit();
+        sess.close();
+    }
+
+    @Override
+    public void deleteFileById(Long id)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+
+        // only need to specify the ID to delete it
+        SplitFile splitFile = (SplitFile) sess.createCriteria(SplitFile.class)
+                .add(Restrictions.eq("id", id)).uniqueResult();
+        sess.delete(splitFile);
+
+        tx.commit();
+        sess.close();
+    }
+
 }

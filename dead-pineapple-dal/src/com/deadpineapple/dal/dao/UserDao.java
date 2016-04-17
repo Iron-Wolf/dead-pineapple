@@ -2,10 +2,13 @@ package com.deadpineapple.dal.dao;
 
 import com.deadpineapple.dal.entity.UserAccount;
 
+import com.deadpineapple.dal.entity.UserAccount_;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+
+import javax.xml.registry.infomodel.User;
 
 /**
  * Created by mikael on 30/03/16.
@@ -24,8 +27,6 @@ public class UserDao implements IUserDao {
 
     public void setSessionFactory(SessionFactory sessionFactory)
     {
-        //this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-        //this.hibernateTemplate.setCheckWriteOperations(false);
         this.sessFact = sessionFactory;
     }
 
@@ -50,6 +51,7 @@ public class UserDao implements IUserDao {
     @Override
     public UserAccount checkCredentials(String login, String password)
     {
+        //check e-mail and password
         org.hibernate.Session sess = sessFact.openSession();
         Transaction tx = sess.beginTransaction();
         UserAccount user = null;
@@ -72,10 +74,34 @@ public class UserDao implements IUserDao {
 
     @Override
     public void saveUser(UserAccount user) {
-        //hibernateTemplate.saveOrUpdate(user);
         org.hibernate.Session sess = sessFact.openSession();
         Transaction tx = sess.beginTransaction();
         sess.saveOrUpdate(user);
+        tx.commit();
+        sess.close();
+    }
+
+    @Override
+    public void deleteUser(UserAccount user)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+        sess.delete(user);
+        tx.commit();
+        sess.close();
+    }
+
+    @Override
+    public void deleteUserById(Long id)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+
+        // only need to specify the ID to delete it
+        UserAccount user = (UserAccount) sess.createCriteria(UserAccount.class)
+                .add(Restrictions.eq("id", id)).uniqueResult();
+        sess.delete(user);
+
         tx.commit();
         sess.close();
     }
