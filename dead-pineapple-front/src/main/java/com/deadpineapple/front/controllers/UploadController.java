@@ -84,10 +84,12 @@ public class UploadController {
                     new File(request.getServletContext().getRealPath("/") + "upload/").mkdirs();
                     File file = new File(request.getServletContext().getRealPath("/") + "upload/", item.getName());
                     item.write(file);
+                    // Create a new video Information
+                    videoInformation = new VideoInformation(request.getServletContext().getRealPath("/") + "upload/"+ item.getName());
                     JSONObject jsono = new JSONObject();
                     jsono.put("name", item.getName());
                     jsono.put("size", item.getSize());
-                    //jsono.put("duration", item.)
+                    jsono.put("duration", videoInformation.getDuration());
                     jsono.put("url", "UploadServlet?getfile=" + item.getName());
                     jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + item.getName());
                     jsono.put("delete_url", "/upload/deleteFile?delfile=" + item.getName());
@@ -147,6 +149,12 @@ public class UploadController {
             if (file.exists()) {
                 file.delete(); // TODO:check and report success
             }
+        }
+    }
+    @RequestMapping(value = "/duration", method = RequestMethod.GET)
+    public void getDuration(HttpServletRequest request, HttpServletResponse response){
+        if(request.getParameter("getDuration") != null && !request.getParameter("getthumb").isEmpty()){
+
         }
     }
     private String getMimeType(File file) {
