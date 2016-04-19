@@ -10,7 +10,6 @@ import java.util.List;
  */
 @Entity
 public class ConvertedFile implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -38,6 +37,8 @@ public class ConvertedFile implements Serializable {
 
     private Date convertedDate;
 
+    public ConvertedFile() {
+    }
     public Long getId() {
         return id;
     }
@@ -117,4 +118,5 @@ public class ConvertedFile implements Serializable {
     public void setConvertedDate(Date convertedDate) {
         this.convertedDate = convertedDate;
     }
+
 }

@@ -11,7 +11,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
 
     <!--Register Jquery-->
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>

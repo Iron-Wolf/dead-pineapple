@@ -159,6 +159,26 @@
             </td>
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
             <td class="duration"><span>{%=file.duration%}</span></td>
+            <td>
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Format vidéo
+                  <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">.avi</a></li>
+                    <li><a href="#">.mp4</a></li>
+                    <li><a href="#">.mp3</a></li>
+                    <li><a href="#">.aac</a></li>
+                    <li><a href="#">.wav</a></li>
+                    <li><a href="#">.wma</a></li>
+                    <li><a href="#">.wmv</a></li>
+                    <li><a href="#">.ogg</a></li>
+                    <li><a href="#">.flv</a></li>
+                    <li><a href="#">.swf</a></li>
+                    <li><a href="#">.dv</a></li>
+                    <li><a href="#">.mov</a></li>
+                  </ul>
+                </div>
+            </td>
             <td colspan="2"></td>
             {% } %}
             <td class="delete">
@@ -183,5 +203,6 @@
     <script src="<spring:url value='/resources/js/jquery.fileupload-ui.js'/>"></script>
     <script src="<spring:url value='/resources/js/locale.js'/>"></script>
     <script src="<spring:url value='/resources/js/main.js'/>"></script>
-</body> 
+    <script src="<spring:url value='/resources/js/main.js'/>"></script>
+</body>
 </html>
