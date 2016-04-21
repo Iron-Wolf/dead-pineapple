@@ -217,7 +217,7 @@
             $.ajax({
             type:"GET",
             url: "/upload/setFormat",
-            data: {     "format: $(".formats option:selected").val(),
+            data: {     format: $(".formats option:selected").val(),
                         file: $(this).attr('id')}
             }).done(function(msg){
                 // Format set (display price)
