@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:4.2.20.Final" level="project" />
     <orderEntry type="module" module-name="dead-pineapple-dal" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.hibernate:hibernate-entitymanager:4.2.2.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.1.0.GA" level="project" />

@@ -157,7 +157,7 @@ public class UploadController {
             String thumb = request.getServletContext().getRealPath("/") + "upload/" + "thumb_" + imageName;
             for (VideoFile video:
                     convertedFiles) {
-                if(video.getConvertedFile().getFilePath() == filePath){
+                if(video.getConvertedFile().getFilePath().equals(filePath)){
                     videoInformation = video.getVideoInformation();
                     break;
                 }
@@ -197,14 +197,34 @@ public class UploadController {
             if (file.exists()) {
                 for (VideoFile video:
                         convertedFiles) {
-                    if(video.getConvertedFile().getFilePath() == filePath){
+                    if(video.getConvertedFile().getFilePath().equals(filePath)){
+
                         // delete file from bdd
+                        file.delete();
                         break;
                     }
                 }
-                file.delete(); // TODO:check and report success
             }
         }
+    }
+    @RequestMapping(value = "/setFormat", method = RequestMethod.GET)
+    public void setConvertFormat(HttpServletRequest request){
+        if (request.getParameter("format") != null && !request.getParameter("format").isEmpty()) {
+            String filePath = request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("file");
+            String format = request.getParameter("format");
+            System.out.println("Vidéo trouvée");
+            for (VideoFile video:
+                    convertedFiles) {
+                if(video.getConvertedFile().getFilePath().equals(filePath)){
+                    convertedFileDao.updateFile(video.getConvertedFile()).setNewType(format);
+                    break;
+                }
+            }
+        }
+    }
+    @RequestMapping(value="/convert", method = RequestMethod.GET)
+    public void convert(){
+        // Start converting video
     }
     private String getMimeType(File file) {
         String mimetype = "";

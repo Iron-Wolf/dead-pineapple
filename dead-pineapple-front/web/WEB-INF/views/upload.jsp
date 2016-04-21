@@ -72,6 +72,10 @@
                 <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
             </form>
             <br>
+            <button class="btn btn-primary start" data-url="/upload/convert">
+                <i class="icon-upload icon-white"></i>
+                <span>Convertir la sélection</span>
+            </button>
             <div class="well">
                 <h3>Information sur l'upload</h3>
                 <ul>
@@ -108,7 +112,10 @@
                 </a>
             </div>
         </div>
-
+        <select class="formats">
+            <option value="avi">.avi</option>
+            <option value="test">test</option>
+            </select>
         <!-- The template to display files available for upload -->
         <script id="template-upload" type="text/x-tmpl">
             {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -159,25 +166,22 @@
             </td>
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
             <td class="duration"><span>{%=file.duration%}</span></td>
+            <td class="price"><span>{%=file.price%}</span></td>
             <td>
-                <div class="dropdown">
-                  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Format vidéo
-                  <span class="caret"></span></button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">.avi</a></li>
-                    <li><a href="#">.mp4</a></li>
-                    <li><a href="#">.mp3</a></li>
-                    <li><a href="#">.aac</a></li>
-                    <li><a href="#">.wav</a></li>
-                    <li><a href="#">.wma</a></li>
-                    <li><a href="#">.wmv</a></li>
-                    <li><a href="#">.ogg</a></li>
-                    <li><a href="#">.flv</a></li>
-                    <li><a href="#">.swf</a></li>
-                    <li><a href="#">.dv</a></li>
-                    <li><a href="#">.mov</a></li>
-                  </ul>
-                </div>
+                <select id="{%=file.name%}" class="formats" onchange="setFormat()">
+                    <option value="avi">.avi</option>
+                    <option value="mp4">.mp4</option>
+                    <option value="mp3">.mp3</option>
+                    <option value="aac">.aac</option>
+                    <option value="wav">.wav</option>
+                    <option value="wma">.wma</option>
+                    <option value="wmv">.wmv</option>
+                    <option value="ogg">.ogg</option>
+                    <option value="flv">.flv</option>
+                    <option value="swf">.swf</option>
+                    <option value="dv">.dv</option>
+                    <option value="mov">.mov</option>
+                </select>
             </td>
             <td colspan="2"></td>
             {% } %}
@@ -203,6 +207,24 @@
     <script src="<spring:url value='/resources/js/jquery.fileupload-ui.js'/>"></script>
     <script src="<spring:url value='/resources/js/locale.js'/>"></script>
     <script src="<spring:url value='/resources/js/main.js'/>"></script>
-    <script src="<spring:url value='/resources/js/main.js'/>"></script>
+    <script type="text/javascript">
+
+        function setFormat(){
+       // $( ".formats" ).change(function() {
+            // When user choose a format for the file, send it to the bdd
+            console.log("Envoi format vers serveur ");
+            console.log($(".formats option:selected").val());
+            $.ajax({
+            type:"GET",
+            url: "/upload/setFormat",
+            data: {     "format: $(".formats option:selected").val(),
+                        file: $(this).attr('id')}
+            }).done(function(msg){
+                // Format set (display price)
+            });
+
+        };
+
+        </script>
 </body>
 </html>
