@@ -119,4 +119,12 @@ public class ConvertedFile implements Serializable {
         this.convertedDate = convertedDate;
     }
 
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
+
 }

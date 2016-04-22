@@ -41,6 +41,8 @@ public class UploadController {
     IConvertedFileDao convertedFileDao;
     ConvertedFile convertedFile;
     ArrayList<VideoFile> convertedFiles = new ArrayList();
+    String UPLOAD_PATH;
+    LoginForm userData;
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
     }
@@ -48,7 +50,9 @@ public class UploadController {
     VideoInformation videoInformation;
     @RequestMapping(method = RequestMethod.GET)
     public String uploadPage(HttpServletRequest request) {
-        LoginForm userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
+        userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
+        user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
+        UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"+user.getFirstName()+"_"+user.getLastName()+"/";
         System.out.println("Invoking Upload page");
         return "upload";
     }
@@ -87,7 +91,6 @@ public class UploadController {
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void uploadVideo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         if (!ServletFileUpload.isMultipartContent(request)) {
             throw new IllegalArgumentException("Request is not multipart, please 'multipart/form-data' enctype for your form.");
         }
@@ -101,14 +104,15 @@ public class UploadController {
             List<FileItem> items = uploadHandler.parseRequest(request);
             for (FileItem item : items) {
                 if (!item.isFormField()) {
-                    new File(request.getServletContext().getRealPath("/") + "upload/").mkdirs();
-                    String filePath = request.getServletContext().getRealPath("/") + "upload/"+ item.getName();
-                    File file = new File(request.getServletContext().getRealPath("/") + "upload/", item.getName());
+                    new File(UPLOAD_PATH).mkdirs();
+                    String filePath = UPLOAD_PATH + item.getName();
+                    File file = new File(UPLOAD_PATH, item.getName());
                     item.write(file);
                     // Save video in bdd
                     Date creationDate = new Date();
                     VideoFile video = new VideoFile();
                     convertedFile = new ConvertedFile();
+                    convertedFile.setUserAccount(user);
                     convertedFile.setFilePath(filePath);
                     convertedFile.setCreationDate(creationDate);
                     convertedFile.setOriginalName(item.getName());
@@ -118,9 +122,10 @@ public class UploadController {
                     convertedFileDao.createFile(convertedFile);
 
                     // Create a new video Information
-                    videoInformation = new VideoInformation(request.getServletContext().getRealPath("/") + "upload/"+ item.getName());
+                    videoInformation = new VideoInformation(UPLOAD_PATH + item.getName());
                     TimeSpan duration = videoInformation.getDuration();
-                    double price = (double)((duration.getHeures() * 60) + duration.getMinutes()) * 0.10;
+                    double price = 0;
+                    price = (double)((duration.getHeures() * 60) + duration.getMinutes()) * 0.10;
 
                     // add video information into converted file
                     video.setConvertedFile(convertedFile);
@@ -151,10 +156,10 @@ public class UploadController {
     @RequestMapping(value = "/getThumb", method = RequestMethod.GET)
     public void getThumb(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getParameter("getthumb") != null && !request.getParameter("getthumb").isEmpty()) {
-            String filePath = request.getServletContext().getRealPath("/") + "upload/"+request.getParameter("getthumb");
+            String filePath = UPLOAD_PATH +request.getParameter("getthumb");
             String imageName = request.getParameter("getthumb");
             imageName = imageName.substring(0, imageName.lastIndexOf('.'))+".png";
-            String thumb = request.getServletContext().getRealPath("/") + "upload/" + "thumb_" + imageName;
+            String thumb = UPLOAD_PATH + "thumb_" + imageName;
             for (VideoFile video:
                     convertedFiles) {
                 if(video.getConvertedFile().getFilePath().equals(filePath)){
@@ -192,8 +197,8 @@ public class UploadController {
     @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)
     public void deleteFile(HttpServletRequest request){
         if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
-            File file = new File(request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("delfile"));
-            String filePath = request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("delfile");
+            File file = new File(UPLOAD_PATH + request.getParameter("delfile"));
+            String filePath = UPLOAD_PATH + request.getParameter("delfile");
             if (file.exists()) {
                 for (VideoFile video:
                         convertedFiles) {
@@ -210,12 +215,13 @@ public class UploadController {
     @RequestMapping(value = "/setFormat", method = RequestMethod.GET)
     public void setConvertFormat(HttpServletRequest request){
         if (request.getParameter("format") != null && !request.getParameter("format").isEmpty()) {
-            String filePath = request.getServletContext().getRealPath("/") + "upload/" + request.getParameter("file");
+            String filePath = UPLOAD_PATH + request.getParameter("file");
             String format = request.getParameter("format");
-            System.out.println("Vidéo trouvée");
+
             for (VideoFile video:
                     convertedFiles) {
                 if(video.getConvertedFile().getFilePath().equals(filePath)){
+                    System.out.println("Vidéo trouvée2"+filePath);
                     convertedFileDao.updateFile(video.getConvertedFile()).setNewType(format);
                     break;
                 }

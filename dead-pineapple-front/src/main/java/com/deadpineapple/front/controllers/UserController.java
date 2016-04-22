@@ -29,6 +29,7 @@ public class UserController {
 
     @Autowired
     IUserDao userBdd;
+    UserAccount user;
     public void setUserDAO(IUserDao userDAO) {
         this.userBdd = userDAO;
     }
@@ -59,9 +60,10 @@ public class UserController {
         String password = loginForm.getPassword();
 
         if(username != null && password != null){
-
-            if( userBdd.checkCredentials(username, getEncryptedPassword(password)) != null ){
+            user = userBdd.checkCredentials(username, getEncryptedPassword(password));
+            if( user != null ){
                 request.getSession().setAttribute("LOGGEDIN_USER", loginForm);
+                request.getSession().setAttribute("USER_INFORMATIONS", user);
                 return "redirect:/upload";
             }else{
                 return "redirect:/index.failed";
@@ -74,6 +76,7 @@ public class UserController {
     public String logOff(Model model, LoginForm loginform, HttpServletRequest request){
         HttpSession session = request.getSession();
         session.removeAttribute("LOGGEDIN_USER");
+        session.removeAttribute("USER_INFORMATIONS");
         model.addAttribute("loginAttribute", loginform);
         return "index";
     }

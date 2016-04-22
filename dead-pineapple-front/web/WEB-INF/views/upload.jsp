@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-image-gallery.min.css'/>" type="text/css">
         <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
         <link rel="stylesheet" href="<spring:url value='/resources/css/jquery.fileupload-ui.css'/>" type="text/css">
+        <link rel="stylesheet" href="<spring:url value='/resources/css/jquery.fileupload.css'/>" type="text/css">
         <!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
         <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
         <title>deadpineapple - Upload fichier</title>
@@ -34,34 +35,35 @@
             <form id="fileupload" action="<spring:url value='/upload/add'/>" method="POST" enctype="multipart/form-data">
                 <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
                 <div class="row fileupload-buttonbar">
-                    <div class="span7">
+                    <div class="col-lg-7">
                         <!-- The fileinput-button span is used to style the file input field as button -->
                         <span class="btn btn-success fileinput-button">
-                            <i class="icon-plus icon-white"></i>
+                            <i class="glyphicon glyphicon-plus"></i>
                             <span>Add files...</span>
                             <input type="file" name="files[]" multiple>
                         </span>
                         <button type="submit" class="btn btn-primary start">
-                            <i class="icon-upload icon-white"></i>
+                            <i class="glyphicon glyphicon-upload"></i>
                             <span>Start upload</span>
                         </button>
                         <button type="reset" class="btn btn-warning cancel">
-                            <i class="icon-ban-circle icon-white"></i>
+                            <i class="glyphicon glyphicon-ban-circle"></i>
                             <span>Cancel upload</span>
                         </button>
                         <button type="button" class="btn btn-danger delete">
-                            <i class="icon-trash icon-white"></i>
+                            <i class="glyphicon glyphicon-trash"></i>
                             <span>Delete</span>
                         </button>
-                        <input type="checkbox" class="toggle">
                     </div>
                     <!-- The global progress information -->
-                    <div class="span5 fileupload-progress fade">
+                    <div class="col-lg-5 fileupload-progress fade">
                         <!-- The global progress bar -->
-                        <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                            <div class="bar" style="width:0%;"></div>
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                         </div>
-                        <!-- The extended global progress information -->
+
+
+                        <!-- The extended global progress state -->
                         <div class="progress-extended">&nbsp;</div>
                     </div>
                 </div>
@@ -112,11 +114,7 @@
                 </a>
             </div>
         </div>
-        <select class="formats">
-            <option value="avi">.avi</option>
-            <option value="test">test</option>
-            </select>
-        <!-- The template to display files available for upload -->
+        <!-- The template to display files available before upload -->
         <script id="template-upload" type="text/x-tmpl">
             {% for (var i=0, file; file=o.files[i]; i++) { %}
         <tr class="template-upload fade">
@@ -127,12 +125,16 @@
             {% if (file.error) { %}
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
             {% } else if (o.files.valid && !i) { %}
-            <td>
-                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+            <td class="progress_style">
+                <div class="progress">
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                                 aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                </div>
             </td>
             <td class="start">{% if (!o.options.autoUpload) { %}
                 <button class="btn btn-primary">
-                    <i class="icon-upload icon-white"></i>
+                    <i class="glyphicon glyphicon-upload"></i>
                     <span>Start</span>
                 </button>
                 {% } %}</td>
@@ -141,14 +143,14 @@
             {% } %}
             <td class="cancel">{% if (!i) { %}
                 <button class="btn btn-warning">
-                    <i class="icon-ban-circle icon-white"></i>
+                    <i class="glyphicon glyphicon-ban-circle"></i>
                     <span>Cancel</span>
                 </button>
                 {% } %}</td>
         </tr>
         {% } %}
     </script>
-    <!-- The template to display files available for download -->
+    <!-- The template to display files before conversion -->
     <script id="template-download" type="text/x-tmpl">
         {% for (var i=0, file; file=o.files[i]; i++) { %}
         <tr class="template-download fade">
@@ -166,9 +168,9 @@
             </td>
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
             <td class="duration"><span>{%=file.duration%}</span></td>
-            <td class="price"><span>{%=file.price%}</span></td>
+            <td class="price"><span>{%=file.price%} &euro;</span></td>
             <td>
-                <select id="{%=file.name%}" class="formats" onchange="setFormat()">
+                <select fileName="{%=file.name%}" class="formats" onchange="setFormat()">
                     <option value="avi">.avi</option>
                     <option value="mp4">.mp4</option>
                     <option value="mp3">.mp3</option>
@@ -187,7 +189,7 @@
             {% } %}
             <td class="delete">
                 <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                        <i class="icon-trash icon-white"></i>
+                        <i class="glyphicon glyphicon-trash"></i>
                     <span>Delete</span>
                 </button>
                 <input type="checkbox" name="delete" value="1">
@@ -210,15 +212,16 @@
     <script type="text/javascript">
 
         function setFormat(){
-       // $( ".formats" ).change(function() {
             // When user choose a format for the file, send it to the bdd
             console.log("Envoi format vers serveur ");
-            console.log($(".formats option:selected").val());
+            var format = $(".formats option:selected").val();
+            var fileName = $(".formats :selected").parent().attr("fileName");
+            console.log(format, fileName);
             $.ajax({
             type:"GET",
             url: "/upload/setFormat",
-            data: {     format: $(".formats option:selected").val(),
-                        file: $(this).attr('id')}
+            data: {     format: format,
+                        file: fileName}
             }).done(function(msg){
                 // Format set (display price)
             });

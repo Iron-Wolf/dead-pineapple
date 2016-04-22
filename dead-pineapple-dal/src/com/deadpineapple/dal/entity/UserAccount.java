@@ -86,24 +86,4 @@ public class UserAccount implements Serializable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-
-    public String cryptWithMD5(String pass){
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] passBytes = pass.getBytes();
-            md.reset();
-            byte[] digested = md.digest(passBytes);
-            StringBuffer sb = new StringBuffer();
-            for(int i=0;i<digested.length;i++){
-                sb.append(Integer.toHexString(0xff & digested[i]));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException ex) {
-            //error = new FacesMessage( FacesMessage.SEVERITY_ERROR, ex.getMessage(), null );
-            // FacesContext facesContext = FacesContext.getCurrentInstance();
-            // facesContext.addMessage( "passwordEncrypt", error );
-        }
-        return null;
-    }
 }
