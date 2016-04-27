@@ -130,10 +130,10 @@
                             !$.support.transition && 'progress-animated'
                         )
                         .attr('aria-valuenow', 100)
-                        .find('.bar').css(
-                            'width',
-                            '100%'
-                        );
+                        .children().first().css(
+                        'width',
+                        '100%'
+                    );
                 }
                 return that._trigger('sent', e, data);
             },
@@ -239,18 +239,25 @@
             },
             // Callback for upload progress events:
             progress: function (e, data) {
+                if (e.isDefaultPrevented()) {
+                    return false;
+                }
+                var progress = Math.floor(data.loaded / data.total * 100);
                 if (data.context) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    data.context.find('.progress')
-                        .attr('aria-valuenow', progress)
-                        .find('.bar').css(
+                    data.context.each(function () {
+                        $(this).find('.progress')
+                            .attr('aria-valuenow', progress)
+                            .children().first().css(
                             'width',
                             progress + '%'
                         );
+                    });
                 }
             },
             // Callback for global upload progress events:
             progressall: function (e, data) {
+                console.log("Fichier chargé à:"+(data.loaded / data.total * 100));
+
                 var $this = $(this),
                     progress = parseInt(data.loaded / data.total * 100, 10),
                     globalProgressNode = $this.find('.fileupload-progress'),
@@ -261,17 +268,25 @@
                         $this.data('fileupload')._renderExtendedProgress(data)
                     );
                 }
+
                 globalProgressNode
                     .find('.progress')
                     .attr('aria-valuenow', progress)
-                    .find('.bar').css(
-                        'width',
-                        progress + '%'
-                    );
+                    .children().first().css(
+                    'width',
+                    progress + '%'
+                );
+
+
             },
             // Callback for uploads start, equivalent to the global ajaxStart event:
             start: function (e) {
-                var that = $(this).data('fileupload');
+                if (e.isDefaultPrevented()) {
+                    return false;
+                }
+                var that = $(this).data('blueimp-fileupload') ||
+                    $(this).data('fileupload');
+                that._resetFinishedDeferreds();
                 that._transition($(this).find('.fileupload-progress')).done(
                     function () {
                         that._trigger('started', e);
@@ -280,14 +295,23 @@
             },
             // Callback for uploads stop, equivalent to the global ajaxStop event:
             stop: function (e) {
-                var that = $(this).data('fileupload');
+                if (e.isDefaultPrevented()) {
+                    return false;
+                }
+                var that = $(this).data('blueimp-fileupload') ||
+                        $(this).data('fileupload'),
+                    deferred = that._addFinishedDeferreds();
+                $.when.apply($, that._getFinishedDeferreds())
+                    .done(function () {
+                        that._trigger('stopped', e);
+                    });
                 that._transition($(this).find('.fileupload-progress')).done(
                     function () {
                         $(this).find('.progress')
                             .attr('aria-valuenow', '0')
-                            .find('.bar').css('width', '0%');
+                            .children().first().css('width', '0%');
                         $(this).find('.progress-extended').html('&nbsp;');
-                        that._trigger('stopped', e);
+                        deferred.resolve();
                     }
                 );
             },
@@ -305,6 +329,21 @@
                     }
                 );
             }
+        },
+        _resetFinishedDeferreds: function () {
+            this._finishedUploads = [];
+        },
+
+        _addFinishedDeferreds: function (deferred) {
+            if (!deferred) {
+                deferred = $.Deferred();
+            }
+            this._finishedUploads.push(deferred);
+            return deferred;
+        },
+
+        _getFinishedDeferreds: function () {
+            return this._finishedUploads;
         },
 
         // Link handler, that allows to download files
