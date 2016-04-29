@@ -42,7 +42,7 @@ public class UserController {
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String saveUser(@ModelAttribute("user")UserAccount user,
                            BindingResult result, ModelMap model, HttpServletRequest request) throws Exception {
-        user.setPassword(getEncryptedPassword(user.getPassword()));
+        user.setPassword(LoginForm.getEncryptedPassword(user.getPassword()));
         Date creationDate = new Date();
         user.setCreationDate(creationDate);
         userBdd.saveUser(user);
@@ -68,7 +68,7 @@ public class UserController {
             if (userOAuth == null) {
                 userOAuth = new UserAccount();
                 userOAuth.setEmail(id);
-                userOAuth.setPassword(getEncryptedPassword(String.valueOf(id)));
+                userOAuth.setPassword(LoginForm.getEncryptedPassword(String.valueOf(id)));
                 Date creationDate = new Date();
                 userOAuth.setCreationDate(creationDate);
                 userBdd.saveUser(userOAuth);
@@ -77,7 +77,7 @@ public class UserController {
             String password = String.valueOf(id);
 
             // check user in DB and add it to the Session
-            user = userBdd.checkCredentials(username, getEncryptedPassword(password));
+            user = userBdd.checkCredentials(username, LoginForm.getEncryptedPassword(password));
             if (user != null) {
                 LoginForm loginForm = new LoginForm();
                 loginForm.setUsername(username); loginForm.setPassword(password);
@@ -95,7 +95,7 @@ public class UserController {
         String password = loginForm.getPassword();
 
         if(username != null && password != null){
-            user = userBdd.checkCredentials(username, getEncryptedPassword(password));
+            user = userBdd.checkCredentials(username, LoginForm.getEncryptedPassword(password));
             if( user != null ){
                 request.getSession().setAttribute("LOGGEDIN_USER", loginForm);
                 request.getSession().setAttribute("USER_INFORMATIONS", user);
@@ -115,15 +115,6 @@ public class UserController {
         model.addAttribute("loginAttribute", loginform);
         return "index";
     }
-    public static String getEncryptedPassword(String clearPassword)   {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(clearPassword.getBytes());
-            return new sun.misc.BASE64Encoder().encode(md.digest());
-        } catch (NoSuchAlgorithmException e) {
-            //_log.error("Failed to encrypt password.", e);
-        }
-        return "";
-    }
+
 
 }

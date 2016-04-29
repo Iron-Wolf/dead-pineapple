@@ -94,9 +94,7 @@ public class UploadController {
         if (!ServletFileUpload.isMultipartContent(request)) {
             throw new IllegalArgumentException("Request is not multipart, please 'multipart/form-data' enctype for your form.");
         }
-
         ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
-
         PrintWriter writer = response.getWriter();
         response.setContentType("application/json");
         JSONArray json = new JSONArray();
@@ -105,10 +103,11 @@ public class UploadController {
             for (FileItem item : items) {
                 if (!item.isFormField()) {
                     new File(UPLOAD_PATH).mkdirs();
-                    String filePath = UPLOAD_PATH + item.getName();
                     File file = new File(UPLOAD_PATH, item.getName());
                     item.write(file);
+
                     // Save video in bdd
+                    String filePath = UPLOAD_PATH + item.getName();
                     Date creationDate = new Date();
                     VideoFile video = new VideoFile();
                     convertedFile = new ConvertedFile();
@@ -122,10 +121,19 @@ public class UploadController {
                     convertedFileDao.createFile(convertedFile);
 
                     // Create a new video Information
-                    videoInformation = new VideoInformation(UPLOAD_PATH + item.getName());
+                    videoInformation = new VideoInformation(filePath);
                     TimeSpan duration = videoInformation.getDuration();
                     double price = 0;
-                    price = (double)((duration.getHeures() * 60) + duration.getMinutes()) * 0.10;
+
+                    double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
+                    System.out.println("temps ="+time +duration.getHeures() * 60);
+                    if(time < 5){
+                        price = Math.log(5) - 1;
+                    }
+                    else{
+                        price = Math.log(time) - 1;
+
+                    }
 
                     // add video information into converted file
                     video.setConvertedFile(convertedFile);
@@ -135,7 +143,7 @@ public class UploadController {
                     jsono.put("name", item.getName());
                     jsono.put("size", item.getSize());
                     jsono.put("duration", duration);
-                    jsono.put("price", price);
+                    jsono.put("price", String.format("%.2f", price));
                     jsono.put("url", "UploadServlet?getfile=" + item.getName());
                     jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + item.getName());
                     jsono.put("delete_url", "/upload/deleteFile?delfile=" + item.getName());
