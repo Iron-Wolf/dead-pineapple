@@ -39,7 +39,16 @@ function makeApiCall() {
             //Do Stuff
             //You have access to user id, name, display name, gender, emails, etc.
             //For more info visit https://developers.google.com/+/api/latest/people#resource
-
+            $.ajax({
+                type: "GET",
+                url: "/user/login",
+                data: {
+                    userOAuthID: resp.id,
+                    userOAuthName: resp.name
+                }
+            }).done(function(msg){
+                window.location.href="/upload";
+            });
         });
     });
 }

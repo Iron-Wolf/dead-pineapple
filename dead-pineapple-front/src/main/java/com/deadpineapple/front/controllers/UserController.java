@@ -54,6 +54,41 @@ public class UserController {
         return "redirect:/upload";
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(HttpServletRequest request)
+    {
+        //facebook & google login behavior
+        String id = request.getParameter("userOAuthID");
+        String fullName = request.getParameter("userOAuthName");
+
+        if (id != null) {
+            UserAccount userOAuth = userBdd.find(id);
+
+            // if user not exist, we create it
+            if (userOAuth == null) {
+                userOAuth = new UserAccount();
+                userOAuth.setEmail(id);
+                userOAuth.setPassword(getEncryptedPassword(String.valueOf(id)));
+                Date creationDate = new Date();
+                userOAuth.setCreationDate(creationDate);
+                userBdd.saveUser(userOAuth);
+            }
+            String username = String.valueOf(id);
+            String password = String.valueOf(id);
+
+            // check user in DB and add it to the Session
+            user = userBdd.checkCredentials(username, getEncryptedPassword(password));
+            if (user != null) {
+                LoginForm loginForm = new LoginForm();
+                loginForm.setUsername(username); loginForm.setPassword(password);
+                request.getSession().setAttribute("LOGGEDIN_USER", loginForm);
+                request.getSession().setAttribute("USER_INFORMATIONS", user);
+                return "redirect:/upload";
+            }
+        }
+        return "redirect:/index.failed";
+    }
+
     @RequestMapping(value="/login", method = RequestMethod.POST)
     public String login(LoginForm loginForm, HttpServletRequest request) throws Exception {
         String username = loginForm.getUsername();

@@ -33,18 +33,34 @@ function checkFbHashLogin() {
     }
 }
 
-function displayUser(user) {
-    setTimeout(function () { }, 1000);
-    if (user.id != null && user.id != "undefined") {
-        //Do Stuff
-        //You have access to user id, name, username, gender etc.
-        //For more info visit https://developers.facebook.com/docs/
-        //                      reference/login/public-profile-and-friend-list
+$(document).ready(
+    function(){
+        var url = window.location.href;
+
+        // get token from facebook
+        var param = url.match(/access_token?(\=.*)$/g);
+        var httpUrl = "https://graph.facebook.com/me?"+param;
+
+        // retrieve JSON data with graph API
+        var JSONdata = $.ajax({ type: "GET", url: httpUrl, async: false }).responseText;
+        var resultJson = JSON.parse(JSONdata);
+
+        // if no error, we pass data to the controller
+        if (resultJson.error == null) {
+            $.ajax({
+                type: "GET",
+                url: "/user/login",
+                data: {
+                    userOAuthID: resultJson.id,
+                    userOAuthName: resultJson.name
+                }
+            }).done(function (msg) {
+                window.location.href = "/upload";
+            });
+        }
     }
-    else {
-        alert('user error');
-    }
-}
+)
+
 
 $(function () {
 
