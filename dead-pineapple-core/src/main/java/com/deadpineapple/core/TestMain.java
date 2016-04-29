@@ -9,7 +9,7 @@ public class TestMain {
     public static void main(String[] args) {
         try {
             ConversionLauncher conversionLauncher = new ConversionLauncher();
-            FileIsUploaded fileIsUploaded = new FileIsUploaded(1, "C:\\Users\\15256\\Videos\\01_01-Course Introduction.mp4", ".avi", "");
+            FileIsUploaded fileIsUploaded = new FileIsUploaded(1, "E:\\serie\\into badlands\\s1\\izi.mkv", ".avi", "");
             conversionLauncher.start();
             conversionLauncher.exeFileIsUploaded(fileIsUploaded);
         } catch (Exception ex) {

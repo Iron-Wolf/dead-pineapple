@@ -26,7 +26,7 @@ public class HibernateUtil {
             Properties prop= new Properties();
             prop.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/dead_pineapple?zeroDateTimeBehavior=convertToNull");
             prop.setProperty("hibernate.connection.username", "root");
-            prop.setProperty("hibernate.connection.password", "root");
+            prop.setProperty("hibernate.connection.password", "PYcqu6rzRL8ZFM8q");
             prop.setProperty("dialect", "org.hibernate.dialect.MySQL5Dialect");
 
             sessionFactory = new AnnotationConfiguration()

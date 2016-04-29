@@ -26,7 +26,6 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
 
     public RabbitInit rabbitInit = new RabbitInit();
 
-    private SplitFileDao splitFileDao;
 
     public void start() {
         rabbitInit.getFileToConvertReceiver().receiver(this);
@@ -40,9 +39,7 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
 
         try {
             Boolean conversionSuccess = conv.start();
-            SplitFile file = splitFileDao.findById(result.getSplitFileId());
-            file.setConverted(conversionSuccess);
-            splitFileDao.updateFile(file);
+
             convertedReport = new FileIsConverted(
                     result.getFileId()
                     , conv.getFileDestinationPath()
@@ -59,11 +56,11 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
         } catch (FfmpegException e) {
             convertedReport = new FileIsConverted(result.getFileId(), conv.getFileDestinationPath()
                     , false, "Conversion error :" + e.getMessage(), result.getSplitFileId());
-        } finally {
+        }
             if (convertedReport != null) {
                 rabbitInit.getFileIsConvertedSender().send(convertedReport);
             }
-        }
+
     }
 
     public String generateNewFileName(FileToConvert fileToConvert) {

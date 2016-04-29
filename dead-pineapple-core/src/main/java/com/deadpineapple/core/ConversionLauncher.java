@@ -13,6 +13,7 @@ import com.deadpineapple.rabbitmq.RabbitInit;
 import com.deadpineapple.rabbitmq.RabbitReceiver.IReceiver;
 import com.deadpineapple.videoHelper.fileEdit.FileJoiner;
 import com.deadpineapple.videoHelper.fileEdit.FileSplitter;
+import org.hibernate.SessionFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -31,8 +32,8 @@ public class ConversionLauncher {
 
     public void start() {
         if (convertedFileDao == null){
-            convertedFileDao = new ConvertedFileDao();
-            splitFileDao = new SplitFileDao();
+            convertedFileDao = new ConvertedFileDao(HibernateUtil.getSessionFactory());
+            splitFileDao = new SplitFileDao(HibernateUtil.getSessionFactory());
         }
         rabbitInit.getFileUploadedReceiver().receiver(new IReceiver<FileIsUploaded>() {
             @Override
@@ -73,9 +74,6 @@ public class ConversionLauncher {
                 fileToSend.setConvertionEncoding(result.getNewEncoding());
                 rabbitInit.getFileToConvertSender().send(fileToSend);
             }
-
-            //on enregistre la dépendance vers le fichier
-            convertedFileDao.updateFile(mainFile);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -94,6 +92,9 @@ public class ConversionLauncher {
 
     public void exeFileIsConverted(FileIsConverted result) {
         if (result.getWasSuccessFull()) {
+            SplitFile file = splitFileDao.findById(result.getSplitFileId());
+            file.setConverted(result.getWasSuccessFull());
+            splitFileDao.updateFile(file);
             ConvertedFile convertedFile = convertedFileDao.findById(result.getFileId());
             List<SplitFile> splitFiles = convertedFile.getSplitFiles();
             if (allSplitAreConverted(splitFiles)) { //tout les fichiers sont convertiss
@@ -101,9 +102,11 @@ public class ConversionLauncher {
                     File joinFile = joinFile(splitFilesToFiles(splitFiles), convertedFile.getFilePath());
                     if (joinFile.exists()) {
                         // TODO: 18/03/2016 envoyer le mail de confirmation
+                        System.out.println("joined");
                         convertedFile.setConverted(true);
                         convertedFile.setFilePath(joinFile.getAbsolutePath());
-                        convertedFileDao.updateFile(convertedFile);
+                        convertedFileDao.updateFile(convertedFile);//todo:voir le bug avec mika demain
+                        System.out.println("file is converted "+joinFile.getAbsolutePath());
                         return;
                     }
 
