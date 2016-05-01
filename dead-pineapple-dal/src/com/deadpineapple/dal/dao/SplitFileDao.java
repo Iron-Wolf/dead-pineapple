@@ -62,6 +62,7 @@ public class SplitFileDao implements ISplitFileDao {
 
         sFile = (SplitFile) criteria.uniqueResult();
 
+        sess.close();
         return sFile;
     }
 

@@ -62,6 +62,7 @@ public class ConvertedFileDao implements IConvertedFileDao {
 
         cFile = (ConvertedFile) criteria.uniqueResult();
 
+        sess.close();
         return cFile;
     }
 

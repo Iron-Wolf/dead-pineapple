@@ -65,9 +65,11 @@ public class UserDao implements IUserDao {
         if (user.getEmail().equals(login)) {
             // if the result send by the DB is equal,
             // the user is returned
+            sess.close();
             return user;
         }
 
+        sess.close();
         return null;
     }
 
