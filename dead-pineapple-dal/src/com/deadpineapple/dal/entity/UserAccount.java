@@ -1,6 +1,7 @@
 package com.deadpineapple.dal.entity;
 
 import com.sun.istack.internal.NotNull;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,6 +31,9 @@ public class UserAccount implements Serializable {
 
     @OneToMany(mappedBy = "userAccount")
     private List<ConvertedFile> convertedFiles;
+
+    @Formula("(SELECT SUM(cf.size) FROM ConvertedFile cf WHERE id=cf.userAccountId)")
+    private int totalSize;
 
     public Long getId() {
         return id;
@@ -85,5 +89,13 @@ public class UserAccount implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public int getTotalSize() {
+        return totalSize;
+    }
+
+    public void setTotalSize(int totalSize) {
+        this.totalSize = totalSize;
     }
 }
