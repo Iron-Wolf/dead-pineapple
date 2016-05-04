@@ -2,13 +2,10 @@ package com.deadpineapple.dal.dao;
 
 import com.deadpineapple.dal.entity.UserAccount;
 
-import com.deadpineapple.dal.entity.UserAccount_;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-
-import javax.xml.registry.infomodel.User;
 
 /**
  * Created by mikael on 30/03/16.

@@ -2,6 +2,7 @@ package com.deadpineapple.core;
 
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.SplitFile;
+import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,7 +28,7 @@ public class HibernateUtil {
             prop.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/dead_pineapple?zeroDateTimeBehavior=convertToNull");
             prop.setProperty("hibernate.connection.username", "root");
             prop.setProperty("hibernate.connection.password", "PYcqu6rzRL8ZFM8q");
-            prop.setProperty("dialect", "org.hibernate.dialect.MySQL5Dialect");
+            prop.setProperty("dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
 
             sessionFactory = new AnnotationConfiguration()
                     .addPackage("com.deadpineapple.dal.entity")
@@ -35,6 +36,7 @@ public class HibernateUtil {
                     .addAnnotatedClass(UserAccount.class)
                     .addAnnotatedClass(ConvertedFile.class)
                     .addAnnotatedClass(SplitFile.class)
+                    .addAnnotatedClass(Transaction.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed

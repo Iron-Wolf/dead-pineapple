@@ -1,5 +1,8 @@
 package com.deadpineapple.dal.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +18,7 @@ public class ConvertedFile implements Serializable {
     private Long id;
 
     @OneToMany(mappedBy = "convertedFile", targetEntity = SplitFile.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<SplitFile> splitFiles;
 
     @ManyToOne(targetEntity = UserAccount.class)

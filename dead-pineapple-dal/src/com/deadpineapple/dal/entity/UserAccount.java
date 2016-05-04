@@ -2,6 +2,8 @@ package com.deadpineapple.dal.entity;
 
 import com.sun.istack.internal.NotNull;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,6 +32,7 @@ public class UserAccount implements Serializable {
     private String lastName;
 
     @OneToMany(mappedBy = "userAccount")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ConvertedFile> convertedFiles;
 
     @Formula("(SELECT SUM(cf.size) FROM ConvertedFile cf WHERE id=cf.userAccountId)")
