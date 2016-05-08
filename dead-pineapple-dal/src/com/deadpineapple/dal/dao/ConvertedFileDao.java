@@ -109,8 +109,11 @@ public class ConvertedFileDao implements IConvertedFileDao {
         criteria.add(Restrictions.eq("convertedFiles",file));
 
         // get the transaction, set file to null and update
-        com.deadpineapple.dal.entity.Transaction t = (com.deadpineapple.dal.entity.Transaction) criteria.uniqueResult();
-        t.setConvertedFiles(null);
-        sess.update(t);
+        try {
+            com.deadpineapple.dal.entity.Transaction t = (com.deadpineapple.dal.entity.Transaction) criteria.uniqueResult();
+            t.setConvertedFiles(null);
+            sess.update(t);
+        }
+        catch (Exception e){}
     }
 }
