@@ -25,7 +25,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController{
 
     @Autowired
     IUserDao userBdd;

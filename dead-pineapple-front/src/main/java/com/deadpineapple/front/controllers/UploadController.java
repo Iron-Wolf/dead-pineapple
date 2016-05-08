@@ -1,7 +1,10 @@
 package com.deadpineapple.front.controllers;
 
 import com.deadpineapple.dal.dao.IConvertedFileDao;
+import com.deadpineapple.dal.dao.ITransactionDao;
+import com.deadpineapple.dal.dao.TransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
+import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
 import com.deadpineapple.front.tools.VideoFile;
@@ -20,7 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.imageio.ImageIO;
+import javax.persistence.Transient;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
@@ -35,19 +42,32 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/upload")
-public class UploadController {
+public class UploadController extends HttpServlet {
 
     @Autowired
     IConvertedFileDao convertedFileDao;
     ConvertedFile convertedFile;
     ArrayList<VideoFile> convertedFiles = new ArrayList();
+
+    @Autowired
+    ITransactionDao transactionDao;
+    List<Transaction> transactions = new ArrayList();
+    JSONArray jsonTransactions, jsonConvertedFiles;
+    JSONObject jsonTransaction;
+    int idTransaction;
+
     String UPLOAD_PATH;
     LoginForm userData;
+    UserAccount user;
+    VideoInformation videoInformation;
+
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
     }
-    UserAccount user;
-    VideoInformation videoInformation;
+    public void setTransactionDao(ITransactionDao transactionDao) {
+        this.transactionDao = transactionDao;
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public String uploadPage(HttpServletRequest request) {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
@@ -275,5 +295,73 @@ public class UploadController {
         g.dispose();
 
         return resizedImage;
+    }
+
+    private void getHistory(){
+        // Get transactions from bdd
+        transactions = transactionDao.getTransByUser(user);
+        // Get the first transaction and init parameters
+        Transaction transactionTest = transactions.get(0);
+        initTransaction(transactionTest);
+
+        for(Transaction aTransaction: transactions){
+            // if the transaction is different, create new transaction
+            if(aTransaction.getIdTransaction() != idTransaction){
+                jsonTransactions.put(jsonTransaction);
+                initTransaction(aTransaction);
+            }
+            ConvertedFile cVideo = aTransaction.getConvertedFiles();
+            if(cVideo != null){
+                JSONObject jsonConvertedFile = new JSONObject();
+                jsonConvertedFile.put("name", cVideo.getOriginalName());
+                jsonConvertedFile.put("size", cVideo.getSize());
+                //jsono.put("duration", uVideo.get);
+                //jsono.put("price", String.format("%.2f", price));
+                // If video is not converted yet, what link ?
+                jsonConvertedFile.put("url", "upload/downloadFile?fileName=" + cVideo.getOriginalName());
+                jsonConvertedFile.put("thumbnail_url", "/upload/getThumb?getthumb=" + cVideo.getOriginalName());
+                jsonConvertedFile.put("delete_url", "/upload/deleteFile?delfile=" + cVideo.getOriginalName());
+                jsonConvertedFile.put("delete_type", "GET");
+                jsonConvertedFiles.put(jsonConvertedFile);
+            }
+
+        }
+
+    }
+    @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String fileName = request.getParameter("fileName");
+        if(fileName == null || fileName.equals("")){
+            throw new ServletException("File Name can't be null or empty");
+        }
+        File file = new File(UPLOAD_PATH, fileName);
+        if(!file.exists()){
+            throw new ServletException("File doesn't exists on server.");
+        }
+        System.out.println("File location on server::"+file.getAbsolutePath());
+        ServletContext ctx = getServletContext();
+        InputStream fis = new FileInputStream(file);
+        String mimeType = ctx.getMimeType(file.getAbsolutePath());
+        response.setContentType(mimeType != null? mimeType:"application/octet-stream");
+        response.setContentLength((int) file.length());
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+        ServletOutputStream os       = response.getOutputStream();
+        byte[] bufferData = new byte[1024];
+        int read=0;
+        while((read = fis.read(bufferData))!= -1){
+            os.write(bufferData, 0, read);
+        }
+        os.flush();
+        os.close();
+        fis.close();
+        System.out.println("File downloaded at client successfully");
+    }
+    private void initTransaction(Transaction transaction){
+        jsonTransaction = new JSONObject();
+        jsonTransaction.put("date",transaction.getDate());
+        jsonTransaction.put("price",transaction.getPrix());
+        jsonConvertedFiles = new JSONArray();
+        idTransaction = transaction.getIdTransaction();
     }
 }
