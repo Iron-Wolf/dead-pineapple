@@ -71,6 +71,11 @@ public class ConvertedFileDao implements IConvertedFileDao {
     {
         org.hibernate.Session sess = sessFact.openSession();
         Transaction tx = sess.beginTransaction();
+
+        // set the file to null on Transaction, if the transaction is already create
+        setNullOnTransaction(convertedFile,sess);
+
+        // delete the file and commit
         sess.delete(convertedFile);
         tx.commit();
         sess.close();
@@ -85,9 +90,27 @@ public class ConvertedFileDao implements IConvertedFileDao {
         // only need to specify the ID to delete it
         ConvertedFile splitFile = (ConvertedFile) sess.createCriteria(ConvertedFile.class)
                 .add(Restrictions.eq("id", id)).uniqueResult();
+
+        // set the file to null on Transaction, if the transaction is already create
+        setNullOnTransaction(splitFile,sess);
+
+        // delete the file
         sess.delete(splitFile);
 
         tx.commit();
         sess.close();
+    }
+
+    private void setNullOnTransaction(ConvertedFile file, org.hibernate.Session sess)
+    {
+        // set the ConvertedFile to null on Transaction table
+        // allow the transaction row to persist in the DB
+        Criteria criteria = sess.createCriteria(com.deadpineapple.dal.entity.Transaction.class);
+        criteria.add(Restrictions.eq("convertedFiles",file));
+
+        // get the transaction, set file to null and update
+        com.deadpineapple.dal.entity.Transaction t = (com.deadpineapple.dal.entity.Transaction) criteria.uniqueResult();
+        t.setConvertedFiles(null);
+        sess.update(t);
     }
 }

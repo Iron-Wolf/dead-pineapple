@@ -1,11 +1,11 @@
 package com.deadpineapple.dal.entity;
 
-import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.hql.internal.ast.tree.BooleanLiteralNode;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +24,7 @@ public class Transaction implements Serializable {
     private UserAccount userAccount;
 
     @ManyToOne(targetEntity = ConvertedFile.class)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private ConvertedFile convertedFiles;
 
     private Date date;
