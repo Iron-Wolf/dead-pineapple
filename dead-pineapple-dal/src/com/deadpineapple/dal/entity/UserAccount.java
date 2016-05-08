@@ -35,7 +35,7 @@ public class UserAccount implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ConvertedFile> convertedFiles;
 
-    @Formula("(SELECT SUM(cf.size) FROM ConvertedFile cf WHERE id=cf.userAccountId)")
+    @Formula("(SELECT COALESCE(SUM(cf.size),0) FROM ConvertedFile cf WHERE id=cf.userAccountId)")
     private int totalSize;
 
     public Long getId() {

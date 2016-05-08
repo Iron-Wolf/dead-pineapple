@@ -1,6 +1,8 @@
 package com.deadpineapple.dal.dao;
 
+import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
+import com.deadpineapple.dal.entity.UserAccount;
 
 import java.util.List;
 
@@ -11,4 +13,5 @@ public interface ITransactionDao {
     public Transaction createTransaction(Transaction transaction);
     public int getNextIdTransaction();
     public List<Transaction> getTransByIdTransaction(int id);
+    public List<Transaction> getTransByUser (UserAccount user);
 }

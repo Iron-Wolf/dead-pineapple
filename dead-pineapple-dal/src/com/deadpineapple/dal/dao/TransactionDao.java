@@ -1,5 +1,6 @@
 package com.deadpineapple.dal.dao;
 
+import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import org.hibernate.Criteria;
@@ -59,11 +60,29 @@ public class TransactionDao implements ITransactionDao {
     @Override
     public List<Transaction> getTransByIdTransaction(int id)
     {
+        // return the Transactions objects belonging to the given ID (getNextIdTransaction)
         org.hibernate.Session sess = sessFact.openSession();
         org.hibernate.Transaction tx = sess.beginTransaction();
 
         Criteria criteria = sess.createCriteria(Transaction.class);
         criteria.add(Restrictions.eq("idTransaction",id));
+        criteria.addOrder(Order.asc("idTransaction"));
+
+        List<Transaction> trans = (List<Transaction>) criteria.list();
+
+        sess.close();
+        return trans;
+    }
+
+    @Override
+    public List<Transaction> getTransByUser (UserAccount user)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        org.hibernate.Transaction tx = sess.beginTransaction();
+
+        Criteria criteria = sess.createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("userAccount",user));
+        criteria.addOrder(Order.asc("idTransaction"));
 
         List<Transaction> trans = (List<Transaction>) criteria.list();
 

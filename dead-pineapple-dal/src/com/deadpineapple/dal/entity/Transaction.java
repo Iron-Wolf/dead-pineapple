@@ -3,6 +3,7 @@ package com.deadpineapple.dal.entity;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.hql.internal.ast.tree.BooleanLiteralNode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,6 +32,8 @@ public class Transaction implements Serializable {
     private double prix;
 
     private int idTransaction;
+
+    private Boolean isPayed;
 
     public Long getId() {
         return id;
@@ -78,5 +81,13 @@ public class Transaction implements Serializable {
 
     public void setIdTransaction(int idTransaction) {
         this.idTransaction = idTransaction;
+    }
+
+    public Boolean getPayed() {
+        return isPayed;
+    }
+
+    public void setPayed(Boolean payed) {
+        isPayed = payed;
     }
 }
