@@ -22,11 +22,12 @@
                 <value>com.deadpineapple.dal.entity.UserAccount</value>
                 <value>com.deadpineapple.dal.entity.ConvertedFile</value>
                 <value>com.deadpineapple.dal.entity.SplitFile</value>
+                <value>com.deadpineapple.dal.entity.Transaction</value>
             </list>
         </property>
         <property name="hibernateProperties">
             <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
             </props>
@@ -40,6 +41,9 @@
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
     <bean id="myConvertedFileDAO" class="com.deadpineapple.dal.dao.ConvertedFileDao">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+    <bean id="myTransactionDAO" class="com.deadpineapple.dal.dao.TransactionDao">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
