@@ -1,4 +1,5 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
     Document   : upload
     Created on : Nov 3, 2012, 12:31:16 PM
@@ -78,6 +79,18 @@
                 <i class="icon-upload icon-white"></i>
                 <span>Convertir la sélection</span>
             </button>
+            <div id="dropbox">
+                <a href="${dropboxUrl}" target="_blank">Uploader depuis votre dropbox</a>
+                <c:if test="${not empty dropboxFiles}">
+                    Mes fichiers dropbox
+                    <ul>
+                        <c:forEach var="listValue" items="${dropboxFiles}">
+                            <li>${listValue}</li>
+                        </c:forEach>
+                    </ul>
+
+                </c:if>
+            </div>
             <div class="well">
                 <h3>Information sur l'upload</h3>
                 <ul>

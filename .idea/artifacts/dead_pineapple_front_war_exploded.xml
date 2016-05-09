@@ -47,6 +47,8 @@
           <element id="library" level="project" name="Maven: org.aspectj:aspectjrt:1.8.9" />
           <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.19" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: com.dropbox.core:dropbox-core-sdk:1.7.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.0-rc1" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="dead-pineapple-front/web/Web" />

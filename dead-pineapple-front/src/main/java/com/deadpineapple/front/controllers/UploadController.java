@@ -2,7 +2,6 @@ package com.deadpineapple.front.controllers;
 
 import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
-import com.deadpineapple.dal.dao.TransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
@@ -10,6 +9,8 @@ import com.deadpineapple.front.Forms.LoginForm;
 import com.deadpineapple.front.tools.VideoFile;
 import com.deadpineapple.videoHelper.TimeSpan;
 import com.deadpineapple.videoHelper.information.VideoInformation;
+import com.dropbox.core.*;
+import com.dropbox.core.json.JsonReader;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -19,23 +20,26 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
-import javax.persistence.Transient;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by saziri on 14/03/2016.
@@ -43,12 +47,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/upload")
 public class UploadController extends HttpServlet {
-
+    // Video variables
     @Autowired
     IConvertedFileDao convertedFileDao;
     ConvertedFile convertedFile;
     ArrayList<VideoFile> convertedFiles = new ArrayList();
-
     @Autowired
     ITransactionDao transactionDao;
     List<Transaction> transactions = new ArrayList();
@@ -61,6 +64,15 @@ public class UploadController extends HttpServlet {
     UserAccount user;
     VideoInformation videoInformation;
 
+    // Dropbox config
+    final String APP_KEY = "3xt31on71g5n2d6";
+    final String APP_SECRET = "01hgg9uje17vwwv";
+    final String URL_SITE = "http://localhost:8080/upload/auth";
+    DbxWebAuth webAuth;
+    DbxClient client;
+    DbxRequestConfig config;
+    HttpSession session;
+
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
     }
@@ -69,11 +81,12 @@ public class UploadController extends HttpServlet {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String uploadPage(HttpServletRequest request) {
+    public String uploadPage(HttpServletRequest request, Model model) throws JsonReader.FileLoadException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"+user.getFirstName()+"_"+user.getLastName()+"/";
-        System.out.println("Invoking Upload page");
+        // Initiate an instance of dropbox
+        model.addAttribute("dropboxUrl", getDropBoxUrl(request));
         return "upload";
     }
 
@@ -363,5 +376,64 @@ public class UploadController extends HttpServlet {
         jsonTransaction.put("price",transaction.getPrix());
         jsonConvertedFiles = new JSONArray();
         idTransaction = transaction.getIdTransaction();
+    }
+    private String getDropBoxUrl(HttpServletRequest request) throws JsonReader.FileLoadException {
+        DbxAppInfo appInfo = new DbxAppInfo(APP_KEY, APP_SECRET);
+        config = new DbxRequestConfig(
+                "JavaTutorial/1.0", Locale.getDefault().toString());
+        HttpSession session = request.getSession(true);
+        String sessionKey = "dropbox-auth-csrf-token";
+        DbxSessionStore csrfTokenStore = new DbxStandardSessionStore(session, sessionKey);
+        webAuth = new DbxWebAuth(config, appInfo, URL_SITE, csrfTokenStore);
+        String authorizeUrl = webAuth.start();
+        return authorizeUrl;
+    }
+    @RequestMapping(value = "/auth", method = RequestMethod.GET)
+    public ModelAndView auth(HttpServletRequest request,HttpServletResponse response, Model model) throws DbxException, IOException {
+        // Load the request token we saved in part 1.
+        DbxAuthFinish authFinish = null;
+        try {
+            authFinish = webAuth.finish(request.getParameterMap());
+        }
+        catch (DbxWebAuth.BadRequestException ex) {
+            log("On /dropbox-auth-finish: Bad request: " + ex.getMessage());
+            response.sendError(400);
+        }
+        catch (DbxWebAuth.BadStateException ex) {
+            // Send them back to the start of the auth flow.
+            response.sendRedirect("http://my-server.com/dropbox-auth-start");
+        }
+        catch (DbxWebAuth.CsrfException ex) {
+            log("On /dropbox-auth-finish: CSRF mismatch: " + ex.getMessage());
+        }
+        catch (DbxWebAuth.NotApprovedException ex) {
+            // When Dropbox asked "Do you want to allow this app to access your
+            // Dropbox account?", the user clicked "No".
+        }
+        catch (DbxWebAuth.ProviderException ex) {
+            System.out.println("On /dropbox-auth-finish: Auth failed: " + ex.getMessage());
+            response.sendError(503, "Error communicating with Dropbox.");
+        }
+        catch (DbxException ex) {
+            System.out.println("On /dropbox-auth-finish: Error getting token: " + ex.getMessage());
+            response.sendError(503, "Error communicating with Dropbox.");
+        }
+
+        String accessToken = authFinish.accessToken;
+        client = new DbxClient(config, accessToken);
+        //System.out.println("Linked account: " + client.getAccountInfo().displayName);
+        ArrayList<String> dropboxFolders =  getFiles("/");
+        model.addAttribute("dropboxFiles",dropboxFolders);
+        return new ModelAndView("upload", "model", model);
+    }
+    private ArrayList<String> getFiles(String path) throws DbxException {
+        ArrayList<String> dropboxFolders = new ArrayList();
+        // List folders of the dropbox user
+        DbxEntry.WithChildren listing = client.getMetadataWithChildren(path);
+        System.out.println("Files in the root path:");
+        for (DbxEntry child : listing.children) {
+            dropboxFolders.add("	" + child.name + ": " + child.toString());
+        }
+        return dropboxFolders;
     }
 }
