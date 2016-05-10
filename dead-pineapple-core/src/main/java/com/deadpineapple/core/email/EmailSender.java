@@ -23,16 +23,11 @@ public class EmailSender {
     public void send(){
         // Get system properties & Setup mail server
         Properties props = System.getProperties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "email-smtp.eu-west-1.amazonaws.com");//// TODO: 13/03/2016 faire les changements pour l'envoie
+        props.put("mail.smtp.starttls.enable", "false");
+        props.put("mail.smtp.host", "smtp.bbox.fr");//// TODO: 13/03/2016 faire les changements pour l'envoie
 
         // Get the default Session subject & auth
-        Session session = Session.getDefaultInstance(props,new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("AKIAICQVR7DNANEOASQQ", "AtTn1/ji1PktPCDAzhNI58YxUNLhtG6AQBwIoFom6mc3");
-            }
-        });
+        Session session = Session.getDefaultInstance(props);
 
         try{
             // Create a default MimeMessage

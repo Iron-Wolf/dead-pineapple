@@ -103,6 +103,7 @@ public class ConversionLauncher {
                     if (joinFile.exists()) {
                         // TODO: 18/03/2016 envoyer le mail de confirmation
                         System.out.println("joined");
+                        convertedFileDao = new ConvertedFileDao(HibernateUtil.getSessionFactory());
                         convertedFile.setConverted(true);
                         convertedFile.setFilePath(joinFile.getAbsolutePath());
                         convertedFileDao.updateFile(convertedFile);//todo:voir le bug avec mika demain
