@@ -225,7 +225,6 @@
     <script src="<spring:url value='/resources/js/jquery.fileupload-ui.js'/>"></script>
     <script src="<spring:url value='/resources/js/locale.js'/>"></script>
     <script src="<spring:url value='/resources/js/main.js'/>"></script>
-    <script src="<spring:url value='/resources/js/jquery.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.easing.js'/>"></script>
     <script src="<spring:url value='/resources/js/jqueryFileTree.js"'/>"></script>
     <script type="text/javascript">

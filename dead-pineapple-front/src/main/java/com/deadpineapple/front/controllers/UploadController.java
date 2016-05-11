@@ -24,6 +24,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -433,14 +435,27 @@ public class UploadController extends HttpServlet {
         dropboxFolders.add("</ul>");
         return dropboxFolders;
     }
-    private ArrayList<String> getFilesInFolder(ArrayList<String> dropboxFolders, String path) throws DbxException {
+    private ArrayList<String> getFilesInFolder(ArrayList<String> dropboxFolders, String path) {
         // List folders of the dropbox user
-        DbxEntry.WithChildren listing = client.getMetadataWithChildren(path);
+        DbxEntry.WithChildren listing = null;
+        try {
+            System.out.println(path);
+            listing = client.getMetadataWithChildren(path);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return dropboxFolders;
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
         for (DbxEntry child : listing.children) {
             if(child.isFolder()){
-                dropboxFolders.add("<li class='directory collapsed'><a href='#' rel='"+child.path+"'>"+child.name+"</a></li>");
+                dropboxFolders.add("<li class='directory collapsed'><a href='#' rel='"+StringEscapeUtils.escapeHtml(child.path)+"'>"+child.name+"</a>");
+                dropboxFolders.add("<ul class='jqueryFileTree' style='display: none;'>");
                 // if folder, call the function again to get the files and folder inside the folder
-                //dropboxFolders = getFilesInFolder(dropboxFolders, child.path);
+                if(!child.path.substring(0,1).equals(".") && child.path.split("/").length < 3){
+                    dropboxFolders = getFilesInFolder(dropboxFolders, child.path);
+                }
+                dropboxFolders.add("</li>");
             }
             else if(child.isFile()){
                 int dotIndex = child.name.lastIndexOf('.');
@@ -455,10 +470,12 @@ public class UploadController extends HttpServlet {
     public void downloadDropboxFile(HttpServletRequest request, HttpServletResponse response) throws IOException, DbxException {
         String fileName = request.getParameter("fileName");
         String filePath = UPLOAD_PATH+fileName;
+        String size;
         FileOutputStream outputStream = new FileOutputStream(filePath);
         try {
             DbxEntry.File downloadedFile = client.getFile(fileName, null,
                     outputStream);
+            size = downloadedFile.humanSize;
             System.out.println("Metadata: " + downloadedFile.toString());
         } finally {
             outputStream.close();
@@ -476,7 +493,7 @@ public class UploadController extends HttpServlet {
         convertedFile.setOriginalName(fileName);
         convertedFile.setOldType(FilenameUtils.getExtension(filePath));
         //convertedFile.setNewType();
-        //convertedFile.setSize((int) );
+        convertedFile.setSize(Integer.parseInt(size));
         convertedFileDao.createFile(convertedFile);
 
         // Create a new video Information
@@ -492,6 +509,7 @@ public class UploadController extends HttpServlet {
         else{
             price = Math.log(time) - 1;
 
+
         }
         // add video information into converted file
         video.setConvertedFile(convertedFile);
@@ -500,7 +518,7 @@ public class UploadController extends HttpServlet {
 
         JSONObject jsono = new JSONObject();
         jsono.put("name", fileName);
-        jsono.put("size", 0);
+        jsono.put("size", size);
         jsono.put("duration", duration);
         jsono.put("price", String.format("%.2f", price));
         jsono.put("url", "UploadServlet?getfile=" + fileName);
