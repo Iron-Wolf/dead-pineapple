@@ -23,24 +23,30 @@ public class EmailSender {
     public void send(){
         // Get system properties & Setup mail server
         Properties props = System.getProperties();
-        props.put("mail.smtp.starttls.enable", "false");
-        props.put("mail.smtp.host", "smtp.bbox.fr");//// TODO: 13/03/2016 faire les changements pour l'envoie
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");//// TODO: 13/03/2016 faire les changements pour l'envoie
 
         // Get the default Session subject & auth
-        Session session = Session.getDefaultInstance(props);
+        Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("lucaszien@gmail.com","");
+            }
+        });
 
         try{
             // Create a default MimeMessage
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("lucas@zientek.fr","noreply deadpineapple"));
+            message.setFrom(new InternetAddress("lucaszien@gmail.com","deadpineapple"));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(getDestination()));
-            message.setSubject(getSubject());
+            message.setSubject(getSubject(),"UTF-8");
 
             // set text and html
-            message.setText(getTextContent());
+            message.setText(getTextContent(),"UTF-8");
             Multipart mp = new MimeMultipart();
             MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(getHtmlContent(), "text/html");
+            htmlPart.setContent(getHtmlContent(), "text/html; charset=utf-8");
             mp.addBodyPart(htmlPart);
             message.setContent(mp);
 
@@ -55,7 +61,7 @@ public class EmailSender {
     }
 
     private String getTextFromHtml(String htmlContent) {
-        return htmlContent;
+        return htmlContent.replaceAll("<[^>]*>", "");
     }
 
 
