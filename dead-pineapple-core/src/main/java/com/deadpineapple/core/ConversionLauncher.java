@@ -32,8 +32,9 @@ public class ConversionLauncher {
 
     public void start() {
         if (convertedFileDao == null){
-            convertedFileDao = new ConvertedFileDao(HibernateUtil.getSessionFactory());
-            splitFileDao = new SplitFileDao(HibernateUtil.getSessionFactory());
+            SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+            convertedFileDao = new ConvertedFileDao(sessionFactory);
+            splitFileDao = new SplitFileDao(sessionFactory);
         }
         rabbitInit.getFileUploadedReceiver().receiver(new IReceiver<FileIsUploaded>() {
             @Override
@@ -103,7 +104,6 @@ public class ConversionLauncher {
                     if (joinFile.exists()) {
                         // TODO: 18/03/2016 envoyer le mail de confirmation
                         System.out.println("joined");
-                        convertedFileDao = new ConvertedFileDao(HibernateUtil.getSessionFactory());
                         convertedFile.setConverted(true);
                         convertedFile.setFilePath(joinFile.getAbsolutePath());
                         convertedFileDao.updateFile(convertedFile);//todo:voir le bug avec mika demain
