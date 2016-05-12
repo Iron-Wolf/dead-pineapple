@@ -5,34 +5,7 @@
     Created on : Nov 3, 2012, 12:31:16 PM
     Author     : Amila
 --%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <!-- Force latest IE rendering engine or ChromeFrame if installed -->
-        <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
-        <meta charset="utf-8">
-        <meta name="description" content="File Upload widget with multiple file selection, drag&amp;drop support, progress bar and preview images for jQuery. Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform (Google App Engine, PHP, Python, Ruby on Rails, Java, etc.) that supports standard HTML form file uploads.">
-        <meta name="viewport" content="width=device-width">
-        <!-- Generic page styles -->
-        <link rel="stylesheet" href="<spring:url value='/resources/css/style.css'/>">
-        <!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
-        <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-responsive.min.css'/>">
-        <!-- Bootstrap CSS fixes for IE6 -->
-        <!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
-        <!-- Bootstrap Image Gallery styles -->
-        <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-image-gallery.min.css'/>" type="text/css">
-        <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-        <link rel="stylesheet" href="<spring:url value='/resources/css/jquery.fileupload-ui.css'/>" type="text/css">
-        <link rel="stylesheet" type="text/css" media="screen" href="<spring:url value='/resources/css/jquery.fileupload.css'/>">
-
-        <link rel="stylesheet" href="<spring:url value='/resources/css/jqueryFileTree.css'/>"/>
-        <!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
-        <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-        <title>deadpineapple - Upload fichier</title>
-    </head>
-    <body>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
         <div class="container">
             <!-- The file upload form used as target for the file upload widget -->
             <form id="fileupload" action="<spring:url value='/upload/add'/>" method="POST" enctype="multipart/form-data">
@@ -269,5 +242,3 @@
 
 
         </script>
-</body>
-</html>

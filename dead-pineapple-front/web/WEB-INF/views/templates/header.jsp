@@ -9,27 +9,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <link rel="stylesheet" href="/resources/css/leftbar.css">
 
-    <!--Register Jquery-->
-    <script src="http://code.jquery.com/jquery-2.2.2.js"></script>
-    <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>
-    <!--Register Google Api-->
-    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
-
-    <script src="<spring:url value='/resources/js/loginAPI/facebookLogin.js'/>"></script>
-    <script src="<spring:url value='/resources/js/loginAPI/googleLogin.js'/>"></script>
-    <script src="<spring:url value='/resources/js/leftbar.js'/>"></script>
-</head>
-
-Header here... Templates / header.jsp <br/>
 <div id="leftbar">
     <ul class="menu-vertical">
-
-
-
 
 <c:choose>
 <c:when test="${sessionScope.LOGGEDIN_USER == null}">
@@ -71,6 +53,4 @@ Header here... Templates / header.jsp <br/>
         <li id="call" class="mv-item"><a href="#">Nous contacter</a></li>
     </ul>
 </div>
-</body>
-</html>
 

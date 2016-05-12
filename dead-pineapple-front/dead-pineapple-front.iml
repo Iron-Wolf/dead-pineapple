@@ -74,5 +74,6 @@
     <orderEntry type="module" module-name="dead-pineapple-videoHelper" />
     <orderEntry type="library" name="Maven: com.dropbox.core:dropbox-core-sdk:1.7.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.0-rc1" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.1" level="project" />
   </component>
 </module>

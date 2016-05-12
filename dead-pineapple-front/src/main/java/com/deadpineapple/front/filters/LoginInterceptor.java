@@ -16,6 +16,7 @@ public class LoginInterceptor implements HandlerInterceptor  {
         // Avoid a redirect loop for some urls
         if( !request.getRequestURI().equals("/index") &&
                 !request.getRequestURI().equals("/user/login") &&
+                !request.getRequestURI().startsWith("/resources") &&
                 !request.getRequestURI().equals("/user/add") &&
                 !request.getRequestURI().equals("/user/login.failed"))
         {
