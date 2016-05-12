@@ -35,6 +35,9 @@
     <!-- Bootstrap Image Gallery styles -->
     <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-image-gallery.min.css'/>" type="text/css">
     <link rel="stylesheet" href="<spring:url value='/resources/css/leftbar.css'/>">
+    <link rel="stylesheet" href="<spring:url value='/resources/css/deadpinnaple.css?v=1.0'/>">
+    <link rel="stylesheet" href="<spring:url value='/resources/css/dashboard.css?v=1.0'/>">
+
 
     <!--Register Jquery Mika
     <script src="http://code.jquery.com/jquery-2.2.2.js"></script>
@@ -49,6 +52,9 @@
     <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
     <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <script src="<spring:url value='/resources/js/leftbar.js'/>"></script>
+    <script src="<spring:url value='/resources/js/globalfront.js'/>"></script>
+    <script src="<spring:url value='/resources/js/dashboard.js'/>"></script>
+    <script src="<spring:url value='/resources/js/loading.js'/>"></script>
     <title>deadpineapple - Index</title>
 </head>
 <body>
