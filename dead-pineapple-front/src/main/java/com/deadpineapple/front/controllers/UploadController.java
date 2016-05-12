@@ -24,6 +24,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -167,7 +169,6 @@ public class UploadController extends HttpServlet {
                         price = Math.log(time) - 1;
 
                     }
-
                     // add video information into converted file
                     video.setConvertedFile(convertedFile);
                     video.setVideoInformation(videoInformation);
@@ -428,12 +429,104 @@ public class UploadController extends HttpServlet {
     }
     private ArrayList<String> getFiles(String path) throws DbxException {
         ArrayList<String> dropboxFolders = new ArrayList();
-        // List folders of the dropbox user
-        DbxEntry.WithChildren listing = client.getMetadataWithChildren(path);
         System.out.println("Files in the root path:");
+        dropboxFolders.add("<ul class='jqueryFileTree'>");
+        dropboxFolders = getFilesInFolder(dropboxFolders, path);
+        dropboxFolders.add("</ul>");
+        return dropboxFolders;
+    }
+    private ArrayList<String> getFilesInFolder(ArrayList<String> dropboxFolders, String path) {
+        // List folders of the dropbox user
+        DbxEntry.WithChildren listing = null;
+        try {
+            System.out.println(path);
+            listing = client.getMetadataWithChildren(path);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return dropboxFolders;
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
         for (DbxEntry child : listing.children) {
-            dropboxFolders.add("	" + child.name + ": " + child.toString());
+            if(child.isFolder()){
+                dropboxFolders.add("<li class='directory collapsed'><a href='#' rel='"+StringEscapeUtils.escapeHtml(child.path)+"'>"+child.name+"</a>");
+                dropboxFolders.add("<ul class='jqueryFileTree' style='display: none;'>");
+                // if folder, call the function again to get the files and folder inside the folder
+                if(!child.path.substring(0,1).equals(".") && child.path.split("/").length < 3){
+                    dropboxFolders = getFilesInFolder(dropboxFolders, child.path);
+                }
+                dropboxFolders.add("</li>");
+            }
+            else if(child.isFile()){
+                int dotIndex = child.name.lastIndexOf('.');
+                String ext = dotIndex > 0 ? child.name.substring(dotIndex + 1) : "";
+                dropboxFolders.add("<li class='file ext_" + ext + "'><a href='#' rel='" +child.path+ "'>"
+                        + child.name + "</a></li>");
+            }
         }
         return dropboxFolders;
+    }
+    @RequestMapping(value = "/uploadDb", method = RequestMethod.GET)
+    public void downloadDropboxFile(HttpServletRequest request, HttpServletResponse response) throws IOException, DbxException {
+        String fileName = request.getParameter("fileName");
+        String filePath = UPLOAD_PATH+fileName;
+        String size;
+        FileOutputStream outputStream = new FileOutputStream(filePath);
+        try {
+            DbxEntry.File downloadedFile = client.getFile(fileName, null,
+                    outputStream);
+            size = downloadedFile.humanSize;
+            System.out.println("Metadata: " + downloadedFile.toString());
+        } finally {
+            outputStream.close();
+        }
+        PrintWriter writer = response.getWriter();
+        response.setContentType("application/json");
+        //Save video in bdd
+
+        Date creationDate = new Date();
+        VideoFile video = new VideoFile();
+        convertedFile = new ConvertedFile();
+        convertedFile.setUserAccount(user);
+        convertedFile.setFilePath(filePath);
+        convertedFile.setCreationDate(creationDate);
+        convertedFile.setOriginalName(fileName);
+        convertedFile.setOldType(FilenameUtils.getExtension(filePath));
+        //convertedFile.setNewType();
+        convertedFile.setSize(Integer.parseInt(size));
+        convertedFileDao.createFile(convertedFile);
+
+        // Create a new video Information
+        videoInformation = new VideoInformation(filePath);
+        TimeSpan duration = videoInformation.getDuration();
+        double price = 0;
+
+        double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
+        System.out.println("temps ="+time +duration.getHeures() * 60);
+        if(time < 5){
+            price = Math.log(5) - 1;
+        }
+        else{
+            price = Math.log(time) - 1;
+
+
+        }
+        // add video information into converted file
+        video.setConvertedFile(convertedFile);
+        video.setVideoInformation(videoInformation);
+        convertedFiles.add(video);
+
+        JSONObject jsono = new JSONObject();
+        jsono.put("name", fileName);
+        jsono.put("size", size);
+        jsono.put("duration", duration);
+        jsono.put("price", String.format("%.2f", price));
+        jsono.put("url", "UploadServlet?getfile=" + fileName);
+        jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + fileName);
+        jsono.put("delete_url", "/upload/deleteFile?delfile=" + fileName);
+        jsono.put("delete_type", "GET");
+
+        writer.write(jsono.toString());
+        writer.close();
     }
 }

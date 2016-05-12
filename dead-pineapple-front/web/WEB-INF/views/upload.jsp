@@ -25,7 +25,9 @@
         <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-image-gallery.min.css'/>" type="text/css">
         <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
         <link rel="stylesheet" href="<spring:url value='/resources/css/jquery.fileupload-ui.css'/>" type="text/css">
-        <link rel="stylesheet" href="<spring:url value='/resources/css/jquery.fileupload.css'/>" type="text/css">
+        <link rel="stylesheet" type="text/css" media="screen" href="<spring:url value='/resources/css/jquery.fileupload.css'/>">
+
+        <link rel="stylesheet" href="<spring:url value='/resources/css/jqueryFileTree.css'/>"/>
         <!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
         <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
         <title>deadpineapple - Upload fichier</title>
@@ -79,16 +81,16 @@
                 <i class="icon-upload icon-white"></i>
                 <span>Convertir la sélection</span>
             </button>
+            <a href="${dropboxUrl}" target="_blank">Uploader depuis votre dropbox</a>
             <div id="dropbox">
-                <a href="${dropboxUrl}" target="_blank">Uploader depuis votre dropbox</a>
-                <c:if test="${not empty dropboxFiles}">
-                    Mes fichiers dropbox
-                    <ul>
-                        <c:forEach var="listValue" items="${dropboxFiles}">
-                            <li>${listValue}</li>
-                        </c:forEach>
-                    </ul>
 
+                Mes fichiers dropbox
+            </div>
+            <div id="dropbox_data">
+                <c:if test="${not empty dropboxFiles}">
+                    <c:forEach var="listValue" items="${dropboxFiles}">
+                        ${listValue}
+                    </c:forEach>
                 </c:if>
             </div>
             <div class="well">
@@ -100,6 +102,7 @@
                     <li>You can <strong>drag &amp; drop</strong> files from your desktop on this webpage with Google Chrome, Mozilla Firefox and Apple Safari.</li>
                 </ul>
             </div>
+
         </div>
         <!-- modal-gallery is the modal dialog used for the image gallery -->
         <div id="modal-gallery" class="modal modal-gallery hide fade" data-filter=":odd">
@@ -222,6 +225,8 @@
     <script src="<spring:url value='/resources/js/jquery.fileupload-ui.js'/>"></script>
     <script src="<spring:url value='/resources/js/locale.js'/>"></script>
     <script src="<spring:url value='/resources/js/main.js'/>"></script>
+    <script src="<spring:url value='/resources/js/jquery.easing.js'/>"></script>
+    <script src="<spring:url value='/resources/js/jqueryFileTree.js"'/>"></script>
     <script type="text/javascript">
 
         function setFormat(){
@@ -240,6 +245,28 @@
             });
 
         };
+        $(document).ready( function() {
+            function openFile(file) {
+                if (confirm("Souhaitez-vous uploader le fichier :"+ file+" ?")) {
+                    // Save it!
+                    $.ajax({
+                        type:"GET",
+                        url: "/upload/setFormat",
+                        data: { fileName: file}
+                    }).done(function(msg){
+                        // Format set (display price)
+                    });
+                } else {
+                    // Do nothin…
+                }
+
+            }
+
+            $('#dropbox_data').fileTree({root: 'dropbox/'}, function (file) {
+                openFile(file);
+            });
+        });
+
 
         </script>
 </body>
