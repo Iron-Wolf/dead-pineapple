@@ -87,7 +87,12 @@ public class VideoInformation {
         Runtime rt = Runtime.getRuntime();
         Process proc = null;
         try {
-            proc = rt.exec("ffmpeg -y -nostats -loglevel 0 -ss 0.5 -i \"" + filePath + "\" -vframes 1 -f image2 \"" + imagePath + "\"");
+            double startTumbTime = 3.0;
+            if (duration.getMinutes() > 3){
+                startTumbTime = 55.0;
+            }
+
+            proc = rt.exec("ffmpeg -y -nostats -loglevel 0 -ss "+startTumbTime+" -i \"" + filePath + "\" -vframes 1 -f image2 \"" + imagePath + "\"");
             return proc.waitFor() == 0;
         } catch (IOException e) {
             e.printStackTrace();

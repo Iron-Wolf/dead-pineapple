@@ -9,7 +9,8 @@ public class Constante {
             ".aac", ".wav", ".wma",
             ".wmv", ".ogg", ".flv",
             ".swf", ".dv", ".gif",
-            ".mov", ".mkv"};
+            ".mov", ".mkv"
+    };
 
     public final static String[] AcceptedUploadedTypes = {
             ".avi", "mp4", ".wma",
