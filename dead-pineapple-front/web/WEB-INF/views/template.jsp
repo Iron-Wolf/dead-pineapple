@@ -44,12 +44,13 @@
     <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>-->
 
     <script src="<spring:url value='/resources/js/jquery-2.1.1.min.js'/>"></script>
+    <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
+
     <!--Register Google Api-->
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 
     <script src="<spring:url value='/resources/js/loginAPI/facebookLogin.js'/>"></script>
     <script src="<spring:url value='/resources/js/loginAPI/googleLogin.js'/>"></script>
-    <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
     <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <script src="<spring:url value='/resources/js/leftbar.js'/>"></script>
     <script src="<spring:url value='/resources/js/globalfront.js'/>"></script>

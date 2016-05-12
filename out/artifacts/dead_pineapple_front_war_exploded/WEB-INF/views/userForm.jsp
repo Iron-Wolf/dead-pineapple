@@ -10,11 +10,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
+
         <form:form method="POST" action="/user/add" id="subscribeForm" data-toggle="validator" modelAttribute="userAccount">
             <div class="form-group">
                 <h2>Créer un compte</h2>
@@ -64,5 +60,4 @@
             <hr> Déja un compte? Connectez vous <a href="#">Sign in</a></p>
 
         </form:form>
-</body>
-</html>
+

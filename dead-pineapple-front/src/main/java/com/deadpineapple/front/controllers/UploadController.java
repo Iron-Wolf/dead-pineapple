@@ -449,13 +449,12 @@ public class UploadController extends HttpServlet {
         }
         for (DbxEntry child : listing.children) {
             if(child.isFolder()){
-                dropboxFolders.add("<li class='directory collapsed'><a href='#' rel='"+StringEscapeUtils.escapeHtml(child.path)+"'>"+child.name+"</a>");
-                dropboxFolders.add("<ul class='jqueryFileTree' style='display: none;'>");
+                dropboxFolders.add("<li class='directory collapsed'><a href='#' rel='"+StringEscapeUtils.escapeHtml(child.path)+"'>"+child.name+"</a></li>");
+
                 // if folder, call the function again to get the files and folder inside the folder
                 if(!child.path.substring(0,1).equals(".") && child.path.split("/").length < 3){
                     dropboxFolders = getFilesInFolder(dropboxFolders, child.path);
                 }
-                dropboxFolders.add("</li>");
             }
             else if(child.isFile()){
                 int dotIndex = child.name.lastIndexOf('.');

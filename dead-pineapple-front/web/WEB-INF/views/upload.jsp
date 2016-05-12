@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
     Document   : upload
-    Created on : Nov 3, 2012, 12:31:16 PM
-    Author     : Amila
+    Created on : 03/03/16
+    Author     : Sofiane
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
         <div class="container">
@@ -186,6 +186,7 @@
         </tr>
         {% } %}
     </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="<spring:url value='/resources/js/vendor/jquery.ui.widget.js'/>"></script>
     <script src="<spring:url value='/resources/js/tmpl.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/load-image.min.js'/>"></script>
