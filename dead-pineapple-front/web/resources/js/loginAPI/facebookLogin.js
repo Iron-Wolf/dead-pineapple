@@ -52,7 +52,7 @@ $(document).ready(
                 url: "/user/login",
                 data: {
                     userOAuthID: resultJson.id,
-                    userOAuthName: resultJson.name
+                    userOAuthFirstName: resultJson.name
                 }
             }).done(function (msg) {
                 window.location.href = "/upload";

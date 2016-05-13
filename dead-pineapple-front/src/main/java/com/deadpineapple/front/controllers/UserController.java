@@ -51,6 +51,7 @@ public class UserController{
         loginForm.setPassword(user.getPassword());
         loginForm.setUsername(user.getEmail());
         request.getSession().setAttribute("LOGGEDIN_USER", loginForm);
+        request.getSession().setAttribute("USER_INFORMATIONS", user);
         return "redirect:/upload";
     }
 
@@ -59,7 +60,24 @@ public class UserController{
     {
         //facebook & google login behavior
         String id = request.getParameter("userOAuthID");
-        String fullName = request.getParameter("userOAuthName");
+        String firstName = request.getParameter("userOAuthFirstName");
+        String lastName = request.getParameter("userOAuthLastName");
+
+        if (lastName == null)
+        {
+            // handle facebook name :
+            // API return first ans last name in the same string
+            // we need to split it
+            String[] split = firstName.split("\\s+");
+            firstName = split[0];
+            lastName = "";
+
+            for (int j=1; j<split.length; j++)
+                lastName += split[j] + " ";
+
+            // trim last space
+            lastName.trim();
+        }
 
         if (id != null) {
             UserAccount userOAuth = userBdd.find(id);
@@ -69,6 +87,8 @@ public class UserController{
                 userOAuth = new UserAccount();
                 userOAuth.setEmail(id);
                 userOAuth.setPassword(LoginForm.getEncryptedPassword(String.valueOf(id)));
+                userOAuth.setFirstName(firstName);
+                userOAuth.setLastName(lastName);
                 Date creationDate = new Date();
                 userOAuth.setCreationDate(creationDate);
                 userBdd.saveUser(userOAuth);
