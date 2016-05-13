@@ -20,8 +20,8 @@
 
 
             <li id="creer" class="mv-item"><a href="#">Créer un compte, se connecter</a></li>
-            <li id="login" class="connect"><form:input type="text"  class="login-inp" path="username" value="login"/></li>
-            <li id="mdp" class="connect"><form:input type="password" onfocus="this.value=''" class="login-inp" path="password"/></li>
+            <li id="login" class="connect"><form:input type="text"  class="login-inp" path="username" placeholder="login"/></li>
+            <li id="mdp" class="connect"><form:input type="password" onfocus="this.value=''" class="login-inp" path="password" placeholder="mot de passe"/></li>
 
             <input type="checkbox" class="checkbox-size connect" id="login-check" /><label for="login-check">Remember me</label>
             <div class="connect" type="button" ><input type="submit" class="submit-login" value="connection" /></div>
