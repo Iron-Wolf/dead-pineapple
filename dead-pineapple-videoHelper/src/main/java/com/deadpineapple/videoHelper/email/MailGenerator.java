@@ -1,4 +1,4 @@
-package com.deadpineapple.core.email;
+package com.deadpineapple.videoHelper.email;
 
 import java.io.IOException;
 import java.nio.file.Files;

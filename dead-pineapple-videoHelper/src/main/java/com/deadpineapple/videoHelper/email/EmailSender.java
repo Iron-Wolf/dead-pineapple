@@ -1,4 +1,4 @@
-package com.deadpineapple.core.email;
+package com.deadpineapple.videoHelper.email;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.io.UnsupportedEncodingException;
