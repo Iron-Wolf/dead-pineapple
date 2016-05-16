@@ -1,9 +1,7 @@
 package com.deadpineapple.front.controllers;
 
 import com.deadpineapple.dal.dao.IConvertedFileDao;
-import com.deadpineapple.dal.dao.ITransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
-import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
 import com.deadpineapple.front.tools.VideoFile;
@@ -54,12 +52,7 @@ public class UploadController extends HttpServlet {
     IConvertedFileDao convertedFileDao;
     ConvertedFile convertedFile;
     ArrayList<VideoFile> convertedFiles = new ArrayList();
-    @Autowired
-    ITransactionDao transactionDao;
-    List<Transaction> transactions = new ArrayList();
-    JSONArray jsonTransactions, jsonConvertedFiles;
-    JSONObject jsonTransaction;
-    int idTransaction;
+
 
     String UPLOAD_PATH;
     LoginForm userData;
@@ -78,10 +71,6 @@ public class UploadController extends HttpServlet {
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
     }
-    public void setTransactionDao(ITransactionDao transactionDao) {
-        this.transactionDao = transactionDao;
-    }
-
     @RequestMapping(method = RequestMethod.GET)
     public String uploadPage(HttpServletRequest request, Model model) throws JsonReader.FileLoadException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
@@ -311,37 +300,6 @@ public class UploadController extends HttpServlet {
         return resizedImage;
     }
 
-    private void getHistory(){
-        // Get transactions from bdd
-        transactions = transactionDao.getTransByUser(user);
-        // Get the first transaction and init parameters
-        Transaction transactionTest = transactions.get(0);
-        initTransaction(transactionTest);
-
-        for(Transaction aTransaction: transactions){
-            // if the transaction is different, create new transaction
-            if(aTransaction.getIdTransaction() != idTransaction){
-                jsonTransactions.put(jsonTransaction);
-                initTransaction(aTransaction);
-            }
-            ConvertedFile cVideo = aTransaction.getConvertedFiles();
-            if(cVideo != null){
-                JSONObject jsonConvertedFile = new JSONObject();
-                jsonConvertedFile.put("name", cVideo.getOriginalName());
-                jsonConvertedFile.put("size", cVideo.getSize());
-                //jsono.put("duration", uVideo.get);
-                //jsono.put("price", String.format("%.2f", price));
-                // If video is not converted yet, what link ?
-                jsonConvertedFile.put("url", "upload/downloadFile?fileName=" + cVideo.getOriginalName());
-                jsonConvertedFile.put("thumbnail_url", "/upload/getThumb?getthumb=" + cVideo.getOriginalName());
-                jsonConvertedFile.put("delete_url", "/upload/deleteFile?delfile=" + cVideo.getOriginalName());
-                jsonConvertedFile.put("delete_type", "GET");
-                jsonConvertedFiles.put(jsonConvertedFile);
-            }
-
-        }
-
-    }
     @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String fileName = request.getParameter("fileName");
@@ -371,13 +329,7 @@ public class UploadController extends HttpServlet {
         fis.close();
         System.out.println("File downloaded at client successfully");
     }
-    private void initTransaction(Transaction transaction){
-        jsonTransaction = new JSONObject();
-        jsonTransaction.put("date",transaction.getDate());
-        jsonTransaction.put("price",transaction.getPrix());
-        jsonConvertedFiles = new JSONArray();
-        idTransaction = transaction.getIdTransaction();
-    }
+
     private String getDropBoxUrl(HttpServletRequest request) throws JsonReader.FileLoadException {
         DbxAppInfo appInfo = new DbxAppInfo(APP_KEY, APP_SECRET);
         config = new DbxRequestConfig(

@@ -41,13 +41,12 @@
         <div >
             <a href="<spring:url value='/user/logOff'/>" class="btn btn-warning">Se déconnecter</a>
         </div>
-        <li class="mv-item"><a href="<spring:url value='/upload'/>"> Uploader une video </a></li>
+        <li class="mv-item"><a href="<spring:url value='/dashboard'/>"> Mon espace </a></li>
 
     </c:otherwise>
 </c:choose>
 
-
-        <li id="convertir" class="mv-item"><a href="#">Convertir une video</a></li>
+        <li class="mv-item"><a href="<spring:url value='/upload'/>"> Convertir une video </a></li>
         <li id="kesako" class="mv-item"><a href="#">Que faisons nous</a></li>
         <li id="qui" class="mv-item"><a href="#">Qui sommes nous</a></li>
         <li id="call" class="mv-item"><a href="#">Nous contacter</a></li>
