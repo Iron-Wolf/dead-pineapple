@@ -7,6 +7,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
         <div class="container">
+            <br/>
+            <h1>
+                Conversion
+            </h1>
+            <hr/>
             <!-- The file upload form used as target for the file upload widget -->
             <form id="fileupload" action="<spring:url value='/upload/add'/>" method="POST" enctype="multipart/form-data">
                 <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
@@ -15,20 +20,24 @@
                         <!-- The fileinput-button span is used to style the file input field as button -->
                         <span class="btn btn-success fileinput-button">
                             <i class="glyphicon glyphicon-plus"></i>
-                            <span>Add files...</span>
+                            <span>Ajouter un fichier</span>
                             <input type="file" name="files[]" multiple>
                         </span>
                         <button type="submit" class="btn btn-primary start">
                             <i class="glyphicon glyphicon-upload"></i>
-                            <span>Start upload</span>
+                            <span>Uploader</span>
+                        </button>
+                        <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Depuis dropbox</span>
                         </button>
                         <button type="reset" class="btn btn-warning cancel">
                             <i class="glyphicon glyphicon-ban-circle"></i>
-                            <span>Cancel upload</span>
+                            <span>Annuler</span>
                         </button>
                         <button type="button" class="btn btn-danger delete">
                             <i class="glyphicon glyphicon-trash"></i>
-                            <span>Delete</span>
+                            <span>Supprimer</span>
                         </button>
                     </div>
                     <!-- The global progress information -->
@@ -52,12 +61,14 @@
             <br>
             <button class="btn btn-primary start" data-url="/upload/convert">
                 <i class="icon-upload icon-white"></i>
-                <span>Convertir la sélection</span>
+                <span>Convertir & payer</span>
             </button>
-            <a href="${dropboxUrl}" target="_blank">Uploader depuis votre dropbox</a>
+            <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
+                <i class="glyphicon glyphicon-upload"></i>
+                <span>Depuis dropbox</span>
+            </button>
             <div id="dropbox">
 
-                Mes fichiers dropbox
             </div>
             <div id="dropbox_data">
                 <c:if test="${not empty dropboxFiles}">

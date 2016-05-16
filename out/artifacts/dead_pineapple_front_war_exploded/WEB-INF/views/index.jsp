@@ -13,8 +13,8 @@
     <div id="ajoutez" class="col-lg-12 col-md-12 ">
         <div id="poussoir" class="col-lg-12">
         </div>
-        <div id="upload" class="col-md-12">
-            <input id="uploadaccess" class="col-lg-4 col-lg-offset-4"type="text" value="Importez ou glissez votre video a convertir">
+        <div id="upload" class="col-md-11">
+            <input id="uploadaccess" class="col-lg-4 col-lg-offset-4"type="text" placeholder="Importez ou glissez votre video a convertir">
             <a href="dashboard.html" class="btn btn-info" role="button">Convertir en Coktail</a>
         </div>
     </div>

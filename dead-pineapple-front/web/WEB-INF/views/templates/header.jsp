@@ -20,8 +20,8 @@
 
 
             <li id="creer" class="mv-item"><a href="#">Créer un compte, se connecter</a></li>
-            <li id="login" class="connect"><form:input type="text"  class="login-inp" path="username" value="login"/></li>
-            <li id="mdp" class="connect"><form:input type="password" onfocus="this.value=''" class="login-inp" path="password"/></li>
+            <li id="login" class="connect"><form:input type="text"  class="login-inp" path="username" placeholder="login"/></li>
+            <li id="mdp" class="connect"><form:input type="password" onfocus="this.value=''" class="login-inp" path="password" placeholder="mot de passe"/></li>
 
             <input type="checkbox" class="checkbox-size connect" id="login-check" /><label for="login-check">Remember me</label>
             <div class="connect" type="button" ><input type="submit" class="submit-login" value="connection" /></div>
@@ -36,18 +36,17 @@
 </c:when>
     <c:otherwise>
         <div >
-            Bienvenue <c:out value="${LOGGEDIN_USER.username}"/> !
+            Bienvenue <c:out value="${USER_INFORMATIONS.firstName}"/> !
         </div>
         <div >
             <a href="<spring:url value='/user/logOff'/>" class="btn btn-warning">Se déconnecter</a>
         </div>
-        <li class="mv-item"><a href="<spring:url value='/upload'/>"> Uploader une video </a></li>
+        <li class="mv-item"><a href="<spring:url value='/dashboard'/>"> Mon espace </a></li>
 
     </c:otherwise>
 </c:choose>
 
-
-        <li id="convertir" class="mv-item"><a href="#">Convertir une video</a></li>
+        <li class="mv-item"><a href="<spring:url value='/upload'/>"> Convertir une video </a></li>
         <li id="kesako" class="mv-item"><a href="#">Que faisons nous</a></li>
         <li id="qui" class="mv-item"><a href="#">Qui sommes nous</a></li>
         <li id="call" class="mv-item"><a href="#">Nous contacter</a></li>

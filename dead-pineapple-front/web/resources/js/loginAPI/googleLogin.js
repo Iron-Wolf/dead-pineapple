@@ -44,7 +44,8 @@ function makeApiCall() {
                 url: "/user/login",
                 data: {
                     userOAuthID: resp.id,
-                    userOAuthName: resp.name
+                    userOAuthFirstName: resp.name.givenName,
+                    userOAuthLastName: resp.name.familyName
                 }
             }).done(function(msg){
                 window.location.href="/upload";
