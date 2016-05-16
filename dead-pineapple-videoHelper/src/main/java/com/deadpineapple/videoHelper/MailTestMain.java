@@ -1,4 +1,4 @@
-package com.deadpineapple.core;
+package com.deadpineapple.videoHelper;
 
 import com.deadpineapple.videoHelper.email.EmailSender;
 import com.deadpineapple.videoHelper.email.MailGenerator;

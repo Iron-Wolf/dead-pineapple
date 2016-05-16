@@ -32,5 +32,8 @@
     <orderEntry type="module" module-name="dead-pineapple-rabbitmq" />
     <orderEntry type="library" name="Maven: com.rabbitmq:amqp-client:3.6.1" level="project" />
     <orderEntry type="module" module-name="dead-pineapple-videoHelper" />
+    <orderEntry type="library" name="Maven: javax:javaee-api:7.0" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.5.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
   </component>
 </module>
