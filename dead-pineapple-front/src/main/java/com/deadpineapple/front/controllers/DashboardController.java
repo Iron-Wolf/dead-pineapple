@@ -35,8 +35,6 @@ public class DashboardController {
     @Autowired
     ITransactionDao transactionDao;
     List<Transaction> transactions = new ArrayList();
-    JSONArray jsonTransactions, jsonConvertedFiles;
-    JSONObject jsonTransaction;
     ArrayList<Invoice> invoices;
     Invoice invoice;
     int idTransaction;
