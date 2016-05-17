@@ -110,7 +110,7 @@ public class UserController{
     }
 
     @RequestMapping(value="/login", method = RequestMethod.POST)
-    public String login(LoginForm loginForm, HttpServletRequest request) throws Exception {
+    public String login(LoginForm loginForm, HttpServletRequest request, Model model) throws Exception {
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
 
@@ -121,9 +121,11 @@ public class UserController{
                 request.getSession().setAttribute("USER_INFORMATIONS", user);
                 return "redirect:/upload";
             }else{
+                model.addAttribute("loginAttribute", loginForm);
                 return "redirect:/index.failed";
             }
         }else{
+            model.addAttribute("loginAttribute", loginForm);
             return "redirect:/index.failed";
         }
     }

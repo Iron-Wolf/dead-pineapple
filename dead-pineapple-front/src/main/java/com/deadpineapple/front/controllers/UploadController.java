@@ -36,10 +36,8 @@ import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by saziri on 14/03/2016.
@@ -67,6 +65,8 @@ public class UploadController extends HttpServlet {
     DbxClient client;
     DbxRequestConfig config;
     HttpSession session;
+
+    List<String> ext = new ArrayList<String>(Arrays.asList(".avi", ".mp4", ".ogg", ".flv", ".swf", ".dv", ".mov"));
 
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
@@ -408,7 +408,7 @@ public class UploadController extends HttpServlet {
                     dropboxFolders = getFilesInFolder(dropboxFolders, child.path);
                 }
             }
-            else if(child.isFile()){
+            else if(child.isFile() && (Arrays.asList(ext).contains(FilenameUtils.getExtension(child.name))) ){
                 int dotIndex = child.name.lastIndexOf('.');
                 String ext = dotIndex > 0 ? child.name.substring(dotIndex + 1) : "";
                 dropboxFolders.add("<li class='file ext_" + ext + "'><a href='#' rel='" +child.path+ "'>"
