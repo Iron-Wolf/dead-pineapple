@@ -15,8 +15,8 @@
             <!-- The file upload form used as target for the file upload widget -->
             <form id="fileupload" action="<spring:url value='/upload/add'/>" method="POST" enctype="multipart/form-data">
                 <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-                <div class="row fileupload-buttonbar">
-                    <div class="col-lg-7">
+                <div class="fileupload-buttonbar">
+                    <div class="col-lg-7" style="padding-left: 0px;">
                         <!-- The fileinput-button span is used to style the file input field as button -->
                         <span class="btn btn-success fileinput-button">
                             <i class="glyphicon glyphicon-plus"></i>
@@ -56,7 +56,7 @@
                 <div class="fileupload-loading"></div>
                 <br>
                 <!-- The table listing the files available for upload/download -->
-                <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+                <table role="presentation" id="uploadedFiles" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
             </form>
             <br>
             <button class="btn btn-primary start" data-url="/upload/convert">
@@ -81,128 +81,117 @@
                 <h3>Information sur l'upload</h3>
                 <ul>
                     <li>The maximum file size for uploads is <strong>1 GB</strong></li>
-                    <li>Only video files (<strong>".avi", "mp4", "mp3", ".aac", ".wav", ".wma", ".wmv", ".ogg", ".flv",".swf",".dv",".mov"</strong>) are allowed.</li>
+                    <li>Only video files (<strong>".avi", "mp4", ".ogg", ".flv",".swf",".dv",".mov"</strong>) are allowed.</li>
                     <li>Uploaded files will be deleted automatically after <strong>5 minutes</strong>.</li>
                     <li>You can <strong>drag &amp; drop</strong> files from your desktop on this webpage with Google Chrome, Mozilla Firefox and Apple Safari.</li>
                 </ul>
             </div>
 
         </div>
-        <!-- modal-gallery is the modal dialog used for the image gallery -->
-        <div id="modal-gallery" class="modal modal-gallery hide fade" data-filter=":odd">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">&times;</a>
-                <h3 class="modal-title"></h3>
-            </div>
-            <div class="modal-body"><div class="modal-image"></div></div>
-            <div class="modal-footer">
-                <a class="btn modal-download" target="_blank">
-                    <i class="icon-download"></i>
-                    <span>Download</span>
-                </a>
-                <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000">
-                    <i class="icon-play icon-white"></i>
-                    <span>Slideshow</span>
-                </a>
-                <a class="btn btn-info modal-prev">
-                    <i class="icon-arrow-left icon-white"></i>
-                    <span>Previous</span>
-                </a>
-                <a class="btn btn-primary modal-next">
-                    <span>Next</span>
-                    <i class="icon-arrow-right icon-white"></i>
-                </a>
-            </div>
-        </div>
+
         <!-- The template to display files available before upload -->
         <script id="template-upload" type="text/x-tmpl">
             {% for (var i=0, file; file=o.files[i]; i++) { %}
-        <tr class="template-upload fade">
-            <td class="preview"><span class="fade"></span></td>
-            <td class="name"><span>{%=file.name%}</span></td>
-            <td class="duration"><span>{%=file.duration%}</span></td>
-            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        <div class="row template-upload fade">
+            <div class="col-sm-4 name"><span>{%=file.name%}</span></div>
+            <div class="col-sm-1 size"><span>{%=o.formatFileSize(file.size)%}</span></div>
             {% if (file.error) { %}
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
             {% } else if (o.files.valid && !i) { %}
-            <td class="progress_style">
+            <div class="col-sm-3 progress_style">
                 <div class="progress">
                             <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
                                  aria-valuemin="0" aria-valuemax="100">
                             </div>
                 </div>
-            </td>
-            <td class="start">{% if (!o.options.autoUpload) { %}
+            </div>
+
+            <div class="col-sm-2 start">{% if (!o.options.autoUpload) { %}
                 <button class="btn btn-primary">
                     <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start</span>
+                    <span>Démarrer</span>
                 </button>
-                {% } %}</td>
+                {% } %}</div>
             {% } else { %}
-            <td colspan="2"></td>
             {% } %}
-            <td class="cancel">{% if (!i) { %}
+            <div class="col-sm-2 cancel">{% if (!i) { %}
                 <button class="btn btn-warning">
                     <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
+                    <span>Annuler</span>
                 </button>
-                {% } %}</td>
-        </tr>
+                {% } %}
+            </div>
+        </div>
         {% } %}
     </script>
     <!-- The template to display files before conversion -->
     <script id="template-download" type="text/x-tmpl">
         {% for (var i=0, file; file=o.files[i]; i++) { %}
-        <tr class="template-download fade">
+        <div class="row template-download fade">
             {% if (file.error) { %}
-            <td></td>
-            <td class="name"><span>{%=file.name%}</span></td>
-            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td ><span class="name">{%=file.name%}</span></td>
+            <td ><span class="size">{%=o.formatFileSize(file.size)%}</span></td>
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
             {% } else { %}
-            <td class="preview">{% if (file.thumbnail_url) { %}
-                <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
-                {% } %}</td>
-            <td class="name">
-                <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
-            </td>
-            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-            <td class="duration"><span>{%=file.duration%}</span></td>
-            <td class="price"><span>{%=file.price%} &euro;</span></td>
-            <td>
-                <select fileName="{%=file.name%}" class="formats" onchange="setFormat()">
-                    <option value="avi">.avi</option>
-                    <option value="mp4">.mp4</option>
-                    <option value="mp3">.mp3</option>
-                    <option value="aac">.aac</option>
-                    <option value="wav">.wav</option>
-                    <option value="wma">.wma</option>
-                    <option value="wmv">.wmv</option>
-                    <option value="ogg">.ogg</option>
-                    <option value="flv">.flv</option>
-                    <option value="swf">.swf</option>
-                    <option value="dv">.dv</option>
-                    <option value="mov">.mov</option>
-                </select>
-            </td>
-            <td colspan="2"></td>
+            <div class="col-sm-1">
+            <span class="preview">{% if (file.thumbnail_url) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}" style="margin-top: 5px;"></a>
+                {% } %}</span></div>
+            <div class="col-sm-3 filename">
+                <span class="name">
+                    <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+                </span>
+            </div>
+            <div class="col-sm-1"><span class="size">{%=o.formatFileSize(file.size)%}</span></div>
+            <div class="col-sm-1"><span class="duration">{%=file.duration%}</span></div>
+            <div class="col-sm-1"><span class="price">{%=file.price%} &euro;</span></div>
+            <div class="col-sm-1">
+                 <div class="form-group">
+                      <label for="sel1">Formats</label>
+                      <select class="form-control formats" onchange="setFormat()">
+                        <option value="avi">.avi</option>
+                        <option value="mp4">.mp4</option>
+                        <option value="mp3">.mp3</option>
+                        <option value="aac">.aac</option>
+                        <option value="wav">.wav</option>
+                        <option value="wma">.wma</option>
+                        <option value="wmv">.wmv</option>
+                        <option value="ogg">.ogg</option>
+                        <option value="flv">.flv</option>
+                        <option value="swf">.swf</option>
+                        <option value="dv">.dv</option>
+                        <option value="mov">.mov</option>
+                     </select>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                  <div class="form-group">
+                      <label for="sel1">Encodage :</label>
+                      <select class="form-control" onchange="setEncodage()">
+                        <option>mpeg4</option>
+                        <option>x264</option>
+                        <option>x265</option>
+                      </select>
+                  </div>
+            </div>
             {% } %}
-            <td class="delete">
+            <div class="col-sm-2 delete">
                 <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                         <i class="glyphicon glyphicon-trash"></i>
                     <span>Delete</span>
                 </button>
                 <input type="checkbox" name="delete" value="1">
-            </td>
-        </tr>
+            </div>
+        </div>
         {% } %}
     </script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="<spring:url value='/resources/js/vendor/jquery.ui.widget.js'/>"></script>
     <script src="<spring:url value='/resources/js/tmpl.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/load-image.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/canvas-to-blob.min.js'/>"></script>
-    <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/bootstrap-image-gallery.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.iframe-transport.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.fileupload.js'/>"></script>
@@ -212,12 +201,12 @@
     <script src="<spring:url value='/resources/js/main.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.easing.js'/>"></script>
     <script src="<spring:url value='/resources/js/jqueryFileTree.js"'/>"></script>
-    <script type="text/javascript">
+   <script type="text/javascript">
 
         function setFormat(){
             // When user choose a format for the file, send it to the bdd
             console.log("Envoi format vers serveur ");
-            var format = $(".formats option:selected").val();
+            var format = $(".formats a:selected").val();
             var fileName = $(".formats :selected").parent().attr("fileName");
             console.log(format, fileName);
             $.ajax({
@@ -225,6 +214,28 @@
             url: "/upload/setFormat",
             data: {     format: format,
                         file: fileName}
+            }).done(function(msg){
+                // Format set (display price)
+            });
+
+        };
+        $(".formats ul.dropdown-menu li a").click(function (e) {
+            e.preventDefault();
+            console.log(this.val());
+            setFormat();
+        });
+        $(document).on('click', '.formats li a', function() { alert('test'); });
+        function setEncodage(){
+            // When user choose a format for the file, send it to the bdd
+            console.log("Envoi format vers serveur ");
+            var format = $(".encodage a:selected").val();
+            var fileName = $(".encodage :selected").parent().attr("fileName");
+            console.log(format, fileName);
+            $.ajax({
+                type:"GET",
+                url: "/upload/setFormat",
+                data: {     format: format,
+                    file: fileName}
             }).done(function(msg){
                 // Format set (display price)
             });

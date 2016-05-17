@@ -37,6 +37,8 @@
     <link rel="stylesheet" href="<spring:url value='/resources/css/leftbar.css'/>">
     <link rel="stylesheet" href="<spring:url value='/resources/css/deadpinnaple.css?v=1.0'/>">
     <link rel="stylesheet" href="<spring:url value='/resources/css/dashboard.css?v=1.0'/>">
+    <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-select.css'/>">
+
 
 
     <!--Register Jquery Mika

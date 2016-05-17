@@ -83,5 +83,14 @@ legend{
 .container .row:hover{
     cursor: pointer;
 }
+.filename{
+    border-right: solid black 3px;
+}
+#uploadedFiles{
+    margin-left: 30px;
+}
+.well{
+    margin-top:20px;
+}
 
 

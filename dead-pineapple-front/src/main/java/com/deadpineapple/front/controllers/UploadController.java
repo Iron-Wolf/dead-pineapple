@@ -292,9 +292,9 @@ public class UploadController extends HttpServlet {
         return suffix;
     }
     private static BufferedImage resizeImage(BufferedImage originalImage) {
-        BufferedImage resizedImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage resizedImage = new BufferedImage(80, 57, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, 100, 100, null);
+        g.drawImage(originalImage, 0, 0, 80, 57, null);
         g.dispose();
 
         return resizedImage;

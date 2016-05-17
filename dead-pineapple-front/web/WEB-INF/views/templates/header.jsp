@@ -36,7 +36,7 @@
 </c:when>
     <c:otherwise>
         <div >
-            Bienvenue <c:out value="${USER_INFORMATIONS.firstName}"/> !
+            Bienvenue <c:out value="${USER_INFORMATIONS.firstName}"/>
         </div>
         <div >
             <a href="<spring:url value='/user/logOff'/>" class="btn btn-warning">Se déconnecter</a>
