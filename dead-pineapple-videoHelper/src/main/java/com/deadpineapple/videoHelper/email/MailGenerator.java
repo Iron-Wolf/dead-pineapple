@@ -1,4 +1,4 @@
-package com.deadpineapple.core.email;
+package com.deadpineapple.videoHelper.email;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +22,7 @@ public class MailGenerator {
     public MailGenerator(String templateName, Hashtable<String, String> tableauDeCorespondance) throws IOException {
 
         this.templateName = templateName;
-        this.template = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir"),"dead-pineapple-core/src/main/java/com/deadpineapple/core/email/templates",templateName + ".html")));
+        this.template = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir"),"dead-pineapple-videoHelper/src/main/java/com/deadpineapple/videoHelper/email/templates",templateName + ".html")));
         this.tableauDeCorespondance = tableauDeCorespondance;
     }
 

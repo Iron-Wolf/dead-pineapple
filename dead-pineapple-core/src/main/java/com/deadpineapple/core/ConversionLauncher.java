@@ -1,5 +1,7 @@
 package com.deadpineapple.core;
 
+import com.deadpineapple.videoHelper.email.EmailSender;
+import com.deadpineapple.videoHelper.email.MailGenerator;
 import com.deadpineapple.dal.RabbitMqEntities.FileIsConverted;
 import com.deadpineapple.dal.RabbitMqEntities.FileIsUploaded;
 import com.deadpineapple.dal.RabbitMqEntities.FileToConvert;
@@ -17,6 +19,7 @@ import org.hibernate.SessionFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -102,7 +105,15 @@ public class ConversionLauncher {
                 try {
                     File joinFile = joinFile(splitFilesToFiles(splitFiles), convertedFile.getFilePath());
                     if (joinFile.exists()) {
-                        // TODO: 18/03/2016 envoyer le mail de confirmation
+                        //sending the email
+                        Hashtable<String,String> generatorHashTable = MailGenerator.getConvertedFileConrespondanceTable(
+                                convertedFile.getUserAccount().getFirstName()+" "+convertedFile.getUserAccount().getLastName(),
+                                convertedFile.getOriginalName(),convertedFile.getFilePath(),"https://photos-6.dropbox.com/t/2/AAAEFI367SZuTY4cByBgm67lc9aFD7eu8hVPDisYUb4DBg/12/114048003/png/32x32/3/1463083200/0/2/donwload.png/EOnYhFgY7M8DIAIoAigE/orL1LMvZy8K1hgt2nVJbAo4dikC9dbhuFvM90hFuzn0?size_mode=5&size=32x32");
+                        MailGenerator generator = new MailGenerator(MailGenerator.FICHIER_CONVERTIE_TEMPLATE,generatorHashTable);
+                        EmailSender sender = new EmailSender(convertedFile.getUserAccount().getEmail(),"Votre fichier est convertie!",generator.generateTheEmail());
+                        sender.send();
+
+                        //mis a jour en bdd
                         System.out.println("joined");
                         convertedFile.setConverted(true);
                         convertedFile.setFilePath(joinFile.getAbsolutePath());

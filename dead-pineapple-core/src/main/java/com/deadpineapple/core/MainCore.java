@@ -1,7 +1,5 @@
 package com.deadpineapple.core;
 
-import com.deadpineapple.core.email.EmailSender;
-
 /**
  * Created by 15256 on 12/02/2016.
  */
