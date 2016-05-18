@@ -24,5 +24,14 @@ $(document).ready(function() {
     $('html, body').animate({scrollTop: coordonnees}, speed); // Go
     return false;
   });
+// cacher icones a ouvertures du menu
+  $("#leftbar").mouseenter(function(){
+    $(this).stop(true, true).animate({marginLeft:'-20px'},'slow');
+    $("#repli").hide("slow");
+  });
+  $("#leftbar").mouseleave(function(){
 
+    $(this).stop(true, true).animate({marginLeft:'-220px'},'slow');
+    $("#repli").show("slow");
+  });
 });
