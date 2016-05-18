@@ -32,10 +32,15 @@ public class FileJoiner {
         bw.close();
 
         fos.close();
-        String ffmpegCmd = "ffmpeg -v quiet -safe 0 -y -f concat -i \""
+        /*String ffmpegCmd = "ffmpeg -v quiet -safe 0 -y -f concat -i \""
                 + videoListFile.getAbsolutePath()
                 + "\" -c copy \""
                 + resultFile.getAbsolutePath() + "\"";
+        */
+        String[] ffmpegCmd = new String[]{"ffmpeg", "-v", "quiet", "-safe", "0", "-y", "-f", "concat", "-i",
+            videoListFile.getAbsolutePath(), "-c", "copy",
+            resultFile.getAbsolutePath()};
+
 
         Process proc = Runtime.getRuntime().exec(ffmpegCmd);
         proc.waitFor();

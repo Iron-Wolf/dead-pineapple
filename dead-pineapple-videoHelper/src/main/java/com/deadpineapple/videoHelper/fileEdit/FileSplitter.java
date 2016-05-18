@@ -36,8 +36,13 @@ public class FileSplitter {
                     .replace('-', ' ').replace('(', ' ').replace(')', ' ')
                     + extention;
             File resultFile = new File(resultPath);
-            String ffmpeg = "ffmpeg -v quiet -y -i \"" + filePath + "\" -vcodec copy -acodec copy -ss "
+            /*String ffmpeg = "ffmpeg -v quiet -y -i \"" + filePath + "\" -vcodec copy -acodec copy -ss "
                     + startTime + " -t " + duree + " -sn \"" + resultFile + "\"";
+            */
+
+            String[] ffmpeg = new String[]{"ffmpeg", "-v", "quiet", "-y", "-i",
+                    filePath, "-vcodec", "copy", "-acodec", "copy", "-ss",
+                    startTime.toString(), "-t", duree.toString(), "-sn", resultFile.toString()};
 
             Process proc = Runtime.getRuntime().exec(ffmpeg);
             proc.waitFor();
