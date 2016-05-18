@@ -39,14 +39,14 @@ public class Conversion {
         return process.waitFor() == 0;
     }
 
-    private String generateFfmpegCommand() throws FfmpegException {
+    private String[] generateFfmpegCommand() throws FfmpegException {
         if (!Arrays.asList(Constante.AcceptedConversionTypes).contains(fileType)) {
             throw new FfmpegException("Unvalid type");
         }
         if (!Arrays.asList(Constante.AcceptedCodec).contains(fileCodec)){
             throw new FfmpegException("Unvalid encoding");
         }
-        String cmd = "ffmpeg";
+
 
         String globalOptions = " -y -nostats -loglevel 0";
         String inputFileOptions = " ";
@@ -54,12 +54,22 @@ public class Conversion {
         if (outputFileOptionDictionnary.get(fileType) != null) {
             outputFileOptions += outputFileOptionDictionnary.get(fileType);
         }
+        /*
+        String cmd = "ffmpeg";
         cmd += globalOptions;
         cmd += inputFileOptions;
         cmd += "-i \"" + getFilePath() + "\"";
         cmd += getEncodingOutput();
         cmd += outputFileOptions;
         cmd += "\"" + getFileDestinationPath() + "\"";
+        */
+
+        String[] cmd = new String[]{"ffmpeg",
+                globalOptions, inputFileOptions,
+                "-i", getFilePath(),
+                getEncodingOutput(), outputFileOptions,
+                getFileDestinationPath()};
+
         return cmd;
     }
 

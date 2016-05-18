@@ -76,8 +76,8 @@ public class UploadController extends HttpServlet {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getFirstName().replaceAll("\\s+", "") + "_"
-                + user.getLastName().replaceAll("\\s+", "") + "/";
+                + user.getFirstName() + "_"
+                + user.getLastName() + "/";
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
         return "upload";

@@ -44,7 +44,7 @@ public class VideoInformation {
         Runtime rt = Runtime.getRuntime();
         Process proc = null;
         try {
-            proc = rt.exec("ffmpeg -i \"" + filePath + "\"");
+            proc = rt.exec(new String[]{"ffmpeg", "-i", filePath});
 
             InputStream stdin = proc.getErrorStream();
             InputStreamReader isr = new InputStreamReader(stdin);
@@ -92,7 +92,8 @@ public class VideoInformation {
                 startTumbTime = 55.0;
             }
 
-            proc = rt.exec("ffmpeg -y -nostats -loglevel 0 -ss "+startTumbTime+" -i \"" + filePath + "\" -vframes 1 -f image2 \"" + imagePath + "\"");
+            proc = rt.exec(new String[]{"ffmpeg", "-y", "-nostats", "-loglevel", "0", "-ss",
+                    Double.toString(startTumbTime), "-i", filePath, "-vframes", "1", "-f", "image2", imagePath});
             return proc.waitFor() == 0;
         } catch (IOException e) {
             e.printStackTrace();
