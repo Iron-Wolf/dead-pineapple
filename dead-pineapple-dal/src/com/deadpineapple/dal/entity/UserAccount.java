@@ -1,14 +1,11 @@
 package com.deadpineapple.dal.entity;
 
-import com.sun.istack.internal.NotNull;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +27,8 @@ public class UserAccount implements Serializable {
     private String firstName;
 
     private String lastName;
+
+    private String phone;
 
     @OneToMany(mappedBy = "userAccount")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -92,6 +91,14 @@ public class UserAccount implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public int getTotalSize() {

@@ -75,7 +75,9 @@ public class UploadController extends HttpServlet {
     public String uploadPage(HttpServletRequest request, Model model) throws JsonReader.FileLoadException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
-        UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"+user.getFirstName()+"_"+user.getLastName()+"/";
+        UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
+                + user.getFirstName().replaceAll("\\s+", "") + "_"
+                + user.getLastName().replaceAll("\\s+", "") + "/";
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
         return "upload";

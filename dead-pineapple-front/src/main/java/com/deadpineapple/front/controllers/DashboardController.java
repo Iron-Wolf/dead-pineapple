@@ -38,14 +38,18 @@ public class DashboardController {
     ArrayList<Invoice> invoices;
     Invoice invoice;
     int idTransaction;
+
     public void setTransactionDao(ITransactionDao transactionDao) {
         this.transactionDao = transactionDao;
     }
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getInvoices(HttpServletRequest request, Model model){
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
-        UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"+user.getFirstName()+"_"+user.getLastName()+"/";
+        UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
+                + user.getFirstName().replaceAll("\\s+", "") + "_"
+                + user.getLastName().replaceAll("\\s+", "") + "/";
         invoices = new ArrayList();
         getHistory();
         System.out.println("size"+invoices.size());
@@ -63,32 +67,35 @@ public class DashboardController {
     private void getHistory(){
         // Get transactions from bdd
         transactions = transactionDao.getTransByUser(user);
-        // Get the first transaction and init parameters
-        Transaction transactionTest = transactions.get(0);
-        initTransaction(transactionTest);
-        for(Transaction aTransaction: transactions){
-            // if the transaction is different, create new transaction
-            if(aTransaction.getIdTransaction() != idTransaction){
-                invoices.add(invoice);
-                invoice = new Invoice();
-                //jsonTransactions.put(jsonTransaction);
-                initTransaction(aTransaction);
-            }
-            ConvertedFile cVideo = aTransaction.getConvertedFiles();
-            if(cVideo != null){
-                invoice.addConvertedFile(cVideo);
-                //jsono.put("duration", uVideo.get);
-                //jsono.put("price", String.format("%.2f", price));
-                // If video is not converted yet, what link ?
-                //convertedFile.put("url", "upload/downloadFile?fileName=" + cVideo.getOriginalName());
-                //convertedFile.put("thumbnail_url", "/upload/getThumb?getthumb=" + cVideo.getOriginalName());
-                ///convertedFile.put("delete_url", "/upload/deleteFile?delfile=" + cVideo.getOriginalName());
-                //convertedFile.put("delete_type", "GET");
-                //invoice.add(convertedFile);
-            }
 
+        if (transactions.size() > 0) {
+            // Get the first transaction and init parameters
+            Transaction transactionTest = transactions.get(0);
+            initTransaction(transactionTest);
+            for (Transaction aTransaction : transactions) {
+                // if the transaction is different, create new transaction
+                if (aTransaction.getIdTransaction() != idTransaction) {
+                    invoices.add(invoice);
+                    invoice = new Invoice();
+                    //jsonTransactions.put(jsonTransaction);
+                    initTransaction(aTransaction);
+                }
+                ConvertedFile cVideo = aTransaction.getConvertedFiles();
+                if (cVideo != null) {
+                    invoice.addConvertedFile(cVideo);
+                    //jsono.put("duration", uVideo.get);
+                    //jsono.put("price", String.format("%.2f", price));
+                    // If video is not converted yet, what link ?
+                    //convertedFile.put("url", "upload/downloadFile?fileName=" + cVideo.getOriginalName());
+                    //convertedFile.put("thumbnail_url", "/upload/getThumb?getthumb=" + cVideo.getOriginalName());
+                    ///convertedFile.put("delete_url", "/upload/deleteFile?delfile=" + cVideo.getOriginalName());
+                    //convertedFile.put("delete_type", "GET");
+                    //invoice.add(convertedFile);
+                }
+
+            }
+            invoices.add(invoice);
         }
-        invoices.add(invoice);
 
     }
 }
