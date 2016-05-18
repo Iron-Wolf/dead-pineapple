@@ -2,12 +2,9 @@
   z-index: 101;
   position:fixed;
   margin-top:10%;
-  margin-left: -260px;
+  margin-left: -220px;
 }
 
-#leftbar:hover{
-  margin-left: 0px;
-}
 #help{
   z-index: 101;
 	position: fixed;
@@ -17,16 +14,17 @@
 }
 /* style du bloc ul */
 .menu-vertical {
+  position: relative;
   /*width: 250px; /* optionnel, c'est pour la démo */
   list-style: none; /* supprime les puces de liste */
   padding: 4px; /* on fait un peu de place autour des liens */
   margin: 0; /* on annule les marges */
   background: #F2F2F2;
-  opacity: 0;
+
   height:400px;
 }
 .menu-vertical:hover{
-  opacity: 1;
+
 
 }
 /* styles des liens et éléments de liste */
