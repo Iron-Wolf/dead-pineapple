@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="<spring:url value='/resources/css/deadpinnaple.css?v=1.0'/>">
     <link rel="stylesheet" href="<spring:url value='/resources/css/dashboard.css?v=1.0'/>">
     <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-select.css'/>">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 
 
 
@@ -46,6 +47,7 @@
     <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>-->
 
     <script src="<spring:url value='/resources/js/jquery-2.1.1.min.js'/>"></script>
+    <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
 
     <!--Register Google Api-->
@@ -58,6 +60,7 @@
     <script src="<spring:url value='/resources/js/globalfront.js'/>"></script>
     <script src="<spring:url value='/resources/js/dashboard.js'/>"></script>
     <script src="<spring:url value='/resources/js/loading.js'/>"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <title>deadpineapple - Index</title>
 </head>
 <body>

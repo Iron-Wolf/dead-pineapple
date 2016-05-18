@@ -2,7 +2,7 @@
   z-index: 101;
   position:fixed;
   margin-top:10%;
-  margin-left: -150px;
+  margin-left: -260px;
 }
 
 #leftbar:hover{
@@ -22,8 +22,13 @@
   padding: 4px; /* on fait un peu de place autour des liens */
   margin: 0; /* on annule les marges */
   background: #F2F2F2;
+  opacity: 0;
+  height:400px;
 }
+.menu-vertical:hover{
+  opacity: 1;
 
+}
 /* styles des liens et éléments de liste */
 .mv-item,
 .mv-item a {
@@ -56,4 +61,21 @@
 
 #delete{
 width:100;
+}
+.login{
+  height:30px;
+  cursor:pointer;
+}
+#seconnecter{
+  border:1px solid green;
+}
+.icon{
+  margin-top: 8px;
+  height:50px;
+}
+.icon:hover{
+  height: 30px;
+}
+ul > li{
+  height:60px;
 }

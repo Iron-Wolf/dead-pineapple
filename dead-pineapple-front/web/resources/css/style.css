@@ -76,9 +76,7 @@ legend{
         text-align: center;
     }
 
-    img {
-        margin-top: 20px;
-    }
+
 }
 .container .row:hover{
     cursor: pointer;

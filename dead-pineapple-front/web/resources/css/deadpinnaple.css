@@ -21,7 +21,7 @@ background: url(/resources/img/fondsun.svg) center 0 no-repeat fixed;
 }
 .etapes{
 
-  margin-top: 25%;
+  margin-top: 10%;
 }
 
 .membre{
@@ -60,7 +60,7 @@ margin-top: 10%
 
 }
 #whats{
-   background: url(/resources/img/fondananascamera.svg) center 0 no-repeat fixed;
+   background: url(/resources/img/fondananasworker.svg) center 0 no-repeat fixed;
 }
 
 #whos {
@@ -95,4 +95,22 @@ margin-top: 10%
 }
 #uploadaccess{
     height:34px;
+}
+
+.etp:hover {
+  -webkit-box-shadow: 0px 0px 15px 10px rgba(255, 255, 255, .75);
+  box-shadow: 0px 0px 15px 10px rgba(255, 255, 255, .75);
+}
+.etp {
+  border-radius: 50%;
+  -webkit-box-shadow: 0px 0px 15px 5px rgba(0, 185, 233, .75);
+  box-shadow: 0px 0px 15px 5px rgba(0, 185, 233, .75);
+  -webkit-transition: all 0.7s ease;
+  transition: all 0.7s ease;
+}
+#lunettes{
+
+
+  margin:auto;
+  position:fixed;
 }

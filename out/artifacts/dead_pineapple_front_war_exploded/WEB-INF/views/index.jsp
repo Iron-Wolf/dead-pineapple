@@ -19,12 +19,15 @@
         </div>
     </div>
     <div id="whats" class="col-lg-12">2
-        <div id="1choose" class="etapes col-lg-2 col-md-2 ">1choose</div>
-        <div id="2upload" class="etapes col-lg-2 col-md-2 ">2upload</div>
-        <div id="3convert" class="etapes col-lg-2 col-md-2 col-lg-offset-1">3convert</div>
-        <div id="4enjoy" class="etapes col-lg-2 col-md-2 col-lg-offset-1">4enjoy</div>
+
+        <div id="1upload" class="etapes col-lg-2 col-md-2 col-lg-offset-1 "><img class="etp" src="/resources/img/upload.svg" height="250" ></div>
+        <div id="2convert" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp" src="/resources/img/transform.svg" height="250" ></div>
+        <div id="3paye" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp" src="/resources/img/paye.svg" height="250" ></div>
+        <div id="4download" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp" src="/resources/img/download.svg" height="250" ></div>
+        <div id="explicatif" class="col-lg-8 col-lg-offset-2"><h1></h1></div>
     </div>
     <div id="whos" class="col-lg-12 col-md-12 ">3
+        <div id="lunettes"><img src="/resources/img/lunettes.svg" height="100" ></div>
         <img id="pablo" class="membre col-lg-1 col-lg-offset-1" style="background-image:url(/resources/img/image1.png)">
         <img id="sofiane" class="membre col-lg-1 col-lg-offset-1" style="background-image:url(/resources/img/image1.png)">
         <img id="michael" class="membre col-lg-1 col-lg-offset-1" style="background-image:url(/resources/img/image1.png)">

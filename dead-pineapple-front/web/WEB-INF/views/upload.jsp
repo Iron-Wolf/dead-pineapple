@@ -39,6 +39,38 @@
                             <i class="glyphicon glyphicon-trash"></i>
                             <span>Supprimer</span>
                         </button>
+                        <button class="btn btn-info" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalDropBox" >
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Parcourir votre Dropbox</span>
+                        </button>
+
+                        <!-- Modal -->
+                        <div id="ModalDropBox" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <img class="etp" src="/resources/img/dropbox2.svg" height="30" >
+                                        <h4 class="modal-title">Choix d'upload depuis Cloud Dropbox</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="dropbox_data">
+                                            <c:if test="${not empty dropboxFiles}">
+                                                <c:forEach var="listValue" items="${dropboxFiles}">
+                                                    ${listValue}
+                                                </c:forEach>
+                                            </c:if>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                     <!-- The global progress information -->
                     <div class="col-lg-5 fileupload-progress fade">
@@ -70,13 +102,7 @@
             <div id="dropbox">
 
             </div>
-            <div id="dropbox_data">
-                <c:if test="${not empty dropboxFiles}">
-                    <c:forEach var="listValue" items="${dropboxFiles}">
-                        ${listValue}
-                    </c:forEach>
-                </c:if>
-            </div>
+
             <div class="well">
                 <h3>Information sur l'upload</h3>
                 <ul>
