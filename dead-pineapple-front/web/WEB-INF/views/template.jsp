@@ -56,8 +56,8 @@
     <script src="<spring:url value='/resources/js/loginAPI/facebookLogin.js'/>"></script>
     <script src="<spring:url value='/resources/js/loginAPI/googleLogin.js'/>"></script>
     <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <script src="<spring:url value='/resources/js/leftbar.js'/>"></script>
     <script src="<spring:url value='/resources/js/globalfront.js'/>"></script>
+    <script src="<spring:url value='/resources/js/leftbar.js'/>"></script>
     <script src="<spring:url value='/resources/js/dashboard.js'/>"></script>
     <script src="<spring:url value='/resources/js/loading.js'/>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>

@@ -16,7 +16,7 @@ $('#whos').height(conteneur_acceuil/4);
 $('#contact').height(conteneur_acceuil/4);
 
 
-        console.log("test2");
+       // console.log("largeur fenetre"+largeur_fenetre/6);
 
 
 //scroll vcers depuis menu

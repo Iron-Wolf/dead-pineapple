@@ -1,5 +1,13 @@
 $(document).ready(function() {
 
+  var largeur_fenetre = $(window).width();
+  console.log("largeur fenetre"+largeur_fenetre);
+  var largeur_leftbar = largeur_fenetre/6;
+  console.log("largeur leftbar"+largeur_leftbar);
+  var largeur_boutons = (largeur_leftbar/6)*5;
+  console.log("largeur boutons"+largeur_boutons);
+
+
   $('.connect').hide();
 
   $("#creer").click(function () {
@@ -26,12 +34,12 @@ $(document).ready(function() {
   });
 // cacher icones a ouvertures du menu
   $("#leftbar").mouseenter(function(){
-    $(this).stop(true, true).animate({marginLeft:'-20px'},'slow');
     $("#repli").hide("slow");
+    $(this).stop(true, true).animate({marginLeft:'-20px'},'slow');
+
   });
   $("#leftbar").mouseleave(function(){
-
-    $(this).stop(true, true).animate({marginLeft:'-220px'},'slow');
     $("#repli").show("slow");
+    $(this).stop(true, true).animate({marginLeft:'-'+largeur_boutons+'px'},'slow');
   });
 });
