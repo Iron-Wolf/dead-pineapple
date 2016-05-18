@@ -6,8 +6,10 @@ $(document).ready(function() {
   console.log("largeur leftbar"+largeur_leftbar);
   var largeur_boutons = (largeur_leftbar/6)*5;
   console.log("largeur boutons"+largeur_boutons);
+  var largeur_icons = largeur_leftbar/12;
+  console.log("largeur icons"+largeur_icons);
 
-
+  $("#leftbar").css({marginLeft:'-'+largeur_boutons+'px'});
   $('.connect').hide();
 
   $("#creer").click(function () {
@@ -35,7 +37,7 @@ $(document).ready(function() {
 // cacher icones a ouvertures du menu
   $("#leftbar").mouseenter(function(){
     $("#repli").hide("slow");
-    $(this).stop(true, true).animate({marginLeft:'-20px'},'slow');
+    $(this).stop(true, true).animate({marginLeft:'-'+largeur_icons+'px'},'slow');
 
   });
   $("#leftbar").mouseleave(function(){
