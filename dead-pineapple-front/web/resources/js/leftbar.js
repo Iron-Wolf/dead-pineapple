@@ -1,15 +1,11 @@
 $(document).ready(function() {
 
   var largeur_fenetre = $(window).width();
-  console.log("largeur fenetre"+largeur_fenetre);
-  var largeur_leftbar = largeur_fenetre/6;
-  console.log("largeur leftbar"+largeur_leftbar);
-  var largeur_boutons = (largeur_leftbar/6)*5;
-  console.log("largeur boutons"+largeur_boutons);
-  var largeur_icons = largeur_leftbar/12;
-  console.log("largeur icons"+largeur_icons);
+  var largeur_leftbar = 270;
+  var largeur_boutons = 217;
+  var largeur_icons = 53;
 
-  $("#leftbar").css({marginLeft:'-'+largeur_boutons+'px'});
+  $("#leftbar").css({left:'-'+largeur_boutons+'px'});
   $('.connect').hide();
 
   $("#creer").click(function () {
@@ -34,14 +30,15 @@ $(document).ready(function() {
     $('html, body').animate({scrollTop: coordonnees}, speed); // Go
     return false;
   });
+
 // cacher icones a ouvertures du menu
   $("#leftbar").mouseenter(function(){
-    $("#repli").hide("slow");
-    $(this).stop(true, true).animate({marginLeft:'-'+largeur_icons+'px'},'slow');
+    $("#repli").stop(true, true).animate({opacity:'0'},'fast');
+    $(this).stop(true, true).animate({left:'0px'},'fast');
 
   });
   $("#leftbar").mouseleave(function(){
-    $("#repli").show("slow");
-    $(this).stop(true, true).animate({marginLeft:'-'+largeur_boutons+'px'},'slow');
+    $("#repli").stop(true, true).show().animate({opacity:'1'},'fast');
+    $(this).stop(true, true).animate({left:'-'+largeur_boutons+'px'},'fast');
   });
 });

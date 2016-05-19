@@ -11,21 +11,44 @@
   margin-top:2%;
   height:100px;
 }
-/* style du bloc ul */
-.menu-vertical {
-  position: relative;
+
+#leftbar{
+  width: 270px;
+  position: fixed;
+}
+#repli{
+  position: absolute;
+  width: 53px;
+  top: 0;
+  right: 0;
+  height: auto;
+  padding-left: 3px;
+}
+#repli .icon{
+  float: left;
+}
+.login-inp{
+    margin: 3px;
+    border: none;
+    background: white;
+    width: 193px;
+    padding: 4px;
+    border-bottom: 1px solid #1ABC9C;
+}
+.menu-vertical{
+  position: absolute;
+  right: 53px;
+  height: auto;
+  top: 0;
+  left: 0;
+  height:400px;
   /*width: 250px; /* optionnel, c'est pour la démo */
   list-style: none; /* supprime les puces de liste */
   padding: 4px; /* on fait un peu de place autour des liens */
   margin: 0; /* on annule les marges */
   background: #F2F2F2;
-
-  height:400px;
 }
-.menu-vertical:hover{
 
-
-}
 /* styles des liens et éléments de liste */
 .mv-item,
 .mv-item a {
@@ -57,7 +80,7 @@
 }
 
 #delete{
-width:100;
+width:100px;
 }
 .login{
   height:30px;
@@ -70,9 +93,7 @@ width:100;
   margin-top: 8px;
   height:50px;
 }
-.icon:hover{
-  height: 30px;
-}
+
 ul > li{
   height:60px;
 }
