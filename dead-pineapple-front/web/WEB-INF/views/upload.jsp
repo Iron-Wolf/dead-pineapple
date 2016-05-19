@@ -27,10 +27,12 @@
                             <i class="glyphicon glyphicon-upload"></i>
                             <span>Uploader</span>
                         </button>
+                        <!--
                         <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
                             <i class="glyphicon glyphicon-upload"></i>
                             <span>Depuis dropbox</span>
                         </button>
+                        !-->
                         <button type="reset" class="btn btn-warning cancel">
                             <i class="glyphicon glyphicon-ban-circle"></i>
                             <span>Annuler</span>
@@ -39,11 +41,11 @@
                             <i class="glyphicon glyphicon-trash"></i>
                             <span>Supprimer</span>
                         </button>
+                        <!--
                         <button class="btn btn-info" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalDropBox" >
                             <i class="glyphicon glyphicon-upload"></i>
                             <span>Parcourir votre Dropbox</span>
-                        </button>
-
+                        </button>!-->
                         <!-- Modal -->
                         <div id="ModalDropBox" class="modal fade" role="dialog">
                             <div class="modal-dialog">
@@ -56,13 +58,7 @@
                                         <h4 class="modal-title">Choix d'upload depuis Cloud Dropbox</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <div id="dropbox_data">
-                                            <c:if test="${not empty dropboxFiles}">
-                                                <c:forEach var="listValue" items="${dropboxFiles}">
-                                                    ${listValue}
-                                                </c:forEach>
-                                            </c:if>
-                                        </div>
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -100,9 +96,12 @@
                 <span>Depuis dropbox</span>
             </button>
             <div id="dropbox">
-
+                <c:if test="${not empty dropboxFiles}">
+                    <c:forEach var="listValue" items="${dropboxFiles}">
+                        ${listValue}
+                    </c:forEach>
+                </c:if>
             </div>
-
             <div class="well">
                 <h3>Information sur l'upload</h3>
                 <ul>
@@ -164,9 +163,7 @@
                 <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}" style="margin-top: 5px;"></a>
                 {% } %}</span></div>
             <div class="col-sm-3 filename">
-                <span class="name">
-                    <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
-                </span>
+                <span class="name">{%=file.name%}</span>
             </div>
             <div class="col-sm-1"><span class="size">{%=o.formatFileSize(file.size)%}</span></div>
             <div class="col-sm-1"><span class="duration">{%=file.duration%}</span></div>
@@ -283,10 +280,79 @@
                 }
 
             }
+                // Load files
+            var showData = $('.files');
 
-            $('#dropbox_data').fileTree({root: 'dropbox/'}, function (file) {
-                openFile(file);
+            $.getJSON('/upload/getFiles', function (data) {
+                console.log(data);
+
+
+                for(var i = 0;i < data.length;i++){
+                    console.log(data[i]);
+                    var fileRow = "<div class='row template-download fade in'>";
+                    var preview, name, price, deleteurl;
+                    var sizeduration ="";
+                    for(var attr in data[i]){
+                        console.log("key"+attr+"|"+data[i][attr]);
+                        if(attr == "thumbnail_url") {
+                            preview = "<div class='col-sm-1'>";
+                            preview += "<span class='preview'>";
+                            preview += "<img src='"+data[i][attr]+"' style='margin-top: 5px;'/>";
+                            preview += "</span></div>";
+                        }
+                        else if(attr == "name"){
+                            name = "<div class='col-sm-3 filename'>";
+                            name += "<span class='name'>"+data[i][attr]+"</span></div>";
+                        }
+                        else if(attr == "size" ||  attr == "duration") {
+                            sizeduration += "<div class='col-sm-1'><span class='"+attr+"'>"+data[i][attr]+"</span></div>";
+                        }
+                        else if(attr == "price"){
+                            price = "<div class='col-sm-1'><span class='"+attr+"'>"+data[i][attr]+"€</span></div>";
+                            price += "<div class='col-sm-1'>";
+                            price += "<div class='form-group'>";
+                            price += "<label for='sel1'>Formats</label>";
+                            price += "<select class='form-control formats' onchange='setFormat()'>";
+                            price += "<option value='avi'>.avi</option>";
+                            price += "<option value='mp4'>.mp4</option>";
+                            price += "<option value='mp3'>.mp3</option>";
+                            price += "<option value='aac'>.aac</option>";
+                            price += "<option value='wav'>.wav</option>";
+                            price += "            <option value='wma'>.wma</option>";
+                            price += "            <option value='wmv'>.wmv</option>";
+                            price += "          <option value='ogg'>.ogg</option>";
+                            price += "           <option value='flv'>.flv</option>";
+                            price += "           <option value='swf'>.swf</option>";
+                            price += "           <option value='dv'>.dv</option>";
+                            price += "           <option value='mov'>.mov</option>";
+                            price += "</select></div></div>";
+                            price += "<div class='col-sm-2'>";
+                            price += "<div class='form-group'>";
+                            price += "<label for='sel1'>Encodage :</label>";
+                            price += "<select class='form-control' onchange='setEncodage()'>"
+                            price += "<option>mpeg4</option>";
+                            price += "<option>x264</option>";
+                            price += "<option>x265</option>";
+                            price += "</select></div></div>";
+                        }
+                        else if(attr == "delete_url") {
+                            deleteurl = "<div class='col-sm-2 delete'>";
+                            deleteurl += "<button class='btn btn-danger' data-type='GET' data-url='"+data[i][attr]+"'>";
+                            deleteurl += "<i class='glyphicon glyphicon-trash'></i>";
+                            deleteurl += "<span>Delete</span>";
+                            deleteurl += "</button>";
+                            deleteurl += "<input type='checkbox' name='delete' value='1'>";
+                            deleteurl += "</div>";
+                        }
+                    }
+                    fileRow += preview + name + sizeduration + price + deleteurl;
+                    fileRow += "</div>";
+                    $(".files").append(fileRow);
+                }
+
+
             });
+
         });
 
 

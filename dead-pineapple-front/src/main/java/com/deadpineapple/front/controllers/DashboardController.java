@@ -55,6 +55,7 @@ public class DashboardController {
         System.out.println("size"+invoices.size());
         //System.out.println(invoices.get(0).get(0).get("name"));
         model.addAttribute("invoices", invoices);
+        model.addAttribute("space", user.getTotalSize());
         model.addAttribute("userAccount", new UserAccount());
         return new ModelAndView("dashboard", "model", model);
     }

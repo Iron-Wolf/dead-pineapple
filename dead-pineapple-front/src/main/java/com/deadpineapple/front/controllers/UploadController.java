@@ -8,7 +8,12 @@ import com.deadpineapple.front.tools.VideoFile;
 import com.deadpineapple.videoHelper.TimeSpan;
 import com.deadpineapple.videoHelper.information.VideoInformation;
 import com.dropbox.core.*;
+import com.dropbox.core.http.HttpRequestor;
 import com.dropbox.core.json.JsonReader;
+import com.dropbox.core.v1.DbxEntry;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.SearchResult;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -33,6 +38,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sound.midi.SysexMessage;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -50,7 +56,7 @@ public class UploadController extends HttpServlet {
     IConvertedFileDao convertedFileDao;
     ConvertedFile convertedFile;
     ArrayList<VideoFile> convertedFiles = new ArrayList();
-
+    JSONArray json;
 
     String UPLOAD_PATH;
     LoginForm userData;
@@ -62,7 +68,7 @@ public class UploadController extends HttpServlet {
     final String APP_SECRET = "01hgg9uje17vwwv";
     final String URL_SITE = "http://localhost:8080/upload/auth";
     DbxWebAuth webAuth;
-    DbxClient client;
+    DbxClientV2 client;
     DbxRequestConfig config;
     HttpSession session;
 
@@ -72,7 +78,7 @@ public class UploadController extends HttpServlet {
         this.convertedFileDao = convertedFileDao;
     }
     @RequestMapping(method = RequestMethod.GET)
-    public String uploadPage(HttpServletRequest request, Model model) throws JsonReader.FileLoadException {
+    public String uploadPage(HttpServletRequest request, Model model,HttpServletResponse response ) throws JsonReader.FileLoadException, IOException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
@@ -123,7 +129,7 @@ public class UploadController extends HttpServlet {
         ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
         PrintWriter writer = response.getWriter();
         response.setContentType("application/json");
-        JSONArray json = new JSONArray();
+        json = new JSONArray();
         try {
             List<FileItem> items = uploadHandler.parseRequest(request);
             for (FileItem item : items) {
@@ -186,6 +192,43 @@ public class UploadController extends HttpServlet {
             writer.close();
         }
     }
+    @RequestMapping(value = "/getFiles", method = RequestMethod.GET)
+    public void getUploadedFiles(HttpServletResponse response) throws IOException {
+        JSONArray history = new JSONArray();
+        List<ConvertedFile> convertedFiles = convertedFileDao.findByUser(user);
+        for(ConvertedFile cf : convertedFiles){
+            // Get duration
+            videoInformation = new VideoInformation(cf.getFilePath());
+            TimeSpan duration = videoInformation.getDuration();
+            double price = 0;
+
+            double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
+            System.out.println("temps ="+time +duration.getHeures() * 60);
+            if(time < 5){
+                price = Math.log(5) - 1;
+            }
+            else{
+                price = Math.log(time) - 1;
+
+            }
+            JSONObject jsono = new JSONObject();
+            jsono.put("name", cf.getOriginalName());
+            jsono.put("size", cf.getSize());
+            jsono.put("duration", duration);
+            jsono.put("price", String.format("%.2f", price));
+            jsono.put("url", "UploadServlet?getfile=" + cf.getOriginalName());
+            jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + cf.getOriginalName());
+            jsono.put("delete_url", "/upload/deleteFile?delfile=" + cf.getOriginalName());
+            jsono.put("delete_type", "GET");
+            history.put(jsono);
+        }
+        if(history != null) {
+            PrintWriter writer = response.getWriter();
+            response.setContentType("application/json");
+            writer.write(history.toString());
+            writer.close();
+        }
+    }
     @RequestMapping(value = "/getThumb", method = RequestMethod.GET)
     public void getThumb(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getParameter("getthumb") != null && !request.getParameter("getthumb").isEmpty()) {
@@ -236,8 +279,8 @@ public class UploadController extends HttpServlet {
                 for (VideoFile video:
                         convertedFiles) {
                     if(video.getConvertedFile().getFilePath().equals(filePath)){
-
                         // delete file from bdd
+                        convertedFileDao.createFile(video.getConvertedFile());
                         file.delete();
                         break;
                     }
@@ -250,7 +293,6 @@ public class UploadController extends HttpServlet {
         if (request.getParameter("format") != null && !request.getParameter("format").isEmpty()) {
             String filePath = UPLOAD_PATH + request.getParameter("file");
             String format = request.getParameter("format");
-
             for (VideoFile video:
                     convertedFiles) {
                 if(video.getConvertedFile().getFilePath().equals(filePath)){
@@ -374,65 +416,47 @@ public class UploadController extends HttpServlet {
             response.sendError(503, "Error communicating with Dropbox.");
         }
 
-        String accessToken = authFinish.accessToken;
-        client = new DbxClient(config, accessToken);
+        String accessToken = authFinish.getAccessToken();
+        client = new DbxClientV2(config, accessToken);
         //System.out.println("Linked account: " + client.getAccountInfo().displayName);
-        ArrayList<String> dropboxFolders =  getFiles("/");
+        ArrayList<String> dropboxFolders =  getVideoFiles();
         model.addAttribute("dropboxFiles",dropboxFolders);
         return new ModelAndView("upload", "model", model);
     }
-    private ArrayList<String> getFiles(String path) throws DbxException {
+    private ArrayList<String> getVideoFiles() throws DbxException {
         ArrayList<String> dropboxFolders = new ArrayList();
-        System.out.println("Files in the root path:");
-        dropboxFolders.add("<ul class='jqueryFileTree'>");
-        dropboxFolders = getFilesInFolder(dropboxFolders, path);
-        dropboxFolders.add("</ul>");
-        return dropboxFolders;
-    }
-    private ArrayList<String> getFilesInFolder(ArrayList<String> dropboxFolders, String path) {
-        // List folders of the dropbox user
-        DbxEntry.WithChildren listing = null;
         try {
-            System.out.println(path);
-            listing = client.getMetadataWithChildren(path);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return dropboxFolders;
+            for(String format : ext){
+                SearchResult search = client.files().search("", format);
+                for(int i = 0; i < search.getMatches().size(); i++){
+                    String pat = search.getMatches().get(i).getMetadata().getPathDisplay();
+                    dropboxFolders.add(pat);
+                    System.out.println(pat);
+                }
+            }
+
+
+
         } catch (DbxException e) {
             e.printStackTrace();
         }
-        for (DbxEntry child : listing.children) {
-            if(child.isFolder()){
-                dropboxFolders.add("<li class='directory collapsed'><a href='#' rel='"+StringEscapeUtils.escapeHtml(child.path)+"'>"+child.name+"</a></li>");
-
-                // if folder, call the function again to get the files and folder inside the folder
-                if(!child.path.substring(0,1).equals(".") && child.path.split("/").length < 3){
-                    dropboxFolders = getFilesInFolder(dropboxFolders, child.path);
-                }
-            }
-            else if(child.isFile() && (Arrays.asList(ext).contains(FilenameUtils.getExtension(child.name))) ){
-                int dotIndex = child.name.lastIndexOf('.');
-                String ext = dotIndex > 0 ? child.name.substring(dotIndex + 1) : "";
-                dropboxFolders.add("<li class='file ext_" + ext + "'><a href='#' rel='" +child.path+ "'>"
-                        + child.name + "</a></li>");
-            }
-        }
         return dropboxFolders;
     }
+
     @RequestMapping(value = "/uploadDb", method = RequestMethod.GET)
     public void downloadDropboxFile(HttpServletRequest request, HttpServletResponse response) throws IOException, DbxException {
         String fileName = request.getParameter("fileName");
         String filePath = UPLOAD_PATH+fileName;
-        String size;
+        Long  size;
         FileOutputStream outputStream = new FileOutputStream(filePath);
         try {
-            DbxEntry.File downloadedFile = client.getFile(fileName, null,
-                    outputStream);
-            size = downloadedFile.humanSize;
-            System.out.println("Metadata: " + downloadedFile.toString());
+            DbxDownloader<FileMetadata> download = client.files().download(filePath);
+            download.download(outputStream);
+            size = download.getResult().getSize();
         } finally {
             outputStream.close();
         }
+
         PrintWriter writer = response.getWriter();
         response.setContentType("application/json");
         //Save video in bdd
@@ -446,7 +470,8 @@ public class UploadController extends HttpServlet {
         convertedFile.setOriginalName(fileName);
         convertedFile.setOldType(FilenameUtils.getExtension(filePath));
         //convertedFile.setNewType();
-        convertedFile.setSize(Integer.parseInt(size));
+
+        convertedFile.setSize(Integer.parseInt(size.toString()));
         convertedFileDao.createFile(convertedFile);
 
         // Create a new video Information
@@ -455,7 +480,6 @@ public class UploadController extends HttpServlet {
         double price = 0;
 
         double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
-        System.out.println("temps ="+time +duration.getHeures() * 60);
         if(time < 5){
             price = Math.log(5) - 1;
         }
