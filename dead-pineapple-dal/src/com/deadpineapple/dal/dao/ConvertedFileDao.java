@@ -1,10 +1,12 @@
 package com.deadpineapple.dal.dao;
 
 import com.deadpineapple.dal.entity.ConvertedFile;
+import com.deadpineapple.dal.entity.UserAccount;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.mapping.List;
 
 
 /**
@@ -61,6 +63,22 @@ public class ConvertedFileDao implements IConvertedFileDao {
         criteria.add(Restrictions.eq("id",id));
 
         cFile = (ConvertedFile) criteria.uniqueResult();
+
+        sess.close();
+        return cFile;
+    }
+
+    @Override
+    public java.util.List<ConvertedFile> findByUser(UserAccount user)
+    {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+        java.util.List<ConvertedFile> cFile = null;
+
+        Criteria criteria = sess.createCriteria(ConvertedFile.class);
+        criteria.add(Restrictions.eq("userAccount",user));
+
+        cFile = (java.util.List<ConvertedFile>) criteria.list();
 
         sess.close();
         return cFile;

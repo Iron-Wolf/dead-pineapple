@@ -30,6 +30,12 @@ public class UserAccount implements Serializable {
 
     private String phone;
 
+    private String adresse;
+
+    private int codePostal;
+
+    private String ville;
+
     @OneToMany(mappedBy = "userAccount")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ConvertedFile> convertedFiles;
@@ -99,6 +105,30 @@ public class UserAccount implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public int getCodePostal() {
+        return codePostal;
+    }
+
+    public void setCodePostal(int codePostal) {
+        this.codePostal = codePostal;
+    }
+
+    public String getVille() {
+        return ville;
+    }
+
+    public void setVille(String ville) {
+        this.ville = ville;
     }
 
     public int getTotalSize() {
