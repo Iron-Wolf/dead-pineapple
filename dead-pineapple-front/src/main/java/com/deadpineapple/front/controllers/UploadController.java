@@ -302,28 +302,36 @@ public class UploadController extends HttpServlet {
     }
 
     @RequestMapping(value="/facture", method = RequestMethod.GET)
-    public String convert(){
-        // Créate the Transaction and redirect to PayPal
+    public String convert(HttpServletRequest request){
+        // Create the Transaction and redirect to PayPal
 
         //TODO : créer Transaction
 
-        //PayPal section
+        //test price : 0.10
         ps = new PayPalService(0.10);
-        String paypalURL = ps.startCheckOut();
+        String serverUrl = request.getScheme() + "://"+ request.getServerName() + ":" +request.getServerPort()+ request.getContextPath();
+
+        // create the paypal payment
+        String paypalURL = ps.startCheckOut(serverUrl);
+
+        // redirect to paypal
+        // You can use this test account :
+        //   login : testBuyer@test.co
+        //   passd : Pa$$w0rd1
         if (paypalURL != null)
             return "redirect:"+paypalURL;
         else
             return "";
     }
 
-    @RequestMapping(value="/payement", method = RequestMethod.GET)
+    @RequestMapping(value="/payment", method = RequestMethod.GET)
     public String finish(HttpServletRequest request){
-        // fin de la transaction
-        // validation payement et passage de transaction isPayed à true
+        // retrieve token and stuff
         String paymentID = (String) request.getParameter("paymentId");
         String token = (String) request.getParameter("token");
         String payerID = (String) request.getParameter("PayerID");
 
+        // execute the payment
         boolean transactStatus = ps.finishCheckOut(paymentID,payerID, token);
         if (transactStatus) {
             return "redirect:/dashboard";

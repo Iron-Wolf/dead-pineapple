@@ -22,7 +22,7 @@ public class PayPalService {
         this.price = price;
     }
 
-    public String startCheckOut(){
+    public String startCheckOut(String serverUrl){
         try {
             Map<String, String> sdkConfig = new HashMap<String, String>();
             sdkConfig.put("mode", "sandbox");
@@ -42,7 +42,7 @@ public class PayPalService {
             amount.setTotal(p);
 
             Transaction transaction = new Transaction();
-            transaction.setDescription("creating a payment");
+            transaction.setDescription("DeadPineapple converter.");
             transaction.setAmount(amount);
 
             List<Transaction> transactions = new ArrayList<Transaction>();
@@ -56,8 +56,8 @@ public class PayPalService {
             payment.setPayer(payer);
             payment.setTransactions(transactions);
             RedirectUrls redirectUrls = new RedirectUrls();
-            redirectUrls.setCancelUrl("http://localhost:8080/upload/payement");
-            redirectUrls.setReturnUrl("http://localhost:8080/upload/payement");
+            redirectUrls.setCancelUrl(serverUrl + "/upload/payment");
+            redirectUrls.setReturnUrl(serverUrl + "/upload/payment");
             payment.setRedirectUrls(redirectUrls);
 
             Payment createdPayment = payment.create(apiContext);
@@ -66,6 +66,7 @@ public class PayPalService {
             for (Links l:list) {
                 if (l.getRel().equals("approval_url"))
                 {
+                    // get the url of paypal platform
                     return l.getHref();
                 }
             }
@@ -81,13 +82,17 @@ public class PayPalService {
     public boolean finishCheckOut(String paymentID, String payerID, String token)
     {
         try{
+            // retrieve payment Object
             Payment payment = Payment.get(apiContext,paymentID);
+
+            // execute the payment
             PaymentExecution paymentExecute = new PaymentExecution();
             paymentExecute.setPayerId(payerID);
             payment.execute(apiContext, paymentExecute);
             return true;
 
         } catch (PayPalRESTException e) {
+            // payment failed
             return false;
         }
     }
