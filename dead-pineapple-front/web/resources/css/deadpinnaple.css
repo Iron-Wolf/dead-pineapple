@@ -10,7 +10,11 @@
 	/*background: url(/resources/img/loader-64x/Preloader_2.gif) center no-repeat #fff;*/
 }
 
-
+iframe{
+  display: none;
+  height: 0 !important;
+  width: 0 !important;
+}
 
 #conteneur{
 background: url(/resources/img/fondsun.svg) center 0 no-repeat fixed;

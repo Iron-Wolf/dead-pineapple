@@ -20,10 +20,10 @@
     </div>
     <div id="whats" class="col-lg-12">2
 
-        <div id="1upload" class="etapes col-lg-2 col-md-2 col-lg-offset-1 "><img class="etp" src="/resources/img/upload.svg" height="250" ></div>
-        <div id="2convert" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp" src="/resources/img/transform.svg" height="250" ></div>
-        <div id="3paye" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp" src="/resources/img/paye.svg" height="250" ></div>
-        <div id="4download" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp" src="/resources/img/download.svg" height="250" ></div>
+        <div id="1upload" class="etapes col-lg-2 col-md-2 col-lg-offset-1 "><img class="etp img-responsive" src="/resources/img/upload.svg" height="250" ></div>
+        <div id="2convert" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp img-responsive" src="/resources/img/transform.svg" height="250" ></div>
+        <div id="3paye" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp img-responsive" src="/resources/img/paye.svg" height="250" ></div>
+        <div id="4download" class="etapes col-lg-2 col-md-2 col-lg-offset-1"><img class="etp img-responsive" src="/resources/img/download.svg" height="250" ></div>
         <div id="explicatif" class="col-lg-8 col-lg-offset-2"><h1></h1></div>
     </div>
     <div id="whos" class="col-lg-12 col-md-12 ">3
@@ -47,7 +47,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </textarea>
-        <input id="contactbutton" class="col-lg-2 col-lg-offset-5"type="submit" value="Envoyer au sevice comm ou support">
+        <input id="contactbutton" class="col-lg-3 col-lg-offset-4 btn btn-default"type="submit" value="Envoyer au sevice comm ou support">
     </div>
 
 </div>
