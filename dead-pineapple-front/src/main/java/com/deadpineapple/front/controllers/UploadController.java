@@ -4,13 +4,12 @@ import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
+import com.deadpineapple.front.tools.PayPalService;
 import com.deadpineapple.front.tools.VideoFile;
 import com.deadpineapple.videoHelper.TimeSpan;
 import com.deadpineapple.videoHelper.information.VideoInformation;
 import com.dropbox.core.*;
-import com.dropbox.core.http.HttpRequestor;
 import com.dropbox.core.json.JsonReader;
-import com.dropbox.core.v1.DbxEntry;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.SearchResult;
@@ -27,8 +26,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -38,7 +35,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.sound.midi.SysexMessage;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -62,6 +58,7 @@ public class UploadController extends HttpServlet {
     LoginForm userData;
     UserAccount user;
     VideoInformation videoInformation;
+    PayPalService ps;
 
     // Dropbox config
     final String APP_KEY = "3xt31on71g5n2d6";
@@ -303,10 +300,39 @@ public class UploadController extends HttpServlet {
             }
         }
     }
-    @RequestMapping(value="/convert", method = RequestMethod.GET)
-    public void convert(){
-        // Start converting video
+
+    @RequestMapping(value="/facture", method = RequestMethod.GET)
+    public String convert(){
+        // Créate the Transaction and redirect to PayPal
+
+        //TODO : créer Transaction
+
+        //PayPal section
+        ps = new PayPalService(0.10);
+        String paypalURL = ps.startCheckOut();
+        if (paypalURL != null)
+            return "redirect:"+paypalURL;
+        else
+            return "";
     }
+
+    @RequestMapping(value="/payement", method = RequestMethod.GET)
+    public String finish(HttpServletRequest request){
+        // fin de la transaction
+        // validation payement et passage de transaction isPayed à true
+        String paymentID = (String) request.getParameter("paymentId");
+        String token = (String) request.getParameter("token");
+        String payerID = (String) request.getParameter("PayerID");
+
+        boolean transactStatus = ps.finishCheckOut(paymentID,payerID, token);
+        if (transactStatus) {
+            return "redirect:/dashboard";
+        }
+        else
+            return "";
+    }
+
+
     private String getMimeType(File file) {
         String mimetype = "";
         if (file.exists()) {

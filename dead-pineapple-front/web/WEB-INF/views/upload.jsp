@@ -87,9 +87,8 @@
                 <table role="presentation" id="uploadedFiles" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
             </form>
             <br>
-            <button class="btn btn-primary start" data-url="/upload/convert">
-                <i class="icon-upload icon-white"></i>
-                <span>Convertir & payer</span>
+                <a href="<spring:url value='/upload/facture'/>" class="btn btn-primary start">Payer et Convertir</a>
+
             </button>
             <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
                 <i class="glyphicon glyphicon-upload"></i>
