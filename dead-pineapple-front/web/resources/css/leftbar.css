@@ -45,7 +45,7 @@
     height: auto;
     top: 0;
     left: 0;
-    height: 400px;
+    /*height: 400px;*/
     /*width: 250px; /* optionnel, c'est pour la démo */
     list-style: none; /* supprime les puces de liste */
     padding: 4px; /* on fait un peu de place autour des liens */
@@ -104,8 +104,4 @@
 
 .icon.bigger {
     height: 70px;
-}
-
-ul > li {
-    height: 60px;
 }
