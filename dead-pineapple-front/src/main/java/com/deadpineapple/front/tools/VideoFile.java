@@ -4,6 +4,7 @@ import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.videoHelper.information.VideoInformation;
 
 import javax.persistence.Transient;
+import java.util.ArrayList;
 
 /**
  * Created by saziri on 19/04/2016.
@@ -28,4 +29,23 @@ public class VideoFile{
 
     VideoInformation videoInformation;
     ConvertedFile convertedFile;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    Double price;
+    public static ArrayList<VideoFile> deleteVideoInformation(ArrayList<VideoFile> vfs, ConvertedFile cf){
+         for(int i = 0; i < vfs.size(); i++){
+             VideoFile vf = vfs.get(i);
+             if(vf.getConvertedFile().equals(cf)){
+                 vfs.remove(i);
+             }
+         }
+        return vfs;
+    }
 }

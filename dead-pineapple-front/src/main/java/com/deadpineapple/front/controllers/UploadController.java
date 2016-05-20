@@ -1,7 +1,10 @@
 package com.deadpineapple.front.controllers;
 
+import com.deadpineapple.dal.dao.ConvertedFileDao;
 import com.deadpineapple.dal.dao.IConvertedFileDao;
+import com.deadpineapple.dal.dao.ITransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
+import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
 import com.deadpineapple.front.tools.PayPalService;
@@ -54,6 +57,10 @@ public class UploadController extends HttpServlet {
     ArrayList<VideoFile> convertedFiles = new ArrayList();
     JSONArray json;
 
+    // Transaction variables
+    @Autowired
+    ITransactionDao transactionDao;
+
     String UPLOAD_PATH;
     LoginForm userData;
     UserAccount user;
@@ -73,6 +80,9 @@ public class UploadController extends HttpServlet {
 
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
+    }
+    public void setTransactionDao(ITransactionDao transactionDao) {
+        this.transactionDao = transactionDao;
     }
     @RequestMapping(method = RequestMethod.GET)
     public String uploadPage(HttpServletRequest request, Model model,HttpServletResponse response ) throws JsonReader.FileLoadException, IOException {
@@ -166,6 +176,7 @@ public class UploadController extends HttpServlet {
                     // add video information into converted file
                     video.setConvertedFile(convertedFile);
                     video.setVideoInformation(videoInformation);
+                    video.setPrice(price);
                     convertedFiles.add(video);
                     JSONObject jsono = new JSONObject();
                     jsono.put("name", item.getName());
@@ -197,6 +208,7 @@ public class UploadController extends HttpServlet {
             // Get duration
             videoInformation = new VideoInformation(cf.getFilePath());
             TimeSpan duration = videoInformation.getDuration();
+
             double price = 0;
 
             double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
@@ -208,6 +220,11 @@ public class UploadController extends HttpServlet {
                 price = Math.log(time) - 1;
 
             }
+            VideoFile video = new VideoFile();
+            video.setVideoInformation(videoInformation);
+            video.setConvertedFile(cf);
+            video.setPrice(price);
+
             JSONObject jsono = new JSONObject();
             jsono.put("name", cf.getOriginalName());
             jsono.put("size", cf.getSize());
@@ -268,22 +285,30 @@ public class UploadController extends HttpServlet {
         }
     }
     @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)
-    public void deleteFile(HttpServletRequest request){
+    public void deleteFile(HttpServletRequest request, HttpServletResponse resp){
         if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
             File file = new File(UPLOAD_PATH + request.getParameter("delfile"));
             String filePath = UPLOAD_PATH + request.getParameter("delfile");
-            if (file.exists()) {
-                for (VideoFile video:
-                        convertedFiles) {
-                    if(video.getConvertedFile().getFilePath().equals(filePath)){
+            List<ConvertedFile> cf = convertedFileDao.findByUser(user);
+            for (ConvertedFile video:
+                        cf) {
+                    if(video.getFilePath().equals(filePath)){
                         // delete file from bdd
-                        convertedFileDao.createFile(video.getConvertedFile());
-                        file.delete();
-                        break;
+                        convertedFileDao.deleteFile(video);
+                        // delete file from user array
+                        VideoFile.deleteVideoInformation(convertedFiles, video);
+                        // Delete file from
+                        if (file.exists()) {
+                            file.delete();
+                        }
+                        resp.setStatus(200);
+                        return;
                     }
-                }
             }
+            resp.setStatus(404);
+
         }
+
     }
     @RequestMapping(value = "/setFormat", method = RequestMethod.GET)
     public void setConvertFormat(HttpServletRequest request){
@@ -304,11 +329,22 @@ public class UploadController extends HttpServlet {
     @RequestMapping(value="/facture", method = RequestMethod.GET)
     public String convert(HttpServletRequest request){
         // Create the Transaction and redirect to PayPal
-
         //TODO : créer Transaction
+        Date transactionDate = new Date();
+        Double priceTotal = 0.0;
+        for(VideoFile vf : convertedFiles){
+            Transaction transaction = new Transaction();
+            transaction.setConvertedFiles(vf.getConvertedFile());
+            transaction.setPrix(vf.getPrice());
+            transaction.setDate(transactionDate);
+            transaction.setUserAccount(user);
+            transaction.setPayed(false);
+            transactionDao.createTransaction(transaction);
+            priceTotal += vf.getPrice();
+        }
 
         //test price : 0.10
-        ps = new PayPalService(0.10);
+        ps = new PayPalService(priceTotal);
         String serverUrl = request.getScheme() + "://"+ request.getServerName() + ":" +request.getServerPort()+ request.getContextPath();
 
         // create the paypal payment
@@ -519,12 +555,11 @@ public class UploadController extends HttpServlet {
         }
         else{
             price = Math.log(time) - 1;
-
-
         }
         // add video information into converted file
         video.setConvertedFile(convertedFile);
         video.setVideoInformation(videoInformation);
+        video.setPrice(price);
         convertedFiles.add(video);
 
         JSONObject jsono = new JSONObject();
