@@ -12,7 +12,6 @@ $(document).ready(function() {
 
 
     if ($(this).is("[title]")) {
-      console.log("fermeture");
       $('.connect').hide("slow");
       $(this).removeAttr("title");
     } else {

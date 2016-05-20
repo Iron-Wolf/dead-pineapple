@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-
-    console.log("test1");
 //definition dimentions fenetre
     var largeur_fenetre = $(window).width();
     var hauteur_fenetre = $(window).height();
@@ -10,13 +8,37 @@ $(document).ready(function () {
 //redimentionnement du conteneur_acceuil
 
     $('#conteneur').height(conteneur_acceuil);
-    $('#ajoutez').height(conteneur_acceuil / 4);
-    $('#whats').height(conteneur_acceuil / 4);
-    $('#whos').height(conteneur_acceuil / 4);
-    $('#contact').height(conteneur_acceuil / 4);
+    $('#ajoutez').height(hauteur_fenetre);
+    $('#whats').height(hauteur_fenetre);
+    $('#whos').height(hauteur_fenetre);
+    $('#contact').height(hauteur_fenetre);
+
+    //si on est sur du paralax
+    var actualPosition = -1;
+    if($('#conteneur').length > 0){
+
+        //grossissement des icones sur le scroll
+        var grossiment = function () {
+            var position = parseInt($(window).scrollTop() / hauteur_fenetre);
+            if (position != actualPosition) {
+                actualPosition = position;
+                var icons = $('#repli .icon');
+                for (var i = 0; i < icons.length; i++) {
+                    if (i == actualPosition) {
+                        $(icons[i]).addClass('bigger');
+                    } else {
+                        $(icons[i]).removeClass('bigger');
+                    }
+                }
+            }
+        };
+
+        //sur le scroll et au start
+        $(window).scroll(grossiment);
+        grossiment();
+    }
 
 
-    // console.log("largeur fenetre"+largeur_fenetre/6);
 
 
 //affichage de description des membres
@@ -33,7 +55,6 @@ $(document).ready(function () {
 
 //déclenches les infos steps
     $("#1upload").mouseover(function () {
-        console.log("upload ok");
         $("#explicatif h1").text("Uploadez jusqu'à 10 gigas de videos convertibles, n'importe ou, n'importe quand");
     });
     $("#2convert").mouseover(function () {

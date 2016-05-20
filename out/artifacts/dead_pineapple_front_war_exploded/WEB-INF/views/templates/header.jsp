@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
-  User: saziri
+  User: lzientek
   Date: 14/03/2016
   Time: 11:54
   To change this template use File | Settings | File Templates.
@@ -11,8 +11,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div id="glissiere" >
     <div id="poussoirG"></div>
-    <div id="leftbar" class="col-lg-2">
-        <ul class="menu-vertical col-lg-10">
+    <div id="leftbar">
+        <ul class="menu-vertical">
 
     <c:choose>
     <c:when test="${sessionScope.LOGGEDIN_USER == null}">
@@ -49,21 +49,18 @@
     </c:choose>
 
             <li class="mv-item"><a href="<spring:url value='/upload'/>"> Convertir une video </a></li>
-            <li id="kesako" class="mv-item"><a href="#whats">Que faisons nous</a></li>
-            <li id="qui" class="mv-item"><a href="#whos">Qui sommes nous</a></li>
-            <li id="call" class="mv-item"><a href="#contact">Nous contacter</a></li>
+            <li id="kesako" class="mv-item"><a href="<spring:url value='/index'/>#whats">Que faisons nous</a></li>
+            <li id="qui" class="mv-item"><a href="<spring:url value='/index'/>#whos">Qui sommes nous</a></li>
+            <li id="call" class="mv-item"><a href="<spring:url value='/index'/>#contact">Nous contacter</a></li>
         </ul>
 
-        <div id="repli" class="col-lg-2">
-            <img src="/resources/img/login.ico" height="30" class="icon col-lg-offset-1">
-            <img src="/resources/img/adduser.ico" height="30" class="icon col-lg-offset-1">
-            <img src="/resources/img/convert.ico" height="30" class="icon col-lg-offset-1">
+        <div id="repli" >
+            <img src="/resources/img/lucas_svg/employee.svg" height="30" class="icon">
+            <!--<img src="/resources/img/lucas_svg/user.svg" height="30" class="icon">-->
+            <img src="/resources/img/lucas_svg/speedometer.svg" height="30" class="icon">
 
-            <img src="/resources/img/weare.ico" height="30" class="icon col-lg-offset-1">
-            <img src="/resources/img/contact.ico" height="30" class="icon col-lg-offset-1">
-
-
-
+            <img src="/resources/img/lucas_svg/team.svg" height="30" class="icon">
+            <img src="/resources/img/lucas_svg/chat.svg" height="30" class="icon">
         </div>
 
     </div>

@@ -29,10 +29,7 @@
 .btnupload img{
   height:200px;
 }
-body{
-  background: url(../img/fondsun.svg) center 0 no-repeat fixed;
 
-}
 #preview{
   background-color: black;
 }

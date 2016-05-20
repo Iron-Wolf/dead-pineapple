@@ -55,12 +55,12 @@
         </ul>
 
         <div id="repli" >
-            <img src="/resources/img/login.ico" height="30" class="icon">
-            <img src="/resources/img/adduser.ico" height="30" class="icon">
-            <img src="/resources/img/convert.ico" height="30" class="icon">
+            <img src="/resources/img/lucas_svg/employee.svg" height="30" class="icon">
+            <!--<img src="/resources/img/lucas_svg/user.svg" height="30" class="icon">-->
+            <img src="/resources/img/lucas_svg/speedometer.svg" height="30" class="icon">
 
-            <img src="/resources/img/weare.ico" height="30" class="icon">
-            <img src="/resources/img/contact.ico" height="30" class="icon">
+            <img src="/resources/img/lucas_svg/team.svg" height="30" class="icon">
+            <img src="/resources/img/lucas_svg/chat.svg" height="30" class="icon">
         </div>
 
     </div>
