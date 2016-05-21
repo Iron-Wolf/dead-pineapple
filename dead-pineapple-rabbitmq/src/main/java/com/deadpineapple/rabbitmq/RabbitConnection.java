@@ -1,5 +1,6 @@
 package com.deadpineapple.rabbitmq;
 
+import com.deadpineapple.rabbitmq.XmlConfig.RabbitConfig;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
@@ -65,10 +66,12 @@ public class RabbitConnection {
     }
 
     public static Connection connect() throws IOException, TimeoutException {
+        RabbitConfig config  = RabbitConfig.read();
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("lzi.space");
-        factory.setUsername("rab1");
-        factory.setPassword("rab1pass");
+        factory.setHost(config.getHost());
+        factory.setUsername(config.getUsername());
+        factory.setPassword(config.getPassword());
+        factory.setPort(config.getPort());
         return factory.newConnection();
     }
 }

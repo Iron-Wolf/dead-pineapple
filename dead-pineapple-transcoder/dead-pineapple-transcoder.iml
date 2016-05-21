@@ -31,6 +31,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.2.5.RELEASE" level="project" />
     <orderEntry type="module" module-name="dead-pineapple-rabbitmq" />
     <orderEntry type="library" name="Maven: com.rabbitmq:amqp-client:3.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.6" level="project" />
     <orderEntry type="module" module-name="dead-pineapple-videoHelper" />
     <orderEntry type="library" name="Maven: javax:javaee-api:7.0" level="project" />
     <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.5.0" level="project" />
