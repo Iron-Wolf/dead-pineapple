@@ -16,16 +16,14 @@
     <meta charset="utf-8">
     <meta name="description" content="File Upload widget with multiple file selection, drag&amp;drop support, progress bar and preview images for jQuery. Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform (Google App Engine, PHP, Python, Ruby on Rails, Java, etc.) that supports standard HTML form file uploads.">
     <meta name="viewport" content="width=device-width">
-
-
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
     <link rel="stylesheet" href="<spring:url value='/resources/css/jquery.fileupload-ui.css'/>" type="text/css">
     <link rel="stylesheet" type="text/css" media="screen" href="<spring:url value='/resources/css/jquery.fileupload.css'/>">
 
     <link rel="stylesheet" href="<spring:url value='/resources/css/jqueryFileTree.css'/>"/>
     <!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
-    <!-- Generic page styles -->
-    <link rel="stylesheet" href="<spring:url value='/resources/css/style.css'/>" type="text/css">
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap.min.css'/>" type="text/css">
     <!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
@@ -34,10 +32,14 @@
     <!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
     <!-- Bootstrap Image Gallery styles -->
     <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-image-gallery.min.css'/>" type="text/css">
+    <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-select.css'/>">
+
+    <!-- Generic page styles -->
+    <link rel="stylesheet" href="<spring:url value='/resources/css/style.css'/>" type="text/css">
     <link rel="stylesheet" href="<spring:url value='/resources/css/leftbar.css'/>">
     <link rel="stylesheet" href="<spring:url value='/resources/css/deadpinnaple.css?v=1.0'/>">
     <link rel="stylesheet" href="<spring:url value='/resources/css/dashboard.css?v=1.0'/>">
-    <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-select.css'/>">
+
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 
 

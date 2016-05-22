@@ -30,8 +30,8 @@
                     <img type="submit" value="Google login" id="googlelogin" class="login" src="/resources/img/google-icon.png">
                 </li>
                 <input type="checkbox" class="checkbox-size connect" id="login-check" /><label class="connect" for="login-check">Remember me</label>
-                <div class="connect" type="button" ><input type="submit" class="submit-login" value="connection" /></div>
-                <li class="mv-item"><a href="<spring:url value='/user/add'/>"> Ajouter un utilisateur </a></li>
+                <div class="connect"  ><input type="submit" class="btn btn-success" value="connexion" /></div>
+                <li class="mv-item"><a href="<spring:url value='/user/add'/>"> S'incrire! </a></li>
 
 
     </form:form>
@@ -47,7 +47,6 @@
 
         </c:otherwise>
     </c:choose>
-
             <li class="mv-item"><a href="<spring:url value='/upload'/>"> Convertir une video </a></li>
             <li id="kesako" class="mv-item"><a href="<spring:url value='/index'/>#whats">Que faisons nous</a></li>
             <li id="qui" class="mv-item"><a href="<spring:url value='/index'/>#whos">Qui sommes nous</a></li>

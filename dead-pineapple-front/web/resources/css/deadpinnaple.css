@@ -26,8 +26,7 @@ iframe {
 }
 
 #conteneur {
-    /*background: url(/resources/img/fondsun_lucas2.svg) center 0 no-repeat fixed;
-    */
+
 }
 
 #whats {
@@ -98,7 +97,7 @@ iframe {
 
 #upload {
     position: absolute;;
-    margin-top: 300px !important;
+    top: 40%;
 }
 
 #1choose {
@@ -142,4 +141,56 @@ iframe {
 
     margin: auto;
     position: fixed;
+}
+
+#explicatif {
+    margin-top: 40px !important;
+    background-color: #edeff1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+#seconnecterindex {
+    position: absolute;
+    top: 15%;
+    background-color: #edeff1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.scroll-down-btn{
+    position: absolute;
+    bottom: 40px;
+}
+.scroll-down-btn button{
+    background: rgba(255,255,255,0.7);
+    height: 37px;
+    width: 100%;
+    text-align: center;
+    border: none !important;
+    border-radius: 25px;
+    transition: content 0.15s;
+}
+.scroll-down-btn button:hover{
+    background: rgba(255,255,255,0.5);
+}
+.scroll-down-btn button:hover::before{
+    content: '↓ ';
+}
+.scroll-down-btn button:hover::after{
+     content: ' ↓';
+ }
+.scroll-down-btn button:active{
+     background: rgba(255,255,255,0.8);
+ }
+.btn.btn-success{
+    background-color: #1abc9c;
+    border-color: #16a085;
+}
+.btn.btn-success:hover, .btn.btn-success:active:focus{
+    border-color: #1abc9c;
+    background-color: #16a085;
+}
+.btn{
+    border-radius: 0;
 }

@@ -60,7 +60,7 @@
        cy="171.92949"
        r="169.18701" />
     <circle
-       style="fill:#55bfff;fill-opacity:1;stroke:#000000;stroke-width:6.45009041;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#a66bbe;fill-opacity:1;stroke:#000000;stroke-width:6.45009041;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path4358-9"
        cx="171.38293"
        cy="170.55302"
@@ -90,7 +90,7 @@
        x="115.5565"
        y="120.6444" />
     <path
-       style="fill:#55bfff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.46082065px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#a66bbe;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.46082065px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 153.52604,121.70388 0.16458,34.89071 -23.12332,-0.24687 c -2.41621,0.32619 -11.02679,6.41856 -3.78532,14.15377 7.24148,7.73521 45.58833,46.24663 45.58833,46.24663 0,0 6.99461,5.92486 12.4257,0.16459 5.43111,-5.76026 44.76543,-44.84773 44.76543,-44.84773 0,0 9.381,-9.2987 -3.45614,-16.3756 l -23.45249,0 -0.0823,-33.90321 z"
        id="path5006"
        inkscape:connector-curvature="0"

@@ -21,13 +21,15 @@ $(document).ready(function() {
   });
 
 
-  $('a[href*="anchor-"]').click(function () { // Au clic sur un élément
-    var page = $(this).attr('href'); // Page cible
-    var ancre = page.replace('#', '');
-    var coordonnees = $('a[name="' + ancre + '"]').offset().top;
-    var speed = 750; // Durée de l'animation (en ms)
-    $('html, body').animate({scrollTop: coordonnees}, speed); // Go
-    return false;
+  $('a[href],button[goto]').click(function () { // Au clic sur un élément
+    var page = $(this).attr('href') || $(this).attr('goto'); // Page cible
+    var index;
+    if((index =page.indexOf('#')) >= 0){
+      var ancre = page.substring(index);
+      var coordonnees = $(ancre).offset().top;
+      var speed = 750; // Durée de l'animation (en ms)
+      $('html, body').animate({scrollTop: coordonnees}, speed); // Go
+    }
   });
 
 // cacher icones a ouvertures du menu

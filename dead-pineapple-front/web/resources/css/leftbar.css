@@ -2,19 +2,20 @@
     z-index: 101;
     position: fixed;
     margin-top: 10%;
+    width: 270px;
 }
 
+@media screen and (max-height: 420px) {
+    #leftbar{
+        margin-top: 2% !important;
+    }
+}
 #help {
     z-index: 101;
     position: fixed;
     margin-left: 3%;
     margin-top: 2%;
     height: 100px;
-}
-
-#leftbar {
-    width: 270px;
-    position: fixed;
 }
 
 #repli {
