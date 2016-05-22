@@ -1,7 +1,11 @@
 $(document).ready(function () {
-
+    var cible;
+    var position;
+    var placementLEFT;
+    var placementTOP;
 //definition dimentions fenetre
     var largeur_fenetre, hauteur_fenetre, conteneur_acceuil;
+
 
 //redimentionnement du conteneur_acceuil
     function misAjourDesTaillesConteneur() {
@@ -50,13 +54,42 @@ $(document).ready(function () {
     }
 
 
-//affichage de description des membres
-    $("#pablo").click(function () {
-        $("#description").text("PABLO VEUX DODO ! & PABLO VEUX DODO ! PABLO VEUX DODO ! PABLO VEUX DODO ! PABLO VEUX DODO ! PABLO VEUX DODO ! PABLO VEUX DODO ! ");
+
+//placement des lunettes
+    $("#lunettes").hide();
+    $(".membre img").click(function () {
+        cible = $(this);
+        position = cible.offset();
+        console.log("position : "+position.left+" "+position.top);
+        placementLEFT = position.left + ($(this).width() / 2) - 35;
+        placementTOP = position.top + ($(this).height() / 2);
+        placementTOP=placementTOP -50;
+
+        console.log("placement des lunettes "+placementLEFT+" placaementTOP"+placementTOP);
+        $("#lunettes").show();
+        $("#lunettes").offset({ top: placementTOP, left: placementLEFT});
+
+        
     });
-    $("#sofiane").click(function () {
-        $("#description").text("SOOOOAFIIAINAISNISNDJDFNJKFNDKDJFNKJFNDFKJNFDKJFNFKDJFNDFKJFNDKFJDFNDFKJDFNKJ ");
+        //affichage de description des membres
+        $("#pablo").click(function () {
+        $("#description h1").html('Pablo MERIDJEN<br/>Principaux travaux<span class="small"> Front design, Mise ne place des outils agile, scrum master</span><br/>Bio <span class="small">Ayant un parcours assez atypique, Pablo a fait des études aux thématiques différentes en abordant le multimedia, le communication et la programmation web et 3D. En alternance à ICDC et ccupant le poste dassistant MOA dans un équipe Agile, il cest naturrelement proposé pour mettre en place une gestion agile du projet et soccuper du front </span><br/>');
     });
+
+    $("#thomas").click(function () {
+        ("#description h1").html('Thomas GERARDIN<br/> Principaux travaux <span class="small">Architecture system, administrateur system</span><br/>Bio <span class="small">des trucs</span><br/>');
+    });
+    $("#sofiane").click(function(){
+        $("#description h1").html('Sofiane AZIRI <br/> Principaux travaux <span class="small">Front JEE, deploiement JEE</span><br/>Bio <span class="small">des trucs</span>');
+    });
+    $("#lucas").click(function(){
+        $("#description h1").html('Lucas ZIENTECH<br/> Principaux travaux <span class="small">Worker ffmpeg, architecture logiciel, front</span><br/>Bio <span class="small">des trucs</span><br/>');
+    });
+
+    $("#michael").click(function(){
+        $("#description h1").html('Michael LEMACHIN<br/> Principaux travaux <span class="small">gestion et deploiement des données, archi logiciel </span><br/>Bio <span class="small">des trucs</span><br/>    ');
+    });
+
 
 
 //navi
@@ -77,7 +110,7 @@ $(document).ready(function () {
     });
 
 
-//placement des lunettes
-//todo: faire les lunnettes
 
+
+    
 });

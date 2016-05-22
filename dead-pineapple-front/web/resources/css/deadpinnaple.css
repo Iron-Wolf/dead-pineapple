@@ -38,16 +38,9 @@ iframe {
     margin-top: 10%;
 }
 
-.membre {
-    border: 1px solid black;
-    margin-top: 10%;
-    height: 200px;
-    background-size: cover;
 
-}
 
 #description {
-    border: 1px solid black;
     height: 200px;
     margin-top: 2%;
 }
@@ -57,8 +50,9 @@ iframe {
 }
 
 #coord {
-    height: 300px;
-    border: 1px solid black;
+    height: 450px;
+    background-color: white;
+    margin-top:10%;
 }
 
 #msg {
@@ -140,15 +134,19 @@ iframe {
 #lunettes {
 
     margin: auto;
-    position: fixed;
+    position: relative;
+    z-index: 105;
 }
 
-#explicatif {
+.msg {
     margin-top: 40px !important;
     background-color: #edeff1;
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: center;
+}
+#description {
+    text-align: left;
 }
 
 #seconnecterindex {
@@ -193,4 +191,11 @@ iframe {
 }
 .btn{
     border-radius: 0;
+}
+.membre{
+    margin-top: 10%;
+}
+.adresses{
+    border-top: 1px solid black;
+    height:250px;
 }

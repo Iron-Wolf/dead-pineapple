@@ -1,23 +1,27 @@
-body{
+body {
     background-color: #16a085 !important;
-
-    color: #393939 !important;
+    font-family: 'Lato', sans-serif !important;
 }
+
 a {
     text-decoration: none;
 }
+
 img {
     border: 0;
     vertical-align: middle;
 }
+
 h1 {
     line-height: 1em;
 }
+
 blockquote {
     padding: 0 0 0 15px;
     margin: 0 0 20px;
     border-left: 5px solid #eee;
 }
+
 table {
     width: 100%;
     margin: 10px 0;
@@ -26,9 +30,11 @@ table {
 .fileupload-progress {
     margin: 10px 0;
 }
+
 .fileupload-progress .progress-extended {
     margin-top: 5px;
 }
+
 .error {
     color: red;
 }
@@ -38,38 +44,55 @@ table {
         list-style: none;
         padding: 0;
     }
+
     .navigation li {
         display: inline-block;
     }
+
     .navigation li:not(:first-child):before {
         content: "| ";
     }
 }
-.progress_style{
+
+.progress_style {
     width: 200px;
 }
-.bgimage{
+
+.bgimage {
     background-size: cover;
     background-position: center;
     height: 150px;
 }
-legend{
+
+legend {
     color: #CACACA !important;
 }
+
 #connect {
     float: right;
     margin-right: 20px;
 }
-#menu{
+
+#menu {
     text-align: center;
     margin-top: 20px;
 }
-#subscribeForm .form-group{
-    width: 60%;
-    margin-left: 20%;
+
+#subscribeForm {
+    padding-top: 1px;
+    padding-bottom: 10px;
+    background-color: #edeff1;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    float: none !important;
 }
-@media(min-width: 1200px){
-    h1{
+#subscribeForm h2{
+
+}
+@media (min-width: 1200px) {
+    h1 {
         margin-top: 10px;
     }
 
@@ -77,19 +100,42 @@ legend{
         text-align: center;
     }
 
-
 }
-.container .row:hover{
+
+.container .row:hover {
     cursor: pointer;
 }
-.filename{
+
+.filename {
     border-right: solid black 3px;
 }
-#uploadedFiles{
+
+#uploadedFiles {
     margin-left: 30px;
 }
-.well{
-    margin-top:20px;
+
+.well {
+    margin-top: 20px;
 }
 
+.form-control {
+    border-radius: 0;
+    border-color: #1ABC9C;
+    border: none;
+    box-shadow: none !important;
+    border-bottom: 1px solid #1ABC9C;
+    transition: border-bottom-width ease-in-out .15s;
+    -o-transition: border-bottom-width ease-in-out .15s;
+    -moz-transition: border-bottom-width ease-in-out .15s;
+}
 
+.form-control:focus {
+    border-color: #1ABC9C;
+    box-shadow: none !important;
+    border-bottom-width: 3px;
+}
+hr{
+    border-color:#878787 ;
+    margin-left: -15px;
+    margin-right: -15px;
+}

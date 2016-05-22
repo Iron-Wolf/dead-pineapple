@@ -46,7 +46,7 @@
         </div>
 
         <div class="scroll-down-btn col-xs-3 col-xs-offset-5">
-            <button type="button" goto="#whats">Scroll down for more!</button>
+            <button type="button" goto="#whats">Qu'est ce que dead-pineapple ?</button>
         </div>
     </div>
     <div id="whats" class="col-lg-12 page-para">
@@ -63,35 +63,45 @@
         <div id="4download" class="etapes col-xs-2 col-md-2 col-xs-offset-1"><img class="etp img-responsive"
                                                                                   src="/resources/img/download.svg"
                                                                                   height="250"></div>
-        <div id="explicatif" class="col-xs-9 col-xs-offset-2"><h1><span class="small">Selectionnez un module ci-dessus pour plus de détails!</span>
+        <div id="explicatif" class="msg col-xs-9 col-xs-offset-2"><h1><span class="small">Selectionnez un module ci-dessus pour plus de détails!</span>
         </h1></div>
+        <div class="scroll-down-btn col-xs-3 col-xs-offset-5">
+            <button type="button" goto="#whos">Qui sommes nous ?</button>
+        </div>
     </div>
     <div id="whos" class="col-lg-12 col-md-12 page-para ">
         <div id="lunettes"><img src="/resources/img/lunettes.svg" height="100"></div>
-        <img id="pablo" class="membre col-lg-1 col-lg-offset-1" style="background-image:url(/resources/img/image1.png)">
-        <img id="sofiane" class="membre col-lg-1 col-lg-offset-1"
-             style="background-image:url(/resources/img/image1.png)">
-        <img id="michael" class="membre col-lg-1 col-lg-offset-1"
-             style="background-image:url(/resources/img/image1.png)">
-        <img id="lucas" class="membre col-lg-1 col-lg-offset-1" style="background-image:url(/resources/img/lucas.jpg)">
-        <img id="thomas" class="membre col-lg-1 col-lg-offset-1" style="background-image:url(/resources/imgimage1.png)">
 
-        <div id="description" class="col-lg-7 col-lg-offset-2"></div>
+        <div id="pablo" class="membre col-lg-1 col-lg-offset-1"><img class="etp teamate img-responsive" src="/resources/img/sofiane.png" height="250"></div>
+        <div id="sofiane" class="membre col-lg-1 col-lg-offset-1"><img class="etp teamate img-responsive" src="/resources/img/sofiane.png" height="250"></div>
+        <div id="michael" class="membre col-lg-1 col-lg-offset-1"><img class="etp teamate img-responsive" src="/resources/img/sofiane.png" height="250"></div>
+        <div id="lucas" class="membre col-lg-1 col-lg-offset-1" ><img class="etp teamate img-responsive" src="/resources/img/sofiane.png" height="250"></div>
+        <div id="thomas" class="membre col-lg-1 col-lg-offset-1" ><img class="etp teamate img-responsive" src="/resources/img/sofiane.png" height="250"></div>
+
+        <div id="description" class="msg col-xs-9 col-xs-offset-2"><h1><span class="small">Découvrez les fondateurs de Dead-pinneaple !</span>
+        </h1></div>
+
+        <div class="scroll-down-btn col-xs-3 col-xs-offset-5">
+            <button type="button" goto="#contact">Nous contacter</button>
+        </div>
 
     </div>
     <div id="contact" class="col-lg-12 col-md-12 page-para ">
-        <div id="coord" class="col-lg-4 col-md-offset-4 col-lg-offset-2"></div>
-      <textarea id="txt" rows="10" cols="50" id="msg" class="col-lg-4 col-lg-offset-4" type="text"
-                value="Indiquez nous toute info">
+        <div id="coord" class="col-xs-9 col-lg-offset-2">
+            <div class="col-xs-10"><h2>Nous contacter</h2></div>
+            <div class="adresses col-xs-12">
+                <h4>N'hésitez pas nous contacter aux différentes adresses suivantes : </h4><br/><br/>
+                <b>Pablo MERIDJEN </b><br/><A HREF="mailto:216369@supinfo.com"> 216369@supinfo.com </A><br/><br/>
+                    <b> Tomas GERARDIN</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                        <b> Lucas ZIENTECH</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                            <b>Sofiane AZIRI </b><br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                                <b>Michael LE FALHER </b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
 
-At w3schools.com you will learn how to make a website. We offer free tutorials in all web development technologies.
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-</textarea>
-        <input id="contactbutton" class="col-lg-3 col-lg-offset-4 btn btn-default" type="submit"
-               value="Envoyer au sevice comm ou support">
+            </div>
+
+        </div>
+
+
     </div>
 
 </div>
