@@ -34,9 +34,11 @@ public class UserController{
         this.userBdd = userDAO;
     }
     @RequestMapping(value="/add", method= RequestMethod.GET)
-    public ModelAndView addUser(Model model, LoginForm loginForm){
+    public ModelAndView addUser(Model model, LoginForm loginForm, ModelMap param){
         System.out.println("Invoking User");
         model.addAttribute("loginAttribute", loginForm);
+        param.put("logout", "");
+        param.put("error", "");
         return new ModelAndView("userForm", "userAccount", new UserAccount());
     }
     @RequestMapping(value="/add", method=RequestMethod.POST)
@@ -110,7 +112,7 @@ public class UserController{
     }
 
     @RequestMapping(value="/login", method = RequestMethod.POST)
-    public String login(LoginForm loginForm, HttpServletRequest request, Model model) throws Exception {
+    public String login(LoginForm loginForm, HttpServletRequest request, Model model, ModelMap param) throws Exception {
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
 
@@ -119,23 +121,26 @@ public class UserController{
             if( user != null ){
                 request.getSession().setAttribute("LOGGEDIN_USER", loginForm);
                 request.getSession().setAttribute("USER_INFORMATIONS", user);
+                param.put("error", "");
                 return "redirect:/upload";
             }else{
                 model.addAttribute("loginAttribute", loginForm);
-                return "redirect:/index.failed";
+                param.put("error", "error");
+                return "redirect:/index";
             }
         }else{
             model.addAttribute("loginAttribute", loginForm);
-            return "redirect:/index.failed";
+            return "redirect:/index";
         }
     }
     @RequestMapping(value="/logOff", method = RequestMethod.GET)
-    public String logOff(Model model, LoginForm loginform, HttpServletRequest request){
+    public String logOff(Model model, LoginForm loginform, HttpServletRequest request, ModelMap param){
         HttpSession session = request.getSession();
         session.removeAttribute("LOGGEDIN_USER");
         session.removeAttribute("USER_INFORMATIONS");
         model.addAttribute("loginAttribute", loginform);
-        return "index";
+        param.put("logout", "success");
+        return "redirect:/index";
     }
 
 

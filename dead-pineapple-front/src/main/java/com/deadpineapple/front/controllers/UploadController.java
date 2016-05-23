@@ -156,7 +156,10 @@ public class UploadController extends HttpServlet {
                     convertedFile.setOriginalName(item.getName());
                     convertedFile.setOldType(FilenameUtils.getExtension(filePath));
                     //convertedFile.setNewType();
-                    convertedFile.setSize((int) item.getSize());
+                    // Convert in MB
+                    double filesize = ((double)item.getSize() / 1024) / 1024;
+                    filesize = Math.round(filesize*100.0)/100.0;
+                    convertedFile.setSize(filesize);
                     convertedFileDao.createFile(convertedFile);
 
                     // Create a new video Information
@@ -176,13 +179,15 @@ public class UploadController extends HttpServlet {
                     // add video information into converted file
                     video.setConvertedFile(convertedFile);
                     video.setVideoInformation(videoInformation);
-                    video.setPrice(price);
+                    video.setPrice(Math.round(price*100.0)/100.0);
                     convertedFiles.add(video);
                     JSONObject jsono = new JSONObject();
                     jsono.put("name", item.getName());
                     jsono.put("size", item.getSize());
                     jsono.put("duration", duration);
-                    jsono.put("price", String.format("%.2f", price));
+                    String aPrice = String.format("%.2f", price);
+                    aPrice = aPrice.replace(",", ".");
+                    jsono.put("price", aPrice);
                     jsono.put("url", "UploadServlet?getfile=" + item.getName());
                     jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + item.getName());
                     jsono.put("delete_url", "/upload/deleteFile?delfile=" + item.getName());
@@ -203,38 +208,45 @@ public class UploadController extends HttpServlet {
     @RequestMapping(value = "/getFiles", method = RequestMethod.GET)
     public void getUploadedFiles(HttpServletResponse response) throws IOException {
         JSONArray history = new JSONArray();
-        List<ConvertedFile> convertedFiles = convertedFileDao.findByUser(user);
-        for(ConvertedFile cf : convertedFiles){
-            // Get duration
-            videoInformation = new VideoInformation(cf.getFilePath());
-            TimeSpan duration = videoInformation.getDuration();
+        List<ConvertedFile> cfs = convertedFileDao.findByUser(user);
+        for(ConvertedFile cf : cfs){
+                // Get duration
+                videoInformation = new VideoInformation(cf.getFilePath());
+                TimeSpan duration = videoInformation.getDuration();
+                double price = 0, time = 0;
+                if(duration != null){
+                    time = (double)((duration.getHeures() * 60) + duration.getMinutes());
+                    System.out.println("temps ="+time +duration.getHeures() * 60);
+                }
+                else{
+                    duration = new TimeSpan();
+                }
 
-            double price = 0;
+                if(time < 5){
+                    price = Math.log(5) - 1;
+                }
+                else{
+                    price = Math.log(time) - 1;
 
-            double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
-            System.out.println("temps ="+time +duration.getHeures() * 60);
-            if(time < 5){
-                price = Math.log(5) - 1;
-            }
-            else{
-                price = Math.log(time) - 1;
+                }
+                VideoFile video = new VideoFile();
+                video.setVideoInformation(videoInformation);
+                video.setConvertedFile(cf);
+                video.setPrice(Math.round(price*100.0)/100.0);
+                convertedFiles.add(video);
 
-            }
-            VideoFile video = new VideoFile();
-            video.setVideoInformation(videoInformation);
-            video.setConvertedFile(cf);
-            video.setPrice(price);
-
-            JSONObject jsono = new JSONObject();
-            jsono.put("name", cf.getOriginalName());
-            jsono.put("size", cf.getSize());
-            jsono.put("duration", duration);
-            jsono.put("price", String.format("%.2f", price));
-            jsono.put("url", "UploadServlet?getfile=" + cf.getOriginalName());
-            jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + cf.getOriginalName());
-            jsono.put("delete_url", "/upload/deleteFile?delfile=" + cf.getOriginalName());
-            jsono.put("delete_type", "GET");
-            history.put(jsono);
+                JSONObject jsono = new JSONObject();
+                jsono.put("name", cf.getOriginalName());
+                jsono.put("size", cf.getSize());
+                jsono.put("duration", duration);
+                String aPrice = String.format("%.2f", price);
+                aPrice = aPrice.replace(",", ".");
+                jsono.put("price", aPrice);
+                jsono.put("url", "UploadServlet?getfile=" + cf.getOriginalName());
+                jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + cf.getOriginalName());
+                jsono.put("delete_url", "/upload/deleteFile?delfile=" + cf.getOriginalName());
+                jsono.put("delete_type", "GET");
+                history.put(jsono);
         }
         if(history != null) {
             PrintWriter writer = response.getWriter();
@@ -308,21 +320,24 @@ public class UploadController extends HttpServlet {
             resp.setStatus(404);
 
         }
-
     }
     @RequestMapping(value = "/setFormat", method = RequestMethod.GET)
-    public void setConvertFormat(HttpServletRequest request){
+    public void setConvertFormat(HttpServletRequest request, HttpServletResponse resp){
         if (request.getParameter("format") != null && !request.getParameter("format").isEmpty()) {
             String filePath = UPLOAD_PATH + request.getParameter("file");
             String format = request.getParameter("format");
-            for (VideoFile video:
-                    convertedFiles) {
-                if(video.getConvertedFile().getFilePath().equals(filePath)){
-                    System.out.println("Vidéo trouvée2"+filePath);
-                    convertedFileDao.updateFile(video.getConvertedFile()).setNewType(format);
-                    break;
+            List<ConvertedFile> cf = convertedFileDao.findByUser(user);
+            for (ConvertedFile video:
+                    cf) {
+                if(video.getFilePath().equals(filePath)){
+                    System.out.println("Set format"+filePath);
+                    convertedFileDao.updateFile(video).setNewType(format);
+
+                    resp.setStatus(200);
+                    return;
                 }
             }
+            resp.setStatus(404);
         }
     }
 
@@ -342,7 +357,7 @@ public class UploadController extends HttpServlet {
             transactionDao.createTransaction(transaction);
             priceTotal += vf.getPrice();
         }
-
+        priceTotal = Math.round(priceTotal*100.0)/100.0;
         //test price : 0.10
         ps = new PayPalService(priceTotal);
         String serverUrl = request.getScheme() + "://"+ request.getServerName() + ":" +request.getServerPort()+ request.getContextPath();
@@ -504,9 +519,6 @@ public class UploadController extends HttpServlet {
                     System.out.println(pat);
                 }
             }
-
-
-
         } catch (DbxException e) {
             e.printStackTrace();
         }
@@ -559,14 +571,16 @@ public class UploadController extends HttpServlet {
         // add video information into converted file
         video.setConvertedFile(convertedFile);
         video.setVideoInformation(videoInformation);
-        video.setPrice(price);
+        video.setPrice(Math.round(price*100.0)/100.0);
         convertedFiles.add(video);
 
         JSONObject jsono = new JSONObject();
         jsono.put("name", fileName);
         jsono.put("size", size);
         jsono.put("duration", duration);
-        jsono.put("price", String.format("%.2f", price));
+        String aPrice = String.format("%.2f", price);
+        aPrice = aPrice.replace(",", ".");
+        jsono.put("price", aPrice);
         jsono.put("url", "UploadServlet?getfile=" + fileName);
         jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + fileName);
         jsono.put("delete_url", "/upload/deleteFile?delfile=" + fileName);

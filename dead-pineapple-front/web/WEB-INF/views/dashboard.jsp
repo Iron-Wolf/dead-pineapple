@@ -19,9 +19,9 @@
     </h1>
     <hr/>
     <div class="progress">
-        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="${space}"
-             aria-valuemin="0" aria-valuemax="1000000">
-            50% d'espace utilisé (info)
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="${spacePercent}"
+             aria-valuemin="0" aria-valuemax="100" style="width: ${spacePercent}%">
+            <c:out value="${userSize} "/> / 10000 MB
         </div>
     </div>
     <div class="row">

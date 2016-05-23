@@ -1,5 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: 15256
@@ -27,6 +28,16 @@
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-success">Connexion</button>
                 </div>
+                <c:if test="${not empty param.error}">
+                    <div class="alert alert-error">
+                        Invalid username and password.
+                    </div>
+                </c:if>
+                <c:if test="${not empty param.logout}">
+                    <div class="alert alert-success">
+                        You have been logged out.
+                    </div>
+                </c:if>
                 <hr class="col-xs-12">
                 <h3>Ou s'incrire/se connecter via:</h3>
                 <div class="form-group">

@@ -1,5 +1,6 @@
 package com.deadpineapple.front.controllers;
 
+import com.deadpineapple.dal.RabbitMqEntities.FileIsUploaded;
 import com.deadpineapple.dal.dao.ITransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
@@ -38,6 +39,8 @@ public class DashboardController {
     ArrayList<Invoice> invoices;
     Invoice invoice;
     int idTransaction;
+    static int totalSpace = 10240;
+    double invoicePrice;
 
     public void setTransactionDao(ITransactionDao transactionDao) {
         this.transactionDao = transactionDao;
@@ -55,14 +58,19 @@ public class DashboardController {
         System.out.println("size"+invoices.size());
         //System.out.println(invoices.get(0).get(0).get("name"));
         model.addAttribute("invoices", invoices);
-        model.addAttribute("space", user.getTotalSize());
+
+        double userSize = user.getTotalSize();
+        System.out.println("Taile totale :"+user.getTotalSize()+" &"+userSize);
+        double spaceLeft = (userSize/ totalSpace) * 100;
+        model.addAttribute("spacePercent",spaceLeft);
+        model.addAttribute("userSize", userSize);
         model.addAttribute("userAccount", new UserAccount());
         return new ModelAndView("dashboard", "model", model);
     }
     private void initTransaction(Transaction transaction){
         invoice = new Invoice();
+        invoicePrice = 0.0;
         invoice.setDate(transaction.getDate());
-        invoice.setPrice(transaction.getPrix());
         idTransaction = transaction.getIdTransaction();
     }
     private void getHistory(){
@@ -74,8 +82,11 @@ public class DashboardController {
             Transaction transactionTest = transactions.get(0);
             initTransaction(transactionTest);
             for (Transaction aTransaction : transactions) {
+                invoicePrice += aTransaction.getPrix();
+                System.out.println("Price :"+ invoicePrice);
                 // if the transaction is different, create new transaction
                 if (aTransaction.getIdTransaction() != idTransaction) {
+                    invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
                     invoices.add(invoice);
                     invoice = new Invoice();
                     //jsonTransactions.put(jsonTransaction);
@@ -95,8 +106,12 @@ public class DashboardController {
                 }
 
             }
+            invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
             invoices.add(invoice);
         }
+
+    }
+    public void startConversion(){
 
     }
 }

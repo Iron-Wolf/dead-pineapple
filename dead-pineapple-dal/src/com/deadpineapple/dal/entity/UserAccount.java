@@ -41,7 +41,7 @@ public class UserAccount implements Serializable {
     private List<ConvertedFile> convertedFiles;
 
     @Formula("(SELECT COALESCE(SUM(cf.size),0) FROM ConvertedFile cf WHERE id=cf.userAccountId)")
-    private int totalSize;
+    private double totalSize;
 
     public Long getId() {
         return id;
@@ -131,11 +131,11 @@ public class UserAccount implements Serializable {
         this.ville = ville;
     }
 
-    public int getTotalSize() {
+    public double getTotalSize() {
         return totalSize;
     }
 
-    public void setTotalSize(int totalSize) {
+    public void setTotalSize(double totalSize) {
         this.totalSize = totalSize;
     }
 }

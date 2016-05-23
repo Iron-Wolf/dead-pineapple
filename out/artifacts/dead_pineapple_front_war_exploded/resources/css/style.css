@@ -108,6 +108,7 @@ legend {
 
 .filename {
     border-right: solid black 3px;
+    word-wrap: break-word;
 }
 
 #uploadedFiles {

@@ -23,12 +23,21 @@
                 <li id="creer" class="mv-item"><a >Se connecter</a></li>
                 <li id="login" class="connect"><form:input type="text"  class="login-inp" path="username" placeholder="login"/></li>
                 <li id="mdp" class="connect"><form:input type="password" onfocus="this.value=''" class="login-inp" path="password" placeholder="mot de passe"/></li>
-
-
+                <c:if test="${not empty param.error}">
+                    <div class="alert alert-error">
+                        Invalid username and password.
+                    </div>
+                </c:if>
+                <c:if test="${not empty param.logout}">
+                    <div class="alert alert-success">
+                        You have been logged out.
+                    </div>
+                </c:if>
                 <li class="connect">
                     <img type="subtmit" value="Facebook login" id="fbLogin" onclick="" class="login" src="/resources/img/F_icon.svg.png">
                     <img type="submit" value="Google login" id="googlelogin" class="login" src="/resources/img/google-icon.png">
                 </li>
+
                 <input type="checkbox" class="checkbox-size connect" id="login-check" /><label class="connect" for="login-check">Remember me</label>
                 <div class="connect"  ><input type="submit" class="btn btn-success" value="connexion" /></div>
                 <li class="mv-item"><a href="<spring:url value='/user/add'/>"> S'incrire! </a></li>

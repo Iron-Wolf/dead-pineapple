@@ -25,7 +25,7 @@ public class ConvertedFile implements Serializable {
     @JoinColumn(name = "userAccountId")
     private UserAccount userAccount;
 
-    private int size;
+    private double size;
 
     private Boolean isConverted;
 
@@ -59,11 +59,11 @@ public class ConvertedFile implements Serializable {
         this.splitFiles = splitFiles;
     }
 
-    public int getSize() {
+    public double getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(double size) {
         this.size = size;
     }
 

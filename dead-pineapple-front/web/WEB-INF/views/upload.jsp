@@ -87,7 +87,7 @@
                 <table role="presentation" id="uploadedFiles" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
             </form>
             <br>
-                <a href="<spring:url value='/upload/facture'/>" class="btn btn-primary start">Payer et Convertir</a>
+                <a href="<spring:url value='/upload/facture'/>" class="btn btn-primary start" id="payButton" price="">Payer et Convertir</a>
 
             </button>
             <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
@@ -115,7 +115,8 @@
 
         <!-- The template to display files available before upload -->
         <script id="template-upload" type="text/x-tmpl">
-            {% for (var i=0, file; file=o.files[i]; i++) { %}
+            {% console.log("Suppression file");
+            for (var i=0, file; file=o.files[i]; i++) { %}
         <div class="row template-upload fade">
             <div class="col-sm-4 name"><span>{%=file.name%}</span></div>
             <div class="col-sm-1 size"><span>{%=o.formatFileSize(file.size)%}</span></div>
@@ -150,7 +151,10 @@
     </script>
     <!-- The template to display files before conversion -->
     <script id="template-download" type="text/x-tmpl">
-        {% for (var i=0, file; file=o.files[i]; i++) { %}
+        {% var totalPrice = 0.0;
+        for (var i=0, file; file=o.files[i]; i++) {
+        {$=totalPrice+=parseFloat(file.price);$}
+        console.log("Price ="+totalPrice);%}
         <div class="row template-download fade">
             {% if (file.error) { %}
             <td ><span class="name">{%=file.name%}</span></td>
@@ -166,11 +170,12 @@
             </div>
             <div class="col-sm-1"><span class="size">{%=o.formatFileSize(file.size)%}</span></div>
             <div class="col-sm-1"><span class="duration">{%=file.duration%}</span></div>
+
             <div class="col-sm-1"><span class="price">{%=file.price%} &euro;</span></div>
             <div class="col-sm-1">
                  <div class="form-group">
                       <label for="sel1">Formats</label>
-                      <select class="form-control formats" onchange="setFormat()">
+                      <select class="form-control formats" filename="{%=file.name%}" onchange="setFormat()" required>
                         <option value="avi">.avi</option>
                         <option value="mp4">.mp4</option>
                         <option value="mp3">.mp3</option>
@@ -189,7 +194,7 @@
             <div class="col-sm-2">
                   <div class="form-group">
                       <label for="sel1">Encodage :</label>
-                      <select class="form-control" onchange="setEncodage()">
+                      <select class="form-control" filename="{%=file.name%}" onchange="setEncodage()" required>
                         <option>mpeg4</option>
                         <option>x264</option>
                         <option>x265</option>
@@ -206,10 +211,17 @@
             </div>
         </div>
         {% } %}
+        {% {$=totalPrice = totalPrice;$}
+        var priceString = document.getElementById("payButton").getAttribute("price");
+        var price = parseFloat(priceString);
+        totalPrice += price;
+        document.getElementById("payButton").setAttribute("price", totalPrice);
+        document.getElementById("payButton").innerHTML = "Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir";
+        %}
     </script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="/resources/js/jquery_1.12.2.min.js"></script>
+    <script src="/resources/js/bootstrap_3.3.6.min.js"></script>
     <script src="<spring:url value='/resources/js/vendor/jquery.ui.widget.js'/>"></script>
     <script src="<spring:url value='/resources/js/tmpl.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/load-image.min.js'/>"></script>
@@ -228,8 +240,8 @@
         function setFormat(){
             // When user choose a format for the file, send it to the bdd
             console.log("Envoi format vers serveur ");
-            var format = $(".formats a:selected").val();
-            var fileName = $(".formats :selected").parent().attr("fileName");
+            var format = $(".formats option:selected").val();
+            var fileName = $(".formats option:selected").parent().attr("filename");
             console.log(format, fileName);
             $.ajax({
             type:"GET",
@@ -250,8 +262,8 @@
         function setEncodage(){
             // When user choose a format for the file, send it to the bdd
             console.log("Envoi format vers serveur ");
-            var format = $(".encodage a:selected").val();
-            var fileName = $(".encodage :selected").parent().attr("fileName");
+            var format = $(".encodage option:selected").val();
+            var fileName = $(".encodage option:selected").parent().attr("filename");
             console.log(format, fileName);
             $.ajax({
                 type:"GET",
@@ -263,6 +275,7 @@
             });
 
         };
+
         $(document).ready( function() {
             function openFile(file) {
                 if (confirm("Souhaitez-vous uploader le fichier :"+ file+" ?")) {
@@ -279,78 +292,101 @@
                 }
 
             }
-                // Load files
-            var showData = $('.files');
-
-            $.getJSON('/upload/getFiles', function (data) {
-                console.log(data);
-
-
-                for(var i = 0;i < data.length;i++){
-                    console.log(data[i]);
-                    var fileRow = "<div class='row template-download fade in'>";
-                    var preview, name, price, deleteurl;
-                    var sizeduration ="";
-                    for(var attr in data[i]){
-                        console.log("key"+attr+"|"+data[i][attr]);
-                        if(attr == "thumbnail_url") {
-                            preview = "<div class='col-sm-1'>";
-                            preview += "<span class='preview'>";
-                            preview += "<img src='"+data[i][attr]+"' style='margin-top: 5px;'/>";
-                            preview += "</span></div>";
-                        }
-                        else if(attr == "name"){
-                            name = "<div class='col-sm-3 filename'>";
-                            name += "<span class='name'>"+data[i][attr]+"</span></div>";
-                        }
-                        else if(attr == "size" ||  attr == "duration") {
-                            sizeduration += "<div class='col-sm-1'><span class='"+attr+"'>"+data[i][attr]+"</span></div>";
-                        }
-                        else if(attr == "price"){
-                            price = "<div class='col-sm-1'><span class='"+attr+"'>"+data[i][attr]+"€</span></div>";
-                            price += "<div class='col-sm-1'>";
-                            price += "<div class='form-group'>";
-                            price += "<label for='sel1'>Formats</label>";
-                            price += "<select class='form-control formats' onchange='setFormat()'>";
-                            price += "<option value='avi'>.avi</option>";
-                            price += "<option value='mp4'>.mp4</option>";
-                            price += "<option value='mp3'>.mp3</option>";
-                            price += "<option value='aac'>.aac</option>";
-                            price += "<option value='wav'>.wav</option>";
-                            price += "            <option value='wma'>.wma</option>";
-                            price += "            <option value='wmv'>.wmv</option>";
-                            price += "          <option value='ogg'>.ogg</option>";
-                            price += "           <option value='flv'>.flv</option>";
-                            price += "           <option value='swf'>.swf</option>";
-                            price += "           <option value='dv'>.dv</option>";
-                            price += "           <option value='mov'>.mov</option>";
-                            price += "</select></div></div>";
-                            price += "<div class='col-sm-2'>";
-                            price += "<div class='form-group'>";
-                            price += "<label for='sel1'>Encodage :</label>";
-                            price += "<select class='form-control' onchange='setEncodage()'>"
-                            price += "<option>mpeg4</option>";
-                            price += "<option>x264</option>";
-                            price += "<option>x265</option>";
-                            price += "</select></div></div>";
-                        }
-                        else if(attr == "delete_url") {
-                            deleteurl = "<div class='col-sm-2 delete'>";
-                            deleteurl += "<button class='btn btn-danger' data-type='GET' data-url='"+data[i][attr]+"'>";
-                            deleteurl += "<i class='glyphicon glyphicon-trash'></i>";
-                            deleteurl += "<span>Delete</span>";
-                            deleteurl += "</button>";
-                            deleteurl += "<input type='checkbox' name='delete' value='1'>";
-                            deleteurl += "</div>";
-                        }
-                    }
-                    fileRow += preview + name + sizeduration + price + deleteurl;
-                    fileRow += "</div>";
-                    $(".files").append(fileRow);
-                }
-
-
+            $('#uploadedFiles').on('click', '.delete', function(){
+                location.reload();
             });
+                // Load files
+            function getFiles(){
+                $.getJSON('/upload/getFiles', function (data) {
+                    console.log(data);
+                    var totalPrice = 0;
+                    for(var i = 0;i < data.length;i++){
+                        var fileRow = "<div class='row template-download fade in'>";
+                        var preview, name, size, duration, price, deleteurl, priceValue;
+                        var fileName = "";
+                        for(var attr in data[i]){
+                            console.log("key"+attr+"|"+data[i][attr]);
+                            if(attr == "thumbnail_url") {
+                                preview = "<div class='col-sm-1'>";
+                                preview += "<span class='preview'>";
+                                preview += "<img src='"+data[i][attr]+"' style='margin-top: 5px;'/>";
+                                preview += "</span></div>";
+                            }
+                            else if(attr == "name"){
+                                fileName = data[i][attr];
+                                name = "<div class='col-sm-3 filename'>";
+                                name += "<span class='name'>"+data[i][attr]+"</span></div>";
+                            }
+                            else if(attr == "size") {
+                                size = "<div class='col-sm-1'><span class='"+attr+"'>"+formatFileSize(parseFloat(data[i][attr])*1000000)+"</span></div>";
+                            }
+                            else if(attr == "duration") {
+                                duration = "<div class='col-sm-1'><span class='"+attr+"'>"+data[i][attr]+"</span></div>";
+                            }
+                            else if(attr == "price"){
+                                priceValue = data[i][attr]
+                                totalPrice += parseFloat(priceValue);
+                            }
+                            else if(attr == "delete_url") {
+                                deleteurl = "<div class='col-sm-2 delete'>";
+                                deleteurl += "<button class='btn btn-danger' data-type='GET' data-url='"+data[i][attr]+"'>";
+                                deleteurl += "<i class='glyphicon glyphicon-trash'></i>";
+                                deleteurl += "<span>Delete</span>";
+                                deleteurl += "</button>";
+                                deleteurl += "<input type='checkbox' name='delete' value='1'>";
+                                deleteurl += "</div>";
+                            }
+                        }
+                        // Create price, format & encodage
+                        price = "<div class='col-sm-1'><span class='price'>"+priceValue+"€</span></div>";
+                        price += "<div class='col-sm-1'>";
+                        price += "<div class='form-group'>";
+                        price += "<label for='sel1'>Formats</label>";
+                        price += "<select class='form-control formats' onchange='setFormat()' filename='"+fileName+"' required>";
+                        price += "<option value='avi'>.avi</option>";
+                        price += "<option value='mp4'>.mp4</option>";
+                        price += "<option value='mp3'>.mp3</option>";
+                        price += "<option value='aac'>.aac</option>";
+                        price += "<option value='wav'>.wav</option>";
+                        price += "<option value='wma'>.wma</option>";
+                        price += "<option value='wmv'>.wmv</option>";
+                        price += "<option value='ogg'>.ogg</option>";
+                        price += "<option value='flv'>.flv</option>";
+                        price += "<option value='swf'>.swf</option>";
+                        price += "<option value='dv'>.dv</option>";
+                        price += "<option value='mov'>.mov</option>";
+                        price += "</select></div></div>";
+                        price += "<div class='col-sm-2'>";
+                        price += "<div class='form-group'>";
+                        price += "<label for='sel1'>Encodage :</label>";
+                        price += "<select class='form-control' onchange='setEncodage()' filename='"+fileName+"')' required>"
+                        price += "<option>mpeg4</option>";
+                        price += "<option>x264</option>";
+                        price += "<option>x265</option>";
+                        price += "</select></div></div>";
+                        fileRow += preview + name + size + duration + price + deleteurl;
+                        fileRow += "</div>";
+                        $(".files").append(fileRow);
+                        $("#payButton").attr("price", totalPrice.toFixed(2));
+                        $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
+                    }
+                });
+            };
+            getFiles();
+
+            function formatFileSize(bytes) {
+                    if (typeof bytes !== 'number') {
+                        return '';
+                    }
+                    if (bytes >= 1000000000) {
+                        return (bytes / 1000000000).toFixed(2) + ' GB';
+                    }
+                    if (bytes >= 1000000) {
+                        return (bytes / 1000000).toFixed(2) + ' MB';
+                    }
+                    return (bytes / 1000).toFixed(2) + ' KB';
+            };
+
 
         });
 
