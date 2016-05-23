@@ -253,11 +253,6 @@
             });
 
         };
-        $(".formats ul.dropdown-menu li a").click(function (e) {
-            e.preventDefault();
-            console.log(this.val());
-            setFormat();
-        });
         $(document).on('click', '.formats li a', function() { alert('test'); });
         function setEncodage(){
             // When user choose a format for the file, send it to the bdd
