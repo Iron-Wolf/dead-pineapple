@@ -32,8 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -75,6 +73,7 @@ public class UploadController extends HttpServlet {
     DbxWebAuth webAuth;
     DbxClientV2 client;
     DbxRequestConfig config;
+    JSONArray history;
 
     List<String> ext = new ArrayList<String>(Arrays.asList(Constante.AcceptedUploadedTypes));
 
@@ -158,7 +157,7 @@ public class UploadController extends HttpServlet {
     // Return the videos already uploaded and non payed yet
     @RequestMapping(value = "/getFiles", method = RequestMethod.GET)
     public void getUploadedFiles(HttpServletResponse response) throws IOException {
-        JSONArray history = new JSONArray();
+        history = new JSONArray();
         List<ConvertedFile> cfs = convertedFileDao.findByUser(user);
         for(ConvertedFile cf : cfs){
                 // Generate video Information for the uploaded file (ffmpeg)
@@ -349,36 +348,6 @@ public class UploadController extends HttpServlet {
         return resizedImage;
     }
 
-    @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String fileName = request.getParameter("fileName");
-        if(fileName == null || fileName.equals("")){
-            throw new ServletException("File Name can't be null or empty");
-        }
-        File file = new File(UPLOAD_PATH, fileName);
-        if(!file.exists()){
-            throw new ServletException("File doesn't exists on server.");
-        }
-        System.out.println("File location on server::"+file.getAbsolutePath());
-        ServletContext ctx = getServletContext();
-        InputStream fis = new FileInputStream(file);
-        String mimeType = ctx.getMimeType(file.getAbsolutePath());
-        response.setContentType(mimeType != null? mimeType:"application/octet-stream");
-        response.setContentLength((int) file.length());
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-
-        ServletOutputStream os       = response.getOutputStream();
-        byte[] bufferData = new byte[1024];
-        int read=0;
-        while((read = fis.read(bufferData))!= -1){
-            os.write(bufferData, 0, read);
-        }
-        os.flush();
-        os.close();
-        fis.close();
-        System.out.println("File downloaded at client successfully");
-    }
-
     private String getDropBoxUrl(HttpServletRequest request) throws JsonReader.FileLoadException {
         DbxAppInfo appInfo = new DbxAppInfo(APP_KEY, APP_SECRET);
         config = new DbxRequestConfig(
@@ -484,9 +453,13 @@ public class UploadController extends HttpServlet {
         video.setVideoInformation(videoInformation);
         video.setPrice(generatePrice(videoInformation.getDuration()));
         convertedFiles.add(video);
+        history.put(generateJsonForPrview(video));
 
-        writer.write(generateJsonForPrview(video).toString());
-        writer.close();
+        if(history != null) {
+            response.setContentType("application/json");
+            writer.write(history.toString());
+            writer.close();
+        }
     }
     public JSONObject generateJsonForPrview(VideoFile video){
         JSONObject jsonFile = new JSONObject();

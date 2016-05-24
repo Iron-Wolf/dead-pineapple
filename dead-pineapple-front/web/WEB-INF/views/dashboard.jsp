@@ -71,24 +71,23 @@
                     </div>
                     <div class="form-group">
                         <form:label class="control-label" path="email">Email</form:label>
-                        <form:input path="email" value="${USER_INFORMATIONS.email}" id="signupEmail" type="email" maxlength="50" placeholder="Email" name="mail" class="form-control" disabled = "false" required="true" />
+                        <form:input path="email" value="${USER_INFORMATIONS.email}" id="signupEmail" type="email" maxlength="50" placeholder="Email" name="mail" class="form-control" disabled="true" required="true" />
                         <span class="erreur">${ erreurs['emailCheck']}</span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="signupEmailagain">Adresse</label>
-                        <input id="signupEmailagain" type="text" placeholder="Adresse" class="form-control" name="address" required="true">
+                        <label class="control-label" for="adresse">Adresse</label>
+                        <form:input id="adresse" value="${USER_INFORMATIONS.adresse}" name="adresse" path="adresse" type="text" placeholder="Adresse" class="form-control" required="true"/>
+                    </div>
+                    <div class="col-sm-6 form-group" style="padding-left:0">
+                        <form:input id="codePostal" value="${USER_INFORMATIONS.codePostal}" path="codePostal" name="codePostal" type="text" placeholder="Code Postal" class="form-control" required="true"/>
+                    </div>
+                    <div class="col-sm-6 form-group" style="padding-right:0">
+                        <form:input id="ville" value="${USER_INFORMATIONS.ville}" path="ville" name="ville" type="text" placeholder="Ville" class="form-control" required="true"/>
+                    </div>
 
-                    </div>
                     <div class="form-group">
-                        <input type="text" placeholder="Code Postal" class="form-control" name="zipcode" required="true">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" placeholder="Ville" class="form-control" name="city" required="true">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="signupTelephone" >Telephone</label>
-                        <input id="signupTelephone" type="text" class="form-control" placeholder="Téléphone (Optional)"name="phone">
+                        <label class="control-label" for="phone" >Telephone</label>
+                        <form:input id="phone" path="phone" value="${USER_INFORMATIONS.phone}" type="text" class="form-control" placeholder="Téléphone (Optional)"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="password">Password</label>

@@ -37,8 +37,8 @@ public class UserController{
     public ModelAndView addUser(Model model, LoginForm loginForm, ModelMap param){
         System.out.println("Invoking User");
         model.addAttribute("loginAttribute", loginForm);
-        param.put("logout", "");
-        param.put("error", "");
+        param.remove("logout");
+        param.remove("error");
         return new ModelAndView("userForm", "userAccount", new UserAccount());
     }
     @RequestMapping(value="/add", method=RequestMethod.POST)
@@ -121,7 +121,7 @@ public class UserController{
             if( user != null ){
                 request.getSession().setAttribute("LOGGEDIN_USER", loginForm);
                 request.getSession().setAttribute("USER_INFORMATIONS", user);
-                param.put("error", "");
+                param.remove("error");
                 return "redirect:/upload";
             }else{
                 model.addAttribute("loginAttribute", loginForm);
@@ -141,6 +141,27 @@ public class UserController{
         model.addAttribute("loginAttribute", loginform);
         param.put("logout", "success");
         return "redirect:/index";
+    }
+
+    @RequestMapping(value="/edit", method=RequestMethod.POST)
+    public String editUser(@ModelAttribute("user")UserAccount editUser,
+                           BindingResult result, ModelMap model, HttpServletRequest request)  {
+
+        user.setPassword(LoginForm.getEncryptedPassword(editUser.getPassword()));
+        user.setAdresse(editUser.getAdresse());
+        user.setCodePostal(editUser.getCodePostal());
+        user.setLastName(editUser.getLastName());
+        user.setFirstName(editUser.getFirstName());
+        user.setPhone(editUser.getPhone());
+        userBdd.saveUser(user);
+        // Create a loginform and check in bdd if users exists
+        LoginForm loginForm = new LoginForm();
+        loginForm.setPassword(user.getPassword());
+        loginForm.setUsername(user.getEmail());
+        request.getSession().setAttribute("LOGGEDIN_USER", loginForm);
+        request.getSession().setAttribute("USER_INFORMATIONS", user);
+        return "redirect:/dashboard";
+
     }
 
 

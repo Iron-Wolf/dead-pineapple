@@ -80,7 +80,9 @@ $(document).ready(function () {
         ("#description h1").html('Thomas GERARDIN<br/> Principaux travaux <span class="small">Architecture system, administrateur system</span><br/>Bio <span class="small">des trucs</span><br/>');
     });
     $("#sofiane").click(function(){
-        $("#description h1").html('Sofiane AZIRI <br/> Principaux travaux <span class="small">Front JEE, deploiement JEE</span><br/>Bio <span class="small">des trucs</span>');
+        $("#description h1").html('Sofiane AZIRI <br/> Principaux travaux <span class="small">Architecture Java Framework Spring, API Dropbox , Manipulation & Upload fichiers Asynchrones</span><br/>Bio <span class="small">BTS Services Informatique aux Organisations <br/> Licence Profesionnelle SIL - Systèmes Informatiques et Logicieles <br/> Master 1 & 2 : Supinfo Expert en informatique <br/>' +
+            'Passionné par le développement d\'architectures et d\'infrastructures, j\'apporte aux projets mon expertise sur le fonctionnement et la navigation d\'un site' +
+            'Retrouvez moi sur <a href="https://fr.linkedin.com/in/sofiane-aziri-b45761104">Linkedin</a></span>');
     });
     $("#lucas").click(function(){
         $("#description h1").html('Lucas ZIENTECH<br/> Principaux travaux <span class="small">Worker ffmpeg, architecture logiciel, front</span><br/>Bio <span class="small">des trucs</span><br/>');

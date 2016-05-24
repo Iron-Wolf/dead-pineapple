@@ -96,9 +96,11 @@
             </button>
             <div id="dropbox">
                 <c:if test="${not empty dropboxFiles}">
+                    <ul>
                     <c:forEach var="listValue" items="${dropboxFiles}">
-                        ${listValue}
+                        <li><a href="#" class="dropbox_file">${listValue}</a></li>
                     </c:forEach>
+                    </ul>
                 </c:if>
             </div>
             <div class="well">
@@ -293,12 +295,15 @@
                 }
 
             }
-            $('#uploadedFiles').on('click', '.delete', function(){
-
+            $(document).on('click', '.dropbox_file', function() {
+                var filename = $(this).text();
+                getFiles("/upload/uploadDb?fileName="+filename)
+                alert(url);
             });
+
                 // Load files
-            function getFiles(){
-                $.getJSON('/upload/getFiles', function (data) {
+            function getFiles(url){
+                $.getJSON(url, function (data) {
                     console.log(data);
                     var totalPrice = 0;
                     for(var i = 0;i < data.length;i++){
@@ -376,7 +381,7 @@
                     }
                 });
             };
-            getFiles();
+            getFiles('/upload/getFiles');
 
             function formatFileSize(bytes) {
                     if (typeof bytes !== 'number') {

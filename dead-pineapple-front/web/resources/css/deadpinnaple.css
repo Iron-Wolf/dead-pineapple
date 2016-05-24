@@ -43,6 +43,7 @@ iframe {
 #description {
     height: 200px;
     margin-top: 2%;
+    overflow: scroll;
 }
 
 .photo {
