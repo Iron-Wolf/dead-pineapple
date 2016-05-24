@@ -17,6 +17,8 @@ import java.util.concurrent.TimeoutException;
  */
 public abstract class AbstractRabbitReceiver<T> {
 
+    protected String configPath;
+
     public abstract String getQueueName();
 
     private RabbitConnection rabbitConnection;
@@ -24,7 +26,11 @@ public abstract class AbstractRabbitReceiver<T> {
     public RabbitConnection getRabbitConnection() {
         if (rabbitConnection == null) {
             try {
-                rabbitConnection = new RabbitConnection();
+                if (getConfigPath() != null) {
+                    rabbitConnection = new RabbitConnection(getConfigPath());
+                } else {
+                    rabbitConnection = new RabbitConnection();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (TimeoutException e) {
@@ -34,6 +40,7 @@ public abstract class AbstractRabbitReceiver<T> {
         }
         return rabbitConnection;
     }
+
 
     public void receiver(final IReceiver<T> receiver)  {
         Consumer consumer = new DefaultConsumer(getRabbitConnection().getChannel()) {
@@ -52,4 +59,7 @@ public abstract class AbstractRabbitReceiver<T> {
     }
 
 
+    public String getConfigPath() {
+        return configPath;
+    }
 }

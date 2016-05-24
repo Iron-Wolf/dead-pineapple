@@ -19,6 +19,11 @@ public class RabbitConnection {
     private Connection connection;
     private Channel channel;
 
+    public RabbitConnection(String path) throws IOException, TimeoutException {
+        connection = connect(path);
+        channel = connection.createChannel();
+    }
+
     public RabbitConnection() throws IOException, TimeoutException {
         connection = connect();
         channel = connection.createChannel();
@@ -65,8 +70,17 @@ public class RabbitConnection {
         this.channel = channel;
     }
 
+    public static Connection connect(String path) throws IOException, TimeoutException {
+        RabbitConfig config  = RabbitConfig.read(path);
+        return getConnection(config);
+    }
+
     public static Connection connect() throws IOException, TimeoutException {
         RabbitConfig config  = RabbitConfig.read();
+        return getConnection(config);
+    }
+
+    private static Connection getConnection(RabbitConfig config) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(config.getHost());
         factory.setUsername(config.getUsername());

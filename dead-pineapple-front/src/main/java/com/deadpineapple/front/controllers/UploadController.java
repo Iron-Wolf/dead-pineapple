@@ -92,8 +92,8 @@ public class UploadController extends HttpServlet {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getFirstName() + "_"
-                + user.getLastName() + "/";
+                + user.getFirstName().trim() + "_"
+                + user.getLastName().trim() + "/";
 
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
@@ -116,6 +116,7 @@ public class UploadController extends HttpServlet {
                 if (!item.isFormField()) {
                     new File(UPLOAD_PATH).mkdirs();
                     File file = new File(UPLOAD_PATH, item.getName());
+                    file.createNewFile();
                     item.write(file);
 
                     // Save video in bdd

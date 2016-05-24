@@ -10,14 +10,25 @@ import java.util.concurrent.TimeoutException;
  * Created by 15256 on 10/03/2016.
  */
 public abstract class AbstractRabbitSender<T> {
+    protected String configPath;
+
     public abstract String getQueueName();
+
+
+    public String getConfigPath() {
+        return configPath;
+    }
 
     private RabbitConnection rabbitConnection;
 
     public RabbitConnection getRabbitConnection() {
         if (rabbitConnection == null) {
             try {
-                rabbitConnection = new RabbitConnection();
+                if (getConfigPath() != null) {
+                    rabbitConnection = new RabbitConnection(getConfigPath());
+                } else {
+                    rabbitConnection = new RabbitConnection();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (TimeoutException e) {

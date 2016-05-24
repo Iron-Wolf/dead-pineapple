@@ -16,13 +16,32 @@ import java.util.concurrent.TimeoutException;
  */
 public class RabbitInit {
 
-    private FileIsConvertedReceiver fileIsConvertedReceiver = new FileIsConvertedReceiver();
-    private FileToConvertReceiver fileToConvertReceiver = new FileToConvertReceiver();
-    private FileUploadedReceiver fileUploadedReceiver = new FileUploadedReceiver();
+    public RabbitInit(String configPath) {
+        fileIsConvertedReceiver = new FileIsConvertedReceiver(configPath);
+        fileToConvertReceiver = new FileToConvertReceiver(configPath);
+        fileUploadedReceiver = new FileUploadedReceiver(configPath);
 
-    private FileIsConvertedSender fileIsConvertedSender = new FileIsConvertedSender();
-    private FileToConvertSender fileToConvertSender = new FileToConvertSender();
-    private FileUploadedSender fileUploadedSender = new FileUploadedSender();
+        fileIsConvertedSender = new FileIsConvertedSender(configPath);
+        fileToConvertSender = new FileToConvertSender(configPath);
+        fileUploadedSender = new FileUploadedSender(configPath);
+    }
+    public RabbitInit(){
+         fileIsConvertedReceiver = new FileIsConvertedReceiver();
+         fileToConvertReceiver = new FileToConvertReceiver();
+         fileUploadedReceiver = new FileUploadedReceiver();
+
+         fileIsConvertedSender = new FileIsConvertedSender();
+         fileToConvertSender = new FileToConvertSender();
+         fileUploadedSender = new FileUploadedSender();
+    }
+
+    private FileIsConvertedReceiver fileIsConvertedReceiver;
+    private FileToConvertReceiver fileToConvertReceiver;
+    private FileUploadedReceiver fileUploadedReceiver;
+
+    private FileIsConvertedSender fileIsConvertedSender;
+    private FileToConvertSender fileToConvertSender;
+    private FileUploadedSender fileUploadedSender;
 
     public FileIsConvertedReceiver getFileIsConvertedReceiver() {
         return fileIsConvertedReceiver;

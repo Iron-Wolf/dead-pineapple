@@ -64,22 +64,22 @@ public class DashboardController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView getInvoices(HttpServletRequest request, Model model){
+    public ModelAndView getInvoices(HttpServletRequest request, Model model) {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getFirstName() + "_"
-                + user.getLastName() + "/";
+                + user.getFirstName().trim() + "_"
+                + user.getLastName().trim() + "/";
         invoices = new ArrayList();
         getHistory();
-        System.out.println("size"+invoices.size());
+        System.out.println("size" + invoices.size());
         //System.out.println(invoices.get(0).get(0).get("name"));
         model.addAttribute("invoices", invoices);
 
         double userSize = user.getTotalSize();
-        System.out.println("Taile totale :"+user.getTotalSize()+" &"+userSize);
-        double spaceLeft = (userSize/ totalSpace) * 100;
-        model.addAttribute("spacePercent",spaceLeft);
+        System.out.println("Taile totale :" + user.getTotalSize() + " &" + userSize);
+        double spaceLeft = (userSize / totalSpace) * 100;
+        model.addAttribute("spacePercent", spaceLeft);
         model.addAttribute("userSize", userSize);
         model.addAttribute("userAccount", new UserAccount());
         return new ModelAndView("dashboard", "model", model);
@@ -88,25 +88,25 @@ public class DashboardController {
     @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String fileName = request.getParameter("fileName");
-        if(fileName == null || fileName.equals("")){
+        if (fileName == null || fileName.equals("")) {
             throw new ServletException("File Name can't be null or empty");
         }
         File file = new File(UPLOAD_PATH, fileName);
-        if(!file.exists()){
+        if (!file.exists()) {
             throw new ServletException("File doesn't exists on server.");
         }
-        System.out.println("File location on server::"+file.getAbsolutePath());
+        System.out.println("File location on server::" + file.getAbsolutePath());
         ServletContext ctx = request.getServletContext();
         InputStream fis = new FileInputStream(file);
         String mimeType = ctx.getMimeType(file.getAbsolutePath());
-        response.setContentType(mimeType != null? mimeType:"application/octet-stream");
+        response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
         response.setContentLength((int) file.length());
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
-        ServletOutputStream os       = response.getOutputStream();
+        ServletOutputStream os = response.getOutputStream();
         byte[] bufferData = new byte[1024];
-        int read=0;
-        while((read = fis.read(bufferData))!= -1){
+        int read = 0;
+        while ((read = fis.read(bufferData)) != -1) {
             os.write(bufferData, 0, read);
         }
         os.flush();
@@ -114,12 +114,14 @@ public class DashboardController {
         fis.close();
         System.out.println("File downloaded at client successfully");
     }
+
     @RequestMapping(value = "/downloadFileDb", method = RequestMethod.GET)
     protected String uploadInDb(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, JsonReader.FileLoadException {
         String accessToken = (String) request.getSession().getAttribute("ACCESS_TOKEN");
-        config = new DbxRequestConfig(
+
+      config = new DbxRequestConfig(
                 "JavaTutorial/1.0", Locale.getDefault().toString());
-        if(accessToken != null || accessToken != ""){
+        if (accessToken != null || accessToken != "") {
             client = new DbxClientV2(config, accessToken);
             String fileName = request.getParameter("fileName");
             if (fileName == null || fileName.equals("")) {
@@ -136,19 +138,20 @@ public class DashboardController {
             } catch (DbxException e) {
                 e.printStackTrace();
             }
-        }else{
-            return "redirect:"+getDropBoxUrl(request);
+        } else {
+            return "redirect:" + getDropBoxUrl(request);
         }
         return "redirect:/dashboard";
     }
 
-    private void initTransaction(Transaction transaction){
+    private void initTransaction(Transaction transaction) {
         invoice = new Invoice();
         invoicePrice = 0.0;
         invoice.setDate(transaction.getDate());
         dateTransaction = transaction.getDate();
     }
-    private void getHistory(){
+
+    private void getHistory() {
         // Get transactions from bdd
         transactions = transactionDao.getTransByUser(user);
 
@@ -156,13 +159,12 @@ public class DashboardController {
             // Get the first transaction and init parameters
             Transaction transactionTest = transactions.get(0);
             initTransaction(transactionTest);
-            RabbitInit init = new RabbitInit();
             for (Transaction aTransaction : transactions) {
 
-                System.out.println("Price :"+ invoicePrice+"id "+aTransaction.getIdTransaction());
+                System.out.println("Price :" + invoicePrice + "id " + aTransaction.getIdTransaction());
                 // if the transaction is different, create new transaction
                 if (!aTransaction.getDate().equals(dateTransaction)) {
-                    invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
+                    invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
                     invoices.add(invoice);
                     invoice = new Invoice();
                     //jsonTransactions.put(jsonTransaction);
@@ -173,16 +175,18 @@ public class DashboardController {
                 if (cVideo != null) {
                     invoice.addConvertedFile(cVideo);
                     // If video is not converted yet start conversion
-                    if(aTransaction.getPayed() && cVideo.getConverted() == null){
+                    if (aTransaction.getPayed() && cVideo.getConverted() == null) {
                         FileIsUploaded videoToConvert = new FileIsUploaded(cVideo.getId(), cVideo.getFilePath(), cVideo.getNewType(), "mpeg4");
-                        //init.getFileUploadedSender().send(videoToConvert);
-                        //cVideo.setConverted(false);
-                        System.out.println("Conversion du fichier : "+cVideo.getOriginalName());
+                        RabbitInit init = new RabbitInit("//todo:mettre le putain de lien ici");
+                        init.getFileUploadedSender().send(videoToConvert);
+                        init.closeAll();
+                        cVideo.setConverted(false);
+                        System.out.println("Conversion du fichier : " + cVideo.getOriginalName());
                     }
                 }
 
             }
-            invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
+            invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
             invoices.add(invoice);
             //init.closeAll();
         }
@@ -199,30 +203,25 @@ public class DashboardController {
         String authorizeUrl = webAuth.start();
         return authorizeUrl;
     }
+
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
     public org.springframework.web.servlet.ModelAndView auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
         // Load the request token we saved in part 1.
         DbxAuthFinish authFinish = null;
         try {
             authFinish = webAuth.finish(request.getParameterMap());
-        }
-        catch (DbxWebAuth.BadRequestException ex) {
+        } catch (DbxWebAuth.BadRequestException ex) {
             response.sendError(400);
-        }
-        catch (DbxWebAuth.BadStateException ex) {
+        } catch (DbxWebAuth.BadStateException ex) {
             // Send them back to the start of the auth flow.
             response.sendRedirect("http://localhost:8080/dashboard/");
-        }
-        catch (DbxWebAuth.CsrfException ex) {
-        }
-        catch (DbxWebAuth.NotApprovedException ex) {
+        } catch (DbxWebAuth.CsrfException ex) {
+        } catch (DbxWebAuth.NotApprovedException ex) {
             // When Dropbox asked "Do you want to allow this app to access your
             // Dropbox account?", the user clicked "No".
-        }
-        catch (DbxWebAuth.ProviderException ex) {
+        } catch (DbxWebAuth.ProviderException ex) {
             response.sendError(503, "Error communicating with Dropbox.");
-        }
-        catch (DbxException ex) {
+        } catch (DbxException ex) {
             response.sendError(503, "Error communicating with Dropbox.");
         }
 
