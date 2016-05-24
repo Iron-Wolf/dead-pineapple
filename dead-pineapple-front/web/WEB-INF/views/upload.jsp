@@ -194,10 +194,13 @@
             <div class="col-sm-2">
                   <div class="form-group">
                       <label for="sel1">Encodage :</label>
-                      <select class="form-control" filename="{%=file.name%}" onchange="setEncodage()" required>
-                        <option>mpeg4</option>
-                        <option>x264</option>
-                        <option>x265</option>
+                      <select class="form-control" filename="{%=file.name%}" required>
+                        <option></option>
+                        <option>ffv1</option>
+                        <option>h.264</option>
+                        <option>vp8</option>
+                        <option>vp9</option>
+                        <option>xvid</option>
                       </select>
                   </div>
             </div>
@@ -291,7 +294,7 @@
 
             }
             $('#uploadedFiles').on('click', '.delete', function(){
-                location.reload();
+
             });
                 // Load files
             function getFiles(){
@@ -357,10 +360,13 @@
                         price += "<div class='col-sm-2'>";
                         price += "<div class='form-group'>";
                         price += "<label for='sel1'>Encodage :</label>";
-                        price += "<select class='form-control' onchange='setEncodage()' filename='"+fileName+"')' required>"
-                        price += "<option>mpeg4</option>";
-                        price += "<option>x264</option>";
-                        price += "<option>x265</option>";
+                        price += "<select class='form-control' filename='"+fileName+"' required>"
+                        price += "<option></option>";
+                        price += "<option>ffv1</option>";
+                        price += "<option>h.264</option>";
+                        price += "<option>vp8</option>";
+                        price += "<option>vp9</option>";
+                        price += "<option>xvid</option>";
                         price += "</select></div></div>";
                         fileRow += preview + name + size + duration + price + deleteurl;
                         fileRow += "</div>";

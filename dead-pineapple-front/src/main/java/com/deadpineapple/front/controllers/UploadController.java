@@ -1,5 +1,6 @@
 package com.deadpineapple.front.controllers;
 
+import com.deadpineapple.dal.constante.Constante;
 import com.deadpineapple.dal.dao.ConvertedFileDao;
 import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
@@ -74,9 +75,8 @@ public class UploadController extends HttpServlet {
     DbxWebAuth webAuth;
     DbxClientV2 client;
     DbxRequestConfig config;
-    HttpSession session;
 
-    List<String> ext = new ArrayList<String>(Arrays.asList(".avi", ".mp4", ".ogg", ".flv", ".swf", ".dv", ".mov"));
+    List<String> ext = new ArrayList<String>(Arrays.asList(Constante.AcceptedUploadedTypes));
 
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
@@ -84,6 +84,7 @@ public class UploadController extends HttpServlet {
     public void setTransactionDao(ITransactionDao transactionDao) {
         this.transactionDao = transactionDao;
     }
+
     @RequestMapping(method = RequestMethod.GET)
     public String uploadPage(HttpServletRequest request, Model model,HttpServletResponse response ) throws JsonReader.FileLoadException, IOException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
@@ -91,40 +92,10 @@ public class UploadController extends HttpServlet {
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
                 + user.getFirstName() + "_"
                 + user.getLastName() + "/";
+
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
         return "upload";
-    }
-
-    // Prepare the upload
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public void prepareUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (request.getParameter("getfile") != null && !request.getParameter("getfile").isEmpty()) {
-            // Save location
-            File file = new File(request.getServletContext().getRealPath("/") + "videos/" + request.getParameter("getfile"));
-            if (file.exists()) {
-                int bytes = 0;
-                ServletOutputStream op = response.getOutputStream();
-
-                response.setContentType(getMimeType(file));
-                response.setContentLength((int) file.length());
-                response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
-
-                byte[] bbuf = new byte[1024];
-                DataInputStream in = new DataInputStream(new FileInputStream(file));
-
-                while ((in != null) && ((bytes = in.read(bbuf)) != -1)) {
-                    op.write(bbuf, 0, bytes);
-                }
-
-                in.close();
-                op.flush();
-                op.close();
-            }  // } // TODO: check and report success
-        } else {
-            PrintWriter writer = response.getWriter();
-            writer.write("call POST with multipart form data");
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -162,37 +133,15 @@ public class UploadController extends HttpServlet {
                     convertedFile.setSize(filesize);
                     convertedFileDao.createFile(convertedFile);
 
-                    // Create a new video Information
-                    videoInformation = new VideoInformation(filePath);
-                    TimeSpan duration = videoInformation.getDuration();
-                    double price = 0;
-
-                    double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
-                    System.out.println("temps ="+time +duration.getHeures() * 60);
-                    if(time < 5){
-                        price = Math.log(5) - 1;
-                    }
-                    else{
-                        price = Math.log(time) - 1;
-
-                    }
-                    // add video information into converted file
+                    // Generate video Information for the uploaded file (ffmpeg)
+                    videoInformation = new VideoInformation(convertedFile.getFilePath());
+                    // Link the converted file with it's video information
                     video.setConvertedFile(convertedFile);
                     video.setVideoInformation(videoInformation);
-                    video.setPrice(Math.round(price*100.0)/100.0);
+                    video.setPrice(generatePrice(videoInformation.getDuration()));
                     convertedFiles.add(video);
-                    JSONObject jsono = new JSONObject();
-                    jsono.put("name", item.getName());
-                    jsono.put("size", item.getSize());
-                    jsono.put("duration", duration);
-                    String aPrice = String.format("%.2f", price);
-                    aPrice = aPrice.replace(",", ".");
-                    jsono.put("price", aPrice);
-                    jsono.put("url", "UploadServlet?getfile=" + item.getName());
-                    jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + item.getName());
-                    jsono.put("delete_url", "/upload/deleteFile?delfile=" + item.getName());
-                    jsono.put("delete_type", "GET");
-                    json.put(jsono);
+
+                    json.put(generateJsonForPrview(video));
                     System.out.println(json.toString());
                 }
             }
@@ -205,48 +154,24 @@ public class UploadController extends HttpServlet {
             writer.close();
         }
     }
+
+    // Return the videos already uploaded and non payed yet
     @RequestMapping(value = "/getFiles", method = RequestMethod.GET)
     public void getUploadedFiles(HttpServletResponse response) throws IOException {
         JSONArray history = new JSONArray();
         List<ConvertedFile> cfs = convertedFileDao.findByUser(user);
         for(ConvertedFile cf : cfs){
-                // Get duration
+                // Generate video Information for the uploaded file (ffmpeg)
                 videoInformation = new VideoInformation(cf.getFilePath());
-                TimeSpan duration = videoInformation.getDuration();
-                double price = 0, time = 0;
-                if(duration != null){
-                    time = (double)((duration.getHeures() * 60) + duration.getMinutes());
-                    System.out.println("temps ="+time +duration.getHeures() * 60);
-                }
-                else{
-                    duration = new TimeSpan();
-                }
-
-                if(time < 5){
-                    price = Math.log(5) - 1;
-                }
-                else{
-                    price = Math.log(time) - 1;
-
-                }
+                // Link the converted file with it's video information
                 VideoFile video = new VideoFile();
                 video.setVideoInformation(videoInformation);
                 video.setConvertedFile(cf);
-                video.setPrice(Math.round(price*100.0)/100.0);
+                // Save the price
+                video.setPrice(generatePrice(videoInformation.getDuration()));
+                //Save videos in converted files for the transaction later
                 convertedFiles.add(video);
-
-                JSONObject jsono = new JSONObject();
-                jsono.put("name", cf.getOriginalName());
-                jsono.put("size", cf.getSize());
-                jsono.put("duration", duration);
-                String aPrice = String.format("%.2f", price);
-                aPrice = aPrice.replace(",", ".");
-                jsono.put("price", aPrice);
-                jsono.put("url", "UploadServlet?getfile=" + cf.getOriginalName());
-                jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + cf.getOriginalName());
-                jsono.put("delete_url", "/upload/deleteFile?delfile=" + cf.getOriginalName());
-                jsono.put("delete_type", "GET");
-                history.put(jsono);
+                history.put(generateJsonForPrview(video));
         }
         if(history != null) {
             PrintWriter writer = response.getWriter();
@@ -255,6 +180,7 @@ public class UploadController extends HttpServlet {
             writer.close();
         }
     }
+    // Generate an image for the uploaded video
     @RequestMapping(value = "/getThumb", method = RequestMethod.GET)
     public void getThumb(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getParameter("getthumb") != null && !request.getParameter("getthumb").isEmpty()) {
@@ -275,11 +201,11 @@ public class UploadController extends HttpServlet {
                 System.out.println(file.getAbsolutePath());
                 BufferedImage resizeImagePng = resizeImage(ImageIO.read(file));
                 ImageIO.write(resizeImagePng, "png", new File(thumb));
-                // Set a previsualisation image to the video and display it on the client size
+
                 int bytes = 0;
                 ServletOutputStream op = response.getOutputStream();
 
-                response.setContentType(getMimeType(file));
+                response.setContentType("image/png");
                 response.setContentLength((int) file.length());
                 response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
 
@@ -318,9 +244,9 @@ public class UploadController extends HttpServlet {
                     }
             }
             resp.setStatus(404);
-
         }
     }
+
     @RequestMapping(value = "/setFormat", method = RequestMethod.GET)
     public void setConvertFormat(HttpServletRequest request, HttpServletResponse resp){
         if (request.getParameter("format") != null && !request.getParameter("format").isEmpty()) {
@@ -332,6 +258,27 @@ public class UploadController extends HttpServlet {
                 if(video.getFilePath().equals(filePath)){
                     System.out.println("Set format"+filePath);
                     video.setNewType(format);
+                    convertedFileDao.updateFile(video);
+
+                    resp.setStatus(200);
+                    return;
+                }
+            }
+            resp.setStatus(404);
+        }
+    }
+
+    @RequestMapping(value = "/setEncodage", method = RequestMethod.GET)
+    public void setConvertEncodate(HttpServletRequest request, HttpServletResponse resp){
+        if (request.getParameter("encodage") != null && !request.getParameter("format").isEmpty()) {
+            String filePath = UPLOAD_PATH + request.getParameter("file");
+            String format = request.getParameter("encodage");
+            List<ConvertedFile> cf = convertedFileDao.findByUser(user);
+            for (ConvertedFile video:
+                    cf) {
+                if(video.getFilePath().equals(filePath)){
+                    System.out.println("Set Encodage"+filePath);
+                    //video.setNewType(format);
                     convertedFileDao.updateFile(video);
 
                     resp.setStatus(200);
@@ -393,34 +340,6 @@ public class UploadController extends HttpServlet {
     }
 
 
-    private String getMimeType(File file) {
-        String mimetype = "";
-        if (file.exists()) {
-            if (getSuffix(file.getName()).equalsIgnoreCase("png")) {
-                mimetype = "image/png";
-            } else if (getSuffix(file.getName()).equalsIgnoreCase("jpg")) {
-                mimetype = "image/jpg";
-            } else if (getSuffix(file.getName()).equalsIgnoreCase("jpeg")) {
-                mimetype = "image/jpeg";
-            } else if (getSuffix(file.getName()).equalsIgnoreCase("gif")) {
-                mimetype = "image/gif";
-            } else {
-                javax.activation.MimetypesFileTypeMap mtMap = new javax.activation.MimetypesFileTypeMap();
-                mimetype = mtMap.getContentType(file);
-            }
-        }
-        return mimetype;
-    }
-
-
-    private String getSuffix(String filename) {
-        String suffix = "";
-        int pos = filename.lastIndexOf('.');
-        if (pos > 0 && pos < filename.length() - 1) {
-            suffix = filename.substring(pos + 1);
-        }
-        return suffix;
-    }
     private static BufferedImage resizeImage(BufferedImage originalImage) {
         BufferedImage resizedImage = new BufferedImage(80, 57, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
@@ -559,35 +478,48 @@ public class UploadController extends HttpServlet {
 
         // Create a new video Information
         videoInformation = new VideoInformation(filePath);
-        TimeSpan duration = videoInformation.getDuration();
-        double price = 0;
 
-        double time = (double)((duration.getHeures() * 60) + duration.getMinutes());
+        // add video information into converted file
+        video.setConvertedFile(convertedFile);
+        video.setVideoInformation(videoInformation);
+        video.setPrice(generatePrice(videoInformation.getDuration()));
+        convertedFiles.add(video);
+
+        writer.write(generateJsonForPrview(video).toString());
+        writer.close();
+    }
+    public JSONObject generateJsonForPrview(VideoFile video){
+        JSONObject jsonFile = new JSONObject();
+        String fileName = video.getConvertedFile().getOriginalName();
+        double size = video.getConvertedFile().getSize();
+        TimeSpan duration = video.getVideoInformation().getDuration();
+        jsonFile.put("name", fileName);
+        jsonFile.put("size", size);
+        jsonFile.put("duration", duration);
+        String aPrice = String.format("%.2f", generatePrice(duration));
+        aPrice = aPrice.replace(",", ".");
+        jsonFile.put("price", aPrice);
+        jsonFile.put("url", "UploadServlet?getfile=" + fileName);
+        jsonFile.put("thumbnail_url", "/upload/getThumb?getthumb=" + fileName);
+        jsonFile.put("delete_url", "/upload/deleteFile?delfile=" + fileName);
+        jsonFile.put("delete_type", "GET");
+        return jsonFile;
+    }
+    public double generatePrice(TimeSpan duration){
+        double price = 0, time = 0;
+        if(duration != null){
+            time = (double)((duration.getHeures() * 60) + duration.getMinutes());
+            System.out.println("temps ="+time +duration.getHeures() * 60);
+        }
+
         if(time < 5){
             price = Math.log(5) - 1;
         }
         else{
             price = Math.log(time) - 1;
+
         }
-        // add video information into converted file
-        video.setConvertedFile(convertedFile);
-        video.setVideoInformation(videoInformation);
-        video.setPrice(Math.round(price*100.0)/100.0);
-        convertedFiles.add(video);
-
-        JSONObject jsono = new JSONObject();
-        jsono.put("name", fileName);
-        jsono.put("size", size);
-        jsono.put("duration", duration);
-        String aPrice = String.format("%.2f", price);
-        aPrice = aPrice.replace(",", ".");
-        jsono.put("price", aPrice);
-        jsono.put("url", "UploadServlet?getfile=" + fileName);
-        jsono.put("thumbnail_url", "/upload/getThumb?getthumb=" + fileName);
-        jsono.put("delete_url", "/upload/deleteFile?delfile=" + fileName);
-        jsono.put("delete_type", "GET");
-
-        writer.write(jsono.toString());
-        writer.close();
+        price = Math.round(price*100.0)/100.0;
+        return price;
     }
 }
