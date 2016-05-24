@@ -109,7 +109,7 @@ public class DashboardController {
             }
             invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
             invoices.add(invoice);
-            init.closeAll();
+            //init.closeAll();
         }
 
     }
