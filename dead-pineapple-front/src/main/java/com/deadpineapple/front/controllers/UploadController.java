@@ -331,7 +331,8 @@ public class UploadController extends HttpServlet {
                     cf) {
                 if(video.getFilePath().equals(filePath)){
                     System.out.println("Set format"+filePath);
-                    convertedFileDao.updateFile(video).setNewType(format);
+                    video.setNewType(format);
+                    convertedFileDao.updateFile(video);
 
                     resp.setStatus(200);
                     return;

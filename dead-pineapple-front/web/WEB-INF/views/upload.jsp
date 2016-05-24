@@ -175,7 +175,7 @@
             <div class="col-sm-1">
                  <div class="form-group">
                       <label for="sel1">Formats</label>
-                      <select class="form-control formats" filename="{%=file.name%}" onchange="setFormat()" required>
+                      <select class="form-control formats" filename="{%=file.name%}"required>
                         <option value="avi">.avi</option>
                         <option value="mp4">.mp4</option>
                         <option value="mp3">.mp3</option>
@@ -237,11 +237,9 @@
     <script src="<spring:url value='/resources/js/jqueryFileTree.js"'/>"></script>
    <script type="text/javascript">
 
-        function setFormat(){
+        function setFormat(format, fileName){
             // When user choose a format for the file, send it to the bdd
             console.log("Envoi format vers serveur ");
-            var format = $(".formats option:selected").val();
-            var fileName = $(".formats option:selected").parent().attr("filename");
             console.log(format, fileName);
             $.ajax({
             type:"GET",
@@ -253,7 +251,12 @@
             });
 
         };
-        $(document).on('click', '.formats li a', function() { alert('test'); });
+        $(document).on('change', '.formats', function() {
+            var format = $('option:selected',this).text();
+            var filename = $('option:selected',this).parent().attr("filename");
+            setFormat(format, filename);
+
+        });
         function setEncodage(){
             // When user choose a format for the file, send it to the bdd
             console.log("Envoi format vers serveur ");
@@ -337,7 +340,7 @@
                         price += "<div class='col-sm-1'>";
                         price += "<div class='form-group'>";
                         price += "<label for='sel1'>Formats</label>";
-                        price += "<select class='form-control formats' onchange='setFormat()' filename='"+fileName+"' required>";
+                        price += "<select class='form-control formats' filename='"+fileName+"' required>";
                         price += "<option value='avi'>.avi</option>";
                         price += "<option value='mp4'>.mp4</option>";
                         price += "<option value='mp3'>.mp3</option>";

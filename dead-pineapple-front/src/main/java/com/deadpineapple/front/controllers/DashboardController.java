@@ -7,6 +7,7 @@ import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
 import com.deadpineapple.front.tools.Invoice;
+import com.deadpineapple.rabbitmq.RabbitInit;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,7 @@ public class DashboardController {
             // Get the first transaction and init parameters
             Transaction transactionTest = transactions.get(0);
             initTransaction(transactionTest);
+            RabbitInit init = new RabbitInit();
             for (Transaction aTransaction : transactions) {
                 invoicePrice += aTransaction.getPrix();
                 System.out.println("Price :"+ invoicePrice);
@@ -95,23 +97,20 @@ public class DashboardController {
                 ConvertedFile cVideo = aTransaction.getConvertedFiles();
                 if (cVideo != null) {
                     invoice.addConvertedFile(cVideo);
-                    //jsono.put("duration", uVideo.get);
-                    //jsono.put("price", String.format("%.2f", price));
-                    // If video is not converted yet, what link ?
-                    //convertedFile.put("url", "upload/downloadFile?fileName=" + cVideo.getOriginalName());
-                    //convertedFile.put("thumbnail_url", "/upload/getThumb?getthumb=" + cVideo.getOriginalName());
-                    ///convertedFile.put("delete_url", "/upload/deleteFile?delfile=" + cVideo.getOriginalName());
-                    //convertedFile.put("delete_type", "GET");
-                    //invoice.add(convertedFile);
+                    // If video is not converted yet start conversion
+                    if(aTransaction.getPayed() && cVideo.getConverted() == null){
+                        FileIsUploaded videoToConvert = new FileIsUploaded(cVideo.getId(), cVideo.getFilePath(), cVideo.getNewType(), "mpeg4");
+                        //init.getFileUploadedSender().send(videoToConvert);
+                        //cVideo.setConverted(false);
+                        System.out.println("Conversion du fichier : "+cVideo.getOriginalName());
+                    }
                 }
 
             }
             invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
             invoices.add(invoice);
+            init.closeAll();
         }
-
-    }
-    public void startConversion(){
 
     }
 }
