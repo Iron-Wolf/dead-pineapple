@@ -163,6 +163,7 @@ public class UploadController extends HttpServlet {
         history = new JSONArray();
         List<ConvertedFile> cfs = convertedFileDao.findByUser(user);
         for(ConvertedFile cf : cfs){
+            if( cf.getConverted() == null || !cf.getConverted()) {
                 // Generate video Information for the uploaded file (ffmpeg)
                 videoInformation = new VideoInformation(cf.getFilePath());
                 // Link the converted file with it's video information
@@ -174,12 +175,16 @@ public class UploadController extends HttpServlet {
                 //Save videos in converted files for the transaction later
                 convertedFiles.add(video);
                 history.put(generateJsonForPrview(video));
+            }
         }
         if(history != null) {
             PrintWriter writer = response.getWriter();
             response.setContentType("application/json");
             writer.write(history.toString());
             writer.close();
+        }
+        else{
+            response.setStatus(200);
         }
     }
     // Generate an image for the uploaded video

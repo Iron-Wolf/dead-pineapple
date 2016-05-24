@@ -166,8 +166,8 @@ public class DashboardController {
             initTransaction(transactionTest);
             RabbitInit init = new RabbitInit();
             for (Transaction aTransaction : transactions) {
-                invoicePrice += aTransaction.getPrix();
-                System.out.println("Price :"+ invoicePrice);
+
+                System.out.println("Price :"+ invoicePrice+"id "+aTransaction.getIdTransaction());
                 // if the transaction is different, create new transaction
                 if (aTransaction.getIdTransaction() != idTransaction) {
                     invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
@@ -176,6 +176,7 @@ public class DashboardController {
                     //jsonTransactions.put(jsonTransaction);
                     initTransaction(aTransaction);
                 }
+                invoicePrice += aTransaction.getPrix();
                 ConvertedFile cVideo = aTransaction.getConvertedFiles();
                 if (cVideo != null) {
                     invoice.addConvertedFile(cVideo);
