@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.taglibs.standard.extra.spath.Path;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +42,7 @@ import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -194,6 +197,7 @@ public class UploadController extends HttpServlet {
                     break;
                 }
             }
+
             videoInformation.generateAThumbnailImage(thumb);
             File file = new File(thumb);
             if (file.exists()) {
@@ -226,10 +230,12 @@ public class UploadController extends HttpServlet {
         if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
             File file = new File(UPLOAD_PATH + request.getParameter("delfile"));
             String filePath = UPLOAD_PATH + request.getParameter("delfile");
+            java.nio.file.Path p = Paths.get(filePath);
+            String fileName = p.getFileName().toString();
             List<ConvertedFile> cf = convertedFileDao.findByUser(user);
             for (ConvertedFile video:
                         cf) {
-                    if(video.getFilePath().equals(filePath)){
+                    if(video.getOriginalName().equals(fileName)){
                         // delete file from bdd
                         convertedFileDao.deleteFile(video);
                         // delete file from user array
@@ -415,17 +421,42 @@ public class UploadController extends HttpServlet {
     }
 
     @RequestMapping(value = "/uploadDb", method = RequestMethod.GET)
-    public void downloadDropboxFile(HttpServletRequest request, HttpServletResponse response) throws IOException, DbxException {
-        String fileName = request.getParameter("fileName");
-        String filePath = UPLOAD_PATH+fileName;
-        Long  size;
-        FileOutputStream outputStream = new FileOutputStream(filePath);
+    public void downloadDropboxFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String dbFilePath = request.getParameter("fileName");
+        if(dbFilePath == null || dbFilePath.equals("")){
+            throw new ServletException("File Name can't be null or empty");
+        }
+        JSONArray t = new JSONArray();
+        java.nio.file.Path p = Paths.get(dbFilePath);
+        String fileName = p.getFileName().toString();
+        String serverPath = UPLOAD_PATH+fileName;
+        double  size;
+        FileOutputStream outputStream = new FileOutputStream(serverPath);
         try {
-            DbxDownloader<FileMetadata> download = client.files().download(filePath);
-            download.download(outputStream);
-            size = download.getResult().getSize();
+            DbxDownloader<FileMetadata> download = null;
+            try {
+                download = client.files().download(dbFilePath);
+            } catch (DbxException e) {
+                System.out.println("Can't find the file db");
+                e.printStackTrace();
+            }
+            try {
+                download.download(outputStream);
+            } catch (DbxException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            size = download.getResult().getSize()/10000;
+            size = size / 100;
+
         } finally {
-            outputStream.close();
+            try {
+                outputStream.close();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         PrintWriter writer = response.getWriter();
@@ -436,30 +467,30 @@ public class UploadController extends HttpServlet {
         VideoFile video = new VideoFile();
         convertedFile = new ConvertedFile();
         convertedFile.setUserAccount(user);
-        convertedFile.setFilePath(filePath);
+        convertedFile.setFilePath(serverPath);
         convertedFile.setCreationDate(creationDate);
         convertedFile.setOriginalName(fileName);
-        convertedFile.setOldType(FilenameUtils.getExtension(filePath));
+        convertedFile.setOldType(FilenameUtils.getExtension(dbFilePath));
         //convertedFile.setNewType();
 
-        convertedFile.setSize(Integer.parseInt(size.toString()));
+        convertedFile.setSize(size);
         convertedFileDao.createFile(convertedFile);
 
         // Create a new video Information
-        videoInformation = new VideoInformation(filePath);
+        videoInformation = new VideoInformation(serverPath);
+        String imageName = fileName.substring(0, fileName.lastIndexOf('.'))+".png";
+        String thumb = UPLOAD_PATH + "thumb_" + imageName;
+        videoInformation.generateAThumbnailImage(thumb);
 
         // add video information into converted file
         video.setConvertedFile(convertedFile);
         video.setVideoInformation(videoInformation);
         video.setPrice(generatePrice(videoInformation.getDuration()));
         convertedFiles.add(video);
-        history.put(generateJsonForPrview(video));
-
-        if(history != null) {
-            response.setContentType("application/json");
-            writer.write(history.toString());
-            writer.close();
-        }
+        response.setContentType("application/json");
+        t.put(generateJsonForPrview(video));
+        writer.write(t.toString());
+        writer.close();
     }
     public JSONObject generateJsonForPrview(VideoFile video){
         JSONObject jsonFile = new JSONObject();

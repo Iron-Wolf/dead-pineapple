@@ -103,10 +103,10 @@
             <div class="adresses col-xs-12">
                 <h4>N'hésitez pas nous contacter aux différentes adresses suivantes : </h4><br/><br/>
                 <b>Pablo MERIDJEN </b><br/><A HREF="mailto:216369@supinfo.com"> 216369@supinfo.com </A><br/><br/>
-                    <b> Tomas GERARDIN</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
-                        <b> Lucas ZIENTECH</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
-                            <b>Sofiane AZIRI </b><br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
-                                <b>Michael LE FALHER </b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                <b>Sofiane AZIRI </b><br/><A HREF="mailto:215546@supinfo.com"> 215546@supinfo.com</A><br/><br/>
+                <b>Michael LE FALHER </b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                <b> Lucas ZIENTECH</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                <b> Tomas GERARDIN</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
 
             </div>
 

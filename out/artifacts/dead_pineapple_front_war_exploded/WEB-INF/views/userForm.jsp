@@ -37,22 +37,22 @@
                     class="form-control" required="true"/>
         <span class="erreur">${ erreurs['emailCheck']}</span>
     </div>
-    <div class="form-group">
-        <label class="control-label" for="signupEmailagain">Adresse</label>
-        <input id="signupEmailagain" type="text" placeholder="Adresse" class="form-control" name="address"
-               required="true">
-
-    </div>
-    <div class="form-group">
-        <input type="text" placeholder="Code Postal" class="form-control" name="zipcode" required="true">
-    </div>
-    <div class="form-group">
-        <input type="text" placeholder="Ville" class="form-control" name="city" required="true">
-    </div>
 
     <div class="form-group">
-        <label class="control-label" for="signupTelephone">Telephone</label>
-        <input id="signupTelephone" type="text" class="form-control" placeholder="Téléphone (Optional)" name="phone">
+        <label class="control-label" for="adresse">Adresse</label>
+        <input id="adresse" name="adresse" path="adresse" type="text" placeholder="Adresse" class="form-control" required="true">
+    </div>
+
+    <div class="col-sm-6 form-group" style="padding-left:0">
+        <input id="codePostal" path="codePostal" name="codePostal" type="text" placeholder="Code Postal" class="form-control" name="zipcode" required="true">
+    </div>
+    <div class="col-sm-6 form-group" style="padding-right:0">
+        <input id="ville" path="ville" name="ville" type="text" placeholder="Ville" class="form-control" name="city" required="true">
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" for="phone" >Telephone</label>
+        <input id="phone" path="phone" type="text" class="form-control" placeholder="Téléphone (Optional)">
     </div>
     <div class="form-group">
         <label class="control-label" for="password">Mot de passe</label>

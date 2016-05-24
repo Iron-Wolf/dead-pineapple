@@ -297,17 +297,17 @@
             }
             $(document).on('click', '.dropbox_file', function() {
                 var filename = $(this).text();
-                getFiles("/upload/uploadDb?fileName="+filename)
-                alert(url);
+                getFiles("/upload/uploadDb?fileName="+filename);
             });
 
-                // Load files
+            // Load files
             function getFiles(url){
                 $.getJSON(url, function (data) {
                     console.log(data);
                     var totalPrice = 0;
+                    var fileRow = "";
                     for(var i = 0;i < data.length;i++){
-                        var fileRow = "<div class='row template-download fade in'>";
+                        fileRow = "<div class='row template-download fade in'>";
                         var preview, name, size, duration, price, deleteurl, priceValue;
                         var fileName = "";
                         for(var attr in data[i]){
@@ -376,12 +376,13 @@
                         fileRow += preview + name + size + duration + price + deleteurl;
                         fileRow += "</div>";
                         $(".files").append(fileRow);
-                        $("#payButton").attr("price", totalPrice.toFixed(2));
-                        $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
                     }
+
+                    $("#payButton").attr("price", totalPrice.toFixed(2));
+                    $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
                 });
             };
-            getFiles('/upload/getFiles');
+            getFiles("/upload/getFiles");
 
             function formatFileSize(bytes) {
                     if (typeof bytes !== 'number') {

@@ -47,10 +47,10 @@
     </c:when>
         <c:otherwise>
             <div >
-                Bienvenue <c:out value="${USER_INFORMATIONS.firstName}"/>
+                <a href="<spring:url value='/user/logOff'/>" class="btn btn-warning mv-item">Se déconnecter</a>
             </div>
             <div >
-                <a href="<spring:url value='/user/logOff'/>" class="btn btn-warning">Se déconnecter</a>
+                Bienvenue <c:out value="${USER_INFORMATIONS.firstName}"/>
             </div>
             <li class="mv-item"><a href="<spring:url value='/dashboard'/>"> Mon espace </a></li>
 
