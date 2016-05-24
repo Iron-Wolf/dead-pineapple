@@ -10,13 +10,8 @@ import com.deadpineapple.front.tools.Invoice;
 import com.deadpineapple.rabbitmq.RabbitInit;
 import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader;
-import com.dropbox.core.v1.DbxEntry;
-import com.dropbox.core.v1.DbxWriteMode;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.UploadUploader;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,10 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by saziri on 16/05/2016.
@@ -55,7 +47,7 @@ public class DashboardController {
     List<Transaction> transactions = new ArrayList();
     ArrayList<Invoice> invoices;
     Invoice invoice;
-    int idTransaction;
+    Date dateTransaction;
     static int totalSpace = 10240;
     double invoicePrice;
 
@@ -154,7 +146,7 @@ public class DashboardController {
         invoice = new Invoice();
         invoicePrice = 0.0;
         invoice.setDate(transaction.getDate());
-        idTransaction = transaction.getIdTransaction();
+        dateTransaction = transaction.getDate();
     }
     private void getHistory(){
         // Get transactions from bdd
@@ -169,7 +161,7 @@ public class DashboardController {
 
                 System.out.println("Price :"+ invoicePrice+"id "+aTransaction.getIdTransaction());
                 // if the transaction is different, create new transaction
-                if (aTransaction.getIdTransaction() != idTransaction) {
+                if (!aTransaction.getDate().equals(dateTransaction)) {
                     invoice.setPrice(Math.round(invoicePrice*100.0)/100.0);
                     invoices.add(invoice);
                     invoice = new Invoice();
