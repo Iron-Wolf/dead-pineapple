@@ -3,9 +3,13 @@ package com.deadpineapple.videoHelper.fileEdit;
 import com.deadpineapple.videoHelper.TimeSpan;
 import com.deadpineapple.videoHelper.information.VideoInformation;
 
+
 import java.io.File;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by 15256 on 31/03/2016.
@@ -40,9 +44,9 @@ public class FileSplitter {
                     + startTime + " -t " + duree + " -sn \"" + resultFile + "\"";
             */
 
-            String[] ffmpeg = new String[]{"ffmpeg", "-v", "quiet", "-y", "-i",
+            String[] ffmpeg = new String[]{"ffmpeg", "-v","quiet",  "-y", "-i",
                     filePath, "-vcodec", "copy", "-acodec", "copy", "-ss",
-                    startTime.toString(), "-t", duree.toString(), "-sn", resultFile.toString()};
+                    startTime.toString(), "-t", duree.toString(), "-sn",  resultFile.toString()};
 
             Process proc = Runtime.getRuntime().exec(ffmpeg);
             proc.waitFor();

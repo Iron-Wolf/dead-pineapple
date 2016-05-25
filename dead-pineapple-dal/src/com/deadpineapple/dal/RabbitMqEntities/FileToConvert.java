@@ -25,6 +25,9 @@ public class FileToConvert implements Serializable {
     }
 
     public String getConvertionEncoding() {
+        if (convertionEncoding == null){
+            return "";
+        }
         return convertionEncoding;
     }
 

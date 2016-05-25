@@ -4,9 +4,7 @@ import com.deadpineapple.dal.constante.Constante;
 import com.deadpineapple.videoHelper.FfmpegException;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.*;
 
 /**
  * Created by 15256 on 11/03/2016.
@@ -47,10 +45,7 @@ public class Conversion {
             throw new FfmpegException("Unvalid encoding");
         }
 
-
-        String globalOptions = " -y -nostats -loglevel 0";
-        String inputFileOptions = " ";
-        String outputFileOptions = " -threads 2 ";
+        String outputFileOptions = "-threads 2";
         if (outputFileOptionDictionnary.get(fileType) != null) {
             outputFileOptions += outputFileOptionDictionnary.get(fileType);
         }
@@ -64,13 +59,19 @@ public class Conversion {
         cmd += "\"" + getFileDestinationPath() + "\"";
         */
 
-        String[] cmd = new String[]{"ffmpeg",
-                globalOptions, inputFileOptions,
-                "-i", getFilePath(),
-                getEncodingOutput(), outputFileOptions,
-                getFileDestinationPath()};
-
-        return cmd;
+        List<String> cmd = new ArrayList<String>();
+        cmd.add("ffmpeg");
+        cmd.add("-y");
+        cmd.add("-nostats");
+        cmd.add("-loglevel");
+        cmd.add("0");
+        cmd.add("-i");
+        cmd.add(getFilePath());
+        cmd.addAll(Arrays.asList(getEncodingOutput().split(" ")));
+        cmd.addAll(Arrays.asList(outputFileOptions.split(" ")));
+        cmd.add(getFileDestinationPath());
+        String[] res = new String[cmd.size()];
+        return cmd.toArray(res);
     }
 
     public Process getProcess() {
@@ -103,7 +104,7 @@ public class Conversion {
 
     String getEncodingOutput() {
         if (fileCodec.equals("ffv1")) {
-            return " -vcodec   ffv1 -level 3";
+            return " -vcodec ffv1 -level 3";
         } else if (fileCodec.equals("h.264")) {
             return " -c:v libx264 -preset ultrafast -qp 0";
         } else if (fileCodec.equals("vp8")) {
