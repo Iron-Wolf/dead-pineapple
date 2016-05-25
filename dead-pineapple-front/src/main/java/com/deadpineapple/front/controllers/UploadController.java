@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
@@ -61,6 +62,7 @@ public class UploadController extends HttpServlet {
     // Transaction variables
     @Autowired
     ITransactionDao transactionDao;
+    ArrayList<Transaction> invoice;
 
     String UPLOAD_PATH;
     LoginForm userData;
@@ -311,6 +313,7 @@ public class UploadController extends HttpServlet {
         //TODO : créer Transaction
         Date transactionDate = new Date();
         Double priceTotal = 0.0;
+        invoice = new ArrayList<Transaction>();
         for (VideoFile vf : convertedFiles) {
             Transaction transaction = new Transaction();
             transaction.setConvertedFiles(vf.getConvertedFile());
@@ -318,7 +321,7 @@ public class UploadController extends HttpServlet {
             transaction.setDate(transactionDate);
             transaction.setUserAccount(user);
             transaction.setPayed(false);
-            transactionDao.createTransaction(transaction);
+            invoice.add(transactionDao.createTransaction(transaction));
             priceTotal += vf.getPrice();
         }
         priceTotal = Math.round(priceTotal * 100.0) / 100.0;
@@ -350,6 +353,7 @@ public class UploadController extends HttpServlet {
         if (paymentID != null && token != null && payerID != null) {
             boolean transactStatus = ps.finishCheckOut(paymentID, payerID, token);
             if (transactStatus) {
+                setInvoicePayed(invoice);
                 return "redirect:/dashboard";
             } else
                 return "redirect:/upload";
@@ -536,5 +540,11 @@ public class UploadController extends HttpServlet {
         price = (Math.log(time) - 1) / 3;
         price = Math.round(price * 100.0) / 100.0;
         return price;
+    }
+    private void setInvoicePayed(ArrayList<Transaction> invoice){
+        for(Transaction transaction: invoice){
+            transaction.setPayed(true);
+            transactionDao.createTransaction(transaction);
+        }
     }
 }
