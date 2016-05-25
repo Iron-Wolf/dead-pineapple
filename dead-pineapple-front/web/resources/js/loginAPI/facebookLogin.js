@@ -66,7 +66,7 @@ $(function () {
 
     checkFbHashLogin();
 
-    $('#fbLogin').click(function () {
+    $('#fbLogin, #fbLogin2').click(function () {
         fbLogin();
     });
 })

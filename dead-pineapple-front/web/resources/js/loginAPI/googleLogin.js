@@ -56,7 +56,12 @@ function makeApiCall() {
 
 $(function () {
     var authorizeButton = document.getElementById('googlelogin');
-    if( authorizeButton) {
+    if (authorizeButton) {
+        authorizeButton.onclick = handleAuthClick;
+    }
+
+    var authorizeButton = document.getElementById('googlelogin2');
+    if (authorizeButton) {
         authorizeButton.onclick = handleAuthClick;
     }
 });

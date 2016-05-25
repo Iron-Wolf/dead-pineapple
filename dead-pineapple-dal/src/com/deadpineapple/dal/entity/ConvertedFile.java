@@ -29,6 +29,8 @@ public class ConvertedFile implements Serializable {
 
     private Boolean isConverted;
 
+    private Boolean isInConvertion;
+
     private String filePath;
 
     private String originalName;
@@ -131,4 +133,11 @@ public class ConvertedFile implements Serializable {
         this.userAccount = userAccount;
     }
 
+    public Boolean getInConvertion() {
+        return isInConvertion;
+    }
+
+    public void setInConvertion(Boolean inConvertion) {
+        isInConvertion = inConvertion;
+    }
 }

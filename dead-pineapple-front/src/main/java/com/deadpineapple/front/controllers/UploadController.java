@@ -342,12 +342,16 @@ public class UploadController extends HttpServlet {
         String payerID = (String) request.getParameter("PayerID");
 
         // execute the payment
-        boolean transactStatus = ps.finishCheckOut(paymentID,payerID, token);
-        if (transactStatus) {
-            return "redirect:/dashboard";
+        if (paymentID != null && token != null && payerID != null)
+        {
+            boolean transactStatus = ps.finishCheckOut(paymentID,payerID, token);
+            if (transactStatus) {
+                return "redirect:/dashboard";
+            }
+            else
+                return "redirect:/upload";
         }
-        else
-            return "";
+        return  "redirect:/upload";
     }
 
 
@@ -402,11 +406,15 @@ public class UploadController extends HttpServlet {
             response.sendError(503, "Error communicating with Dropbox.");
         }
 
-        String accessToken = authFinish.getAccessToken();
-        client = new DbxClientV2(config, accessToken);
-        //System.out.println("Linked account: " + client.getAccountInfo().displayName);
-        ArrayList<String> dropboxFolders =  getVideoFiles();
-        model.addAttribute("dropboxFiles",dropboxFolders);
+        if (authFinish != null)
+        {
+            String accessToken = authFinish.getAccessToken();
+            client = new DbxClientV2(config, accessToken);
+            //System.out.println("Linked account: " + client.getAccountInfo().displayName);
+            ArrayList<String> dropboxFolders =  getVideoFiles();
+            model.addAttribute("dropboxFiles",dropboxFolders);
+        }
+
         return new ModelAndView("upload", "model", model);
     }
     private ArrayList<String> getVideoFiles() throws DbxException {
