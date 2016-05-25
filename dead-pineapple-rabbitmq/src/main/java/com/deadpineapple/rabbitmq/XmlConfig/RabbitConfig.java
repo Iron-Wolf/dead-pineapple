@@ -9,13 +9,13 @@ import java.io.File;
 /**
  * Created by 15256 on 21/05/2016.
  */
-public class RabbitConfi {
+public class RabbitConfig {
     private String host;
     private int port;
     private String username;
     private String password;
 
-    public RabbitConfi(String host, int port, String username, String password) {
+    public RabbitConfig(String host, int port, String username, String password) {
 
         this.host = host;
         this.port = port;
@@ -23,11 +23,11 @@ public class RabbitConfi {
         this.password = password;
     }
 
-    public static RabbitConfi read(){
+    public static RabbitConfig read(){
         return read(System.getProperty("user.dir")+ "dead-pineapple-rabbitmq/src/main/java/com/deadpineapple/rabbitmq/rabbitConfig.xml");
     }
 
-    public static RabbitConfi read(String path) {
+    public static RabbitConfig read(String path) {
         SAXBuilder sxb = new SAXBuilder();
         try {
 
@@ -36,7 +36,7 @@ public class RabbitConfi {
             Element connectionInfo = racine.getChild("connection");
             Element server  = connectionInfo.getChild("serveur");
             Element user  = connectionInfo.getChild("user");
-            return new RabbitConfi(server.getAttributeValue("host"),Integer.parseInt(server.getAttributeValue("port")),user.getAttributeValue("name"),user.getAttributeValue("password"));
+            return new RabbitConfig(server.getAttributeValue("host"),Integer.parseInt(server.getAttributeValue("port")),user.getAttributeValue("name"),user.getAttributeValue("password"));
 
         } catch (Exception e) {
             return  null;
