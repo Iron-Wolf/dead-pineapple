@@ -82,12 +82,13 @@ public class UploadController extends HttpServlet {
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
     }
+
     public void setTransactionDao(ITransactionDao transactionDao) {
         this.transactionDao = transactionDao;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String uploadPage(HttpServletRequest request, Model model,HttpServletResponse response ) throws JsonReader.FileLoadException, IOException {
+    public String uploadPage(HttpServletRequest request, Model model, HttpServletResponse response) throws JsonReader.FileLoadException, IOException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
@@ -130,8 +131,8 @@ public class UploadController extends HttpServlet {
                     convertedFile.setOldType(FilenameUtils.getExtension(filePath));
                     convertedFile.setNewType(".avi");
                     // Convert in MB
-                    double filesize = ((double)item.getSize() / 1024) / 1024;
-                    filesize = Math.round(filesize*100.0)/100.0;
+                    double filesize = ((double) item.getSize() / 1024) / 1024;
+                    filesize = Math.round(filesize * 100.0) / 100.0;
                     convertedFile.setSize(filesize);
                     convertedFileDao.createFile(convertedFile);
 
@@ -162,8 +163,8 @@ public class UploadController extends HttpServlet {
     public void getUploadedFiles(HttpServletResponse response) throws IOException {
         history = new JSONArray();
         List<ConvertedFile> cfs = convertedFileDao.findByUser(user);
-        for(ConvertedFile cf : cfs){
-            if( cf.getConverted() == null || !cf.getConverted()) {
+        for (ConvertedFile cf : cfs) {
+            if (cf.getConverted() == null || !cf.getConverted()) {
                 // Generate video Information for the uploaded file (ffmpeg)
                 videoInformation = new VideoInformation(cf.getFilePath());
                 // Link the converted file with it's video information
@@ -177,27 +178,27 @@ public class UploadController extends HttpServlet {
                 history.put(generateJsonForPrview(video));
             }
         }
-        if(history != null) {
+        if (history != null) {
             PrintWriter writer = response.getWriter();
             response.setContentType("application/json");
             writer.write(history.toString());
             writer.close();
-        }
-        else{
+        } else {
             response.setStatus(200);
         }
     }
+
     // Generate an image for the uploaded video
     @RequestMapping(value = "/getThumb", method = RequestMethod.GET)
     public void getThumb(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getParameter("getthumb") != null && !request.getParameter("getthumb").isEmpty()) {
-            String filePath = UPLOAD_PATH +request.getParameter("getthumb");
+            String filePath = UPLOAD_PATH + request.getParameter("getthumb");
             String imageName = request.getParameter("getthumb");
-            imageName = imageName.substring(0, imageName.lastIndexOf('.'))+".png";
+            imageName = imageName.substring(0, imageName.lastIndexOf('.')) + ".png";
             String thumb = UPLOAD_PATH + "thumb_" + imageName;
-            for (VideoFile video:
+            for (VideoFile video :
                     convertedFiles) {
-                if(video.getConvertedFile().getFilePath().equals(filePath)){
+                if (video.getConvertedFile().getFilePath().equals(filePath)) {
                     videoInformation = video.getVideoInformation();
                     break;
                 }
@@ -230,43 +231,44 @@ public class UploadController extends HttpServlet {
             }
         }
     }
+
     @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)
-    public void deleteFile(HttpServletRequest request, HttpServletResponse resp){
+    public void deleteFile(HttpServletRequest request, HttpServletResponse resp) {
         if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
             File file = new File(UPLOAD_PATH + request.getParameter("delfile"));
             String filePath = UPLOAD_PATH + request.getParameter("delfile");
             java.nio.file.Path p = Paths.get(filePath);
             String fileName = p.getFileName().toString();
             List<ConvertedFile> cf = convertedFileDao.findByUser(user);
-            for (ConvertedFile video:
-                        cf) {
-                    if(video.getOriginalName().equals(fileName)){
-                        // delete file from bdd
-                        convertedFileDao.deleteFile(video);
-                        // delete file from user array
-                        VideoFile.deleteVideoInformation(convertedFiles, video);
-                        // Delete file from
-                        if (file.exists()) {
-                            file.delete();
-                        }
-                        resp.setStatus(200);
-                        return;
+            for (ConvertedFile video :
+                    cf) {
+                if (video.getOriginalName().equals(fileName)) {
+                    // delete file from bdd
+                    convertedFileDao.deleteFile(video);
+                    // delete file from user array
+                    VideoFile.deleteVideoInformation(convertedFiles, video);
+                    // Delete file from
+                    if (file.exists()) {
+                        file.delete();
                     }
+                    resp.setStatus(200);
+                    return;
+                }
             }
             resp.setStatus(404);
         }
     }
 
     @RequestMapping(value = "/setFormat", method = RequestMethod.GET)
-    public void setConvertFormat(HttpServletRequest request, HttpServletResponse resp){
+    public void setConvertFormat(HttpServletRequest request, HttpServletResponse resp) {
         if (request.getParameter("format") != null && !request.getParameter("format").isEmpty()) {
             String filePath = UPLOAD_PATH + request.getParameter("file");
             String format = request.getParameter("format");
             List<ConvertedFile> cf = convertedFileDao.findByUser(user);
-            for (ConvertedFile video:
+            for (ConvertedFile video :
                     cf) {
-                if(video.getFilePath().equals(filePath)){
-                    System.out.println("Set format"+filePath);
+                if (video.getFilePath().equals(filePath)) {
+                    System.out.println("Set format" + filePath);
                     video.setNewType(format);
                     convertedFileDao.updateFile(video);
 
@@ -279,15 +281,15 @@ public class UploadController extends HttpServlet {
     }
 
     @RequestMapping(value = "/setEncodage", method = RequestMethod.GET)
-    public void setConvertEncodate(HttpServletRequest request, HttpServletResponse resp){
+    public void setConvertEncodate(HttpServletRequest request, HttpServletResponse resp) {
         if (request.getParameter("encodage") != null && !request.getParameter("format").isEmpty()) {
             String filePath = UPLOAD_PATH + request.getParameter("file");
             String format = request.getParameter("encodage");
             List<ConvertedFile> cf = convertedFileDao.findByUser(user);
-            for (ConvertedFile video:
+            for (ConvertedFile video :
                     cf) {
-                if(video.getFilePath().equals(filePath)){
-                    System.out.println("Set Encodage"+filePath);
+                if (video.getFilePath().equals(filePath)) {
+                    System.out.println("Set Encodage" + filePath);
                     //video.setNewType(format);
                     convertedFileDao.updateFile(video);
 
@@ -299,13 +301,13 @@ public class UploadController extends HttpServlet {
         }
     }
 
-    @RequestMapping(value="/facture", method = RequestMethod.GET)
-    public String convert(HttpServletRequest request){
+    @RequestMapping(value = "/facture", method = RequestMethod.GET)
+    public String convert(HttpServletRequest request) {
         // Create the Transaction and redirect to PayPal
         //TODO : créer Transaction
         Date transactionDate = new Date();
         Double priceTotal = 0.0;
-        for(VideoFile vf : convertedFiles){
+        for (VideoFile vf : convertedFiles) {
             Transaction transaction = new Transaction();
             transaction.setConvertedFiles(vf.getConvertedFile());
             transaction.setPrix(vf.getPrice());
@@ -315,10 +317,10 @@ public class UploadController extends HttpServlet {
             transactionDao.createTransaction(transaction);
             priceTotal += vf.getPrice();
         }
-        priceTotal = Math.round(priceTotal*100.0)/100.0;
+        priceTotal = Math.round(priceTotal * 100.0) / 100.0;
         //test price : 0.10
         ps = new PayPalService(priceTotal);
-        String serverUrl = request.getScheme() + "://"+ request.getServerName() + ":" +request.getServerPort()+ request.getContextPath();
+        String serverUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 
         // create the paypal payment
         String paypalURL = ps.startCheckOut(serverUrl);
@@ -328,29 +330,27 @@ public class UploadController extends HttpServlet {
         //   login : testBuyer@test.co
         //   passd : Pa$$w0rd1
         if (paypalURL != null)
-            return "redirect:"+paypalURL;
+            return "redirect:" + paypalURL;
         else
             return "";
     }
 
-    @RequestMapping(value="/payment", method = RequestMethod.GET)
-    public String finish(HttpServletRequest request){
+    @RequestMapping(value = "/payment", method = RequestMethod.GET)
+    public String finish(HttpServletRequest request) {
         // retrieve token and stuff
         String paymentID = (String) request.getParameter("paymentId");
         String token = (String) request.getParameter("token");
         String payerID = (String) request.getParameter("PayerID");
 
         // execute the payment
-        if (paymentID != null && token != null && payerID != null)
-        {
-            boolean transactStatus = ps.finishCheckOut(paymentID,payerID, token);
+        if (paymentID != null && token != null && payerID != null) {
+            boolean transactStatus = ps.finishCheckOut(paymentID, payerID, token);
             if (transactStatus) {
                 return "redirect:/dashboard";
-            }
-            else
+            } else
                 return "redirect:/upload";
         }
-        return  "redirect:/upload";
+        return "redirect:/upload";
     }
 
 
@@ -374,54 +374,49 @@ public class UploadController extends HttpServlet {
         String authorizeUrl = webAuth.start();
         return authorizeUrl;
     }
+
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
-    public ModelAndView auth(HttpServletRequest request,HttpServletResponse response, Model model) throws DbxException, IOException {
+    public ModelAndView auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
         // Load the request token we saved in part 1.
         DbxAuthFinish authFinish = null;
         try {
             authFinish = webAuth.finish(request.getParameterMap());
-        }
-        catch (DbxWebAuth.BadRequestException ex) {
+        } catch (DbxWebAuth.BadRequestException ex) {
             log("On /dropbox-auth-finish: Bad request: " + ex.getMessage());
             response.sendError(400);
-        }
-        catch (DbxWebAuth.BadStateException ex) {
+        } catch (DbxWebAuth.BadStateException ex) {
             // Send them back to the start of the auth flow.
             response.sendRedirect("http://my-server.com/dropbox-auth-start");
-        }
-        catch (DbxWebAuth.CsrfException ex) {
+        } catch (DbxWebAuth.CsrfException ex) {
             log("On /dropbox-auth-finish: CSRF mismatch: " + ex.getMessage());
-        }
-        catch (DbxWebAuth.NotApprovedException ex) {
+        } catch (DbxWebAuth.NotApprovedException ex) {
             // When Dropbox asked "Do you want to allow this app to access your
             // Dropbox account?", the user clicked "No".
-        }
-        catch (DbxWebAuth.ProviderException ex) {
+        } catch (DbxWebAuth.ProviderException ex) {
             System.out.println("On /dropbox-auth-finish: Auth failed: " + ex.getMessage());
             response.sendError(503, "Error communicating with Dropbox.");
-        }
-        catch (DbxException ex) {
+        } catch (DbxException ex) {
             System.out.println("On /dropbox-auth-finish: Error getting token: " + ex.getMessage());
             response.sendError(503, "Error communicating with Dropbox.");
         }
 
-        if (authFinish != null)
-        {
+        if (authFinish != null) {
             String accessToken = authFinish.getAccessToken();
             client = new DbxClientV2(config, accessToken);
             //System.out.println("Linked account: " + client.getAccountInfo().displayName);
-            ArrayList<String> dropboxFolders =  getVideoFiles();
-            model.addAttribute("dropboxFiles",dropboxFolders);
+            ArrayList<String> dropboxFolders = getVideoFiles();
+            model.addAttribute("dropboxFiles", dropboxFolders);
         }
 
         return new ModelAndView("upload", "model", model);
     }
+
     private ArrayList<String> getVideoFiles() throws DbxException {
         ArrayList<String> dropboxFolders = new ArrayList();
         try {
-            for(String format : ext){
+            for (String format : ext) {
                 SearchResult search = client.files().search("", format);
-                for(int i = 0; i < search.getMatches().size(); i++){
+                for (int i = 0; i < search.getMatches().size(); i++) {
                     String pat = search.getMatches().get(i).getMetadata().getPathDisplay();
                     dropboxFolders.add(pat);
                     System.out.println(pat);
@@ -436,14 +431,14 @@ public class UploadController extends HttpServlet {
     @RequestMapping(value = "/uploadDb", method = RequestMethod.GET)
     public void downloadDropboxFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String dbFilePath = request.getParameter("fileName");
-        if(dbFilePath == null || dbFilePath.equals("")){
+        if (dbFilePath == null || dbFilePath.equals("")) {
             throw new ServletException("File Name can't be null or empty");
         }
         JSONArray t = new JSONArray();
         java.nio.file.Path p = Paths.get(dbFilePath);
         String fileName = p.getFileName().toString();
-        String serverPath = UPLOAD_PATH+fileName;
-        double  size;
+        String serverPath = UPLOAD_PATH + fileName;
+        double size;
         FileOutputStream outputStream = new FileOutputStream(serverPath);
         try {
             DbxDownloader<FileMetadata> download = null;
@@ -460,7 +455,7 @@ public class UploadController extends HttpServlet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            size = download.getResult().getSize()/10000;
+            size = download.getResult().getSize() / 10000;
             size = size / 100;
 
         } finally {
@@ -483,7 +478,7 @@ public class UploadController extends HttpServlet {
         convertedFile.setFilePath(serverPath);
         convertedFile.setCreationDate(creationDate);
         convertedFile.setOriginalName(fileName);
-        convertedFile.setOldType("."+FilenameUtils.getExtension(dbFilePath));
+        convertedFile.setOldType("." + FilenameUtils.getExtension(dbFilePath));
         convertedFile.setNewType(".avi");
 
         convertedFile.setSize(size);
@@ -491,7 +486,7 @@ public class UploadController extends HttpServlet {
 
         // Create a new video Information
         videoInformation = new VideoInformation(serverPath);
-        String imageName = fileName.substring(0, fileName.lastIndexOf('.'))+".png";
+        String imageName = fileName.substring(0, fileName.lastIndexOf('.')) + ".png";
         String thumb = UPLOAD_PATH + "thumb_" + imageName;
         videoInformation.generateAThumbnailImage(thumb);
 
@@ -505,7 +500,8 @@ public class UploadController extends HttpServlet {
         writer.write(t.toString());
         writer.close();
     }
-    public JSONObject generateJsonForPrview(VideoFile video){
+
+    public JSONObject generateJsonForPrview(VideoFile video) {
         JSONObject jsonFile = new JSONObject();
         String fileName = video.getConvertedFile().getOriginalName();
         double size = video.getConvertedFile().getSize();
@@ -522,21 +518,19 @@ public class UploadController extends HttpServlet {
         jsonFile.put("delete_type", "GET");
         return jsonFile;
     }
-    public double generatePrice(TimeSpan duration){
+
+    public double generatePrice(TimeSpan duration) {
         double price = 0, time = 0;
-        if(duration != null){
-            time = (double)((duration.getHeures() * 60) + duration.getMinutes());
-            System.out.println("temps ="+time +duration.getHeures() * 60);
+        if (duration != null) {
+            time = (double) ((duration.getHeures() * 60) + duration.getMinutes());
+            System.out.println("temps =" + time + duration.getHeures() * 60);
         }
 
-        if(time < 5){
-            price = Math.log(5) - 1;
+        if (time < 5) {
+            time = 5;
         }
-        else{
-            price = Math.log(time) - 1;
-
-        }
-        price = Math.round(price*100.0)/100.0;
+        price = (Math.log(time) - 1) / 3;
+        price = Math.round(price * 100.0) / 100.0;
         return price;
     }
 }

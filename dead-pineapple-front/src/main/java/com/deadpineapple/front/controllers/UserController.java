@@ -41,6 +41,7 @@ public class UserController{
         param.remove("error");
         return new ModelAndView("userForm", "userAccount", new UserAccount());
     }
+
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String saveUser(@ModelAttribute("user")UserAccount user,
                            BindingResult result, ModelMap model, HttpServletRequest request) throws Exception {

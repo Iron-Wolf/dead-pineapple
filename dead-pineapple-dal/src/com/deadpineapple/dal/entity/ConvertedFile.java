@@ -42,6 +42,7 @@ public class ConvertedFile implements Serializable {
     private Date creationDate;
 
     private Date convertedDate;
+    private String newEncoding;
 
     public ConvertedFile() {
     }
@@ -139,5 +140,13 @@ public class ConvertedFile implements Serializable {
 
     public void setInConvertion(Boolean inConvertion) {
         isInConvertion = inConvertion;
+    }
+
+    public String getNewEncoding() {
+        return newEncoding;
+    }
+
+    public void setNewEncoding(String newEncoding) {
+        this.newEncoding = newEncoding;
     }
 }
