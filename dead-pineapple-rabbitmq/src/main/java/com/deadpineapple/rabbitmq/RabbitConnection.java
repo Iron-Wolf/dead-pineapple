@@ -1,6 +1,6 @@
 package com.deadpineapple.rabbitmq;
 
-import com.deadpineapple.rabbitmq.XmlConfig.RabbitConfig;
+import com.deadpineapple.rabbitmq.XmlConfig.RabbitConfi;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
@@ -71,16 +71,16 @@ public class RabbitConnection {
     }
 
     public static Connection connect(String path) throws IOException, TimeoutException {
-        RabbitConfig config  = RabbitConfig.read(path);
+        RabbitConfi config  = RabbitConfi.read(path);
         return getConnection(config);
     }
 
     public static Connection connect() throws IOException, TimeoutException {
-        RabbitConfig config  = RabbitConfig.read();
+        RabbitConfi config  = RabbitConfi.read();
         return getConnection(config);
     }
 
-    private static Connection getConnection(RabbitConfig config) throws IOException, TimeoutException {
+    private static Connection getConnection(RabbitConfi config) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(config.getHost());
         factory.setUsername(config.getUsername());
