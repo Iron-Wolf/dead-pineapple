@@ -282,7 +282,7 @@ public class UploadController extends HttpServlet {
 
     @RequestMapping(value = "/setEncodage", method = RequestMethod.GET)
     public void setConvertEncodate(HttpServletRequest request, HttpServletResponse resp) {
-        if (request.getParameter("encodage") != null && !request.getParameter("format").isEmpty()) {
+        if (request.getParameter("encodage") != null) {
             String filePath = UPLOAD_PATH + request.getParameter("file");
             String format = request.getParameter("encodage");
             List<ConvertedFile> cf = convertedFileDao.findByUser(user);
@@ -290,7 +290,11 @@ public class UploadController extends HttpServlet {
                     cf) {
                 if (video.getFilePath().equals(filePath)) {
                     System.out.println("Set Encodage" + filePath);
-                    //video.setNewType(format);
+                    if (format.isEmpty()) {
+                        video.setNewEncoding(null);
+                    } else {
+                        video.setNewEncoding(format);
+                    }
                     convertedFileDao.updateFile(video);
 
                     resp.setStatus(200);

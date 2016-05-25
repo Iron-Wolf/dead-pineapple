@@ -176,7 +176,7 @@ public class DashboardController {
                     invoice.addConvertedFile(cVideo);
                     // If video is not converted yet start conversion
                     if (aTransaction.getPayed() && cVideo.getConverted() == null) {
-                        FileIsUploaded videoToConvert = new FileIsUploaded(cVideo.getId(), cVideo.getFilePath(), cVideo.getNewType(), null);
+                        FileIsUploaded videoToConvert = new FileIsUploaded(cVideo.getId(), cVideo.getFilePath(), cVideo.getNewType(), cVideo.getNewEncoding());
                         RabbitInit init = new RabbitInit(path);
                         init.getFileUploadedSender().send(videoToConvert);
                         init.closeAll();
