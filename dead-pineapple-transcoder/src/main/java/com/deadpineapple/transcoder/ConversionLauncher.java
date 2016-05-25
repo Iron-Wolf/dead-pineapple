@@ -24,7 +24,15 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
 
     public static final String RESULT_FOLDER = "/conversion";
 
-    public RabbitInit rabbitInit = new RabbitInit();
+    public RabbitInit rabbitInit;
+
+    public ConversionLauncher(String configPath) {
+        rabbitInit = new RabbitInit(configPath);
+    }
+
+    public ConversionLauncher() {
+        rabbitInit = new RabbitInit();
+    }
 
 
     public void start() {
@@ -57,9 +65,9 @@ public class ConversionLauncher implements IReceiver<FileToConvert> {
             convertedReport = new FileIsConverted(result.getFileId(), conv.getFileDestinationPath()
                     , false, "Conversion error :" + e.getMessage(), result.getSplitFileId());
         }
-            if (convertedReport != null) {
-                rabbitInit.getFileIsConvertedSender().send(convertedReport);
-            }
+        if (convertedReport != null) {
+            rabbitInit.getFileIsConvertedSender().send(convertedReport);
+        }
 
     }
 

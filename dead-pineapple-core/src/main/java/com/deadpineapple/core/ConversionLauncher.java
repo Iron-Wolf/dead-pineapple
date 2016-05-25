@@ -26,12 +26,20 @@ import java.util.List;
  * Created by 15256 on 18/03/2016.
  */
 public class ConversionLauncher {
-    private RabbitInit rabbitInit = new RabbitInit();
+    private RabbitInit rabbitInit;
 
     private static final int MaximumPartSize = 2 * 1024 * 1024;
     IConvertedFileDao convertedFileDao;
 
     ISplitFileDao splitFileDao;
+
+    public ConversionLauncher(String configPath) {
+        rabbitInit = new RabbitInit(configPath);
+    }
+
+    public ConversionLauncher() {
+        rabbitInit = new RabbitInit();
+    }
 
     public void start() {
         if (convertedFileDao == null){

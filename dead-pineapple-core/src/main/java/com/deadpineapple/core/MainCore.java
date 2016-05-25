@@ -8,7 +8,13 @@ public class MainCore {
 
     public static void main(String[] args) {
         try {
-            ConversionLauncher conversionLauncher = new ConversionLauncher();
+            ConversionLauncher conversionLauncher;
+            if(args.length > 0){
+                conversionLauncher = new ConversionLauncher(args[0]);
+            }else {
+                conversionLauncher = new ConversionLauncher();
+            }
+
             conversionLauncher.start();
         } catch (Exception ex) {
             contFailed++;

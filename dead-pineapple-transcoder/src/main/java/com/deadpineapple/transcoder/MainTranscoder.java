@@ -8,7 +8,12 @@ public class MainTranscoder {
 
     public static void main(String[] args) {
 
-        ConversionLauncher launcher = new ConversionLauncher();
+        ConversionLauncher launcher;
+        if (args.length > 0) {
+            launcher = new ConversionLauncher(args[0]);
+        }else {
+            launcher = new ConversionLauncher();
+        }
         launcher.start();
     }
 }
