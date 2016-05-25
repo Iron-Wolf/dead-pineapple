@@ -41,9 +41,9 @@
                 <hr class="col-xs-12">
                 <h3>Ou s'incrire/se connecter via:</h3>
                 <div class="form-group">
-                    <img type="subtmit" value="Facebook login" id="fbLogin" onclick="" class="login"
+                    <img type="subtmit" value="Facebook login" id="fbLogin2" onclick="" class="login"
                          src="/resources/img/bigFbLogin.png">
-                    <img type="submit" value="Google login" id="googlelogin" class="login"
+                    <img type="submit" value="Google login" id="googlelogin2" class="login"
                          src="/resources/img/bigGoogleLogin.png">
                 </div>
 
