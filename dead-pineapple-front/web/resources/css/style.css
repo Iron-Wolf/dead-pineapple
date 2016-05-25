@@ -130,7 +130,12 @@ legend {
     -o-transition: border-bottom-width ease-in-out .15s;
     -moz-transition: border-bottom-width ease-in-out .15s;
 }
-
+.form-control[disabled]{
+    background-color: #d7d7d7;
+}
+select.form-control{
+    border: none!important;
+}
 .form-control:focus {
     border-color: #1ABC9C;
     box-shadow: none !important;

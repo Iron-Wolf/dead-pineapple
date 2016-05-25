@@ -12,7 +12,7 @@
 <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
 <script src="<spring:url value='/resources/js/video.js'/>"></script>
 <link rel="stylesheet" href="<spring:url value='/resources/css/video-js.min.css'/>">
-<div class="container">
+<div class="container dashboard-container">
     <br/>
     <h1>
         Mon espace
@@ -58,9 +58,9 @@
         </div>
     </div>
     <div class="row">
-            <div class="col-lg-11 col-lg-offset-1">
+            <div class="col-md-10 col-md-offset-1">
             <h3>Mes informations personnelles</h3>
-                <form:form method="POST" action="/user/edit" id="editForm" data-toggle="validator" modelAttribute="userAccount" disabled="true">
+                <form:form method="POST" action="/user/edit" id="editForm" cssClass="col-md-10 col-md-offset-1" data-toggle="validator" modelAttribute="userAccount" disabled="true">
                     <div class="form-group">
                         <form:label path="lastName" class="control-label">Votre nom</form:label>
                         <form:input path="lastName" value="${USER_INFORMATIONS.lastName}" id="name" type="text" name="name" placeholder="Nom" maxlength="50" class="form-control" required="true"/>
