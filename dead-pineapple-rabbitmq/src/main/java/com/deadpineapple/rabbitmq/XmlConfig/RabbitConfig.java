@@ -24,7 +24,7 @@ public class RabbitConfig {
     }
 
     public static RabbitConfig read(){
-        return read(System.getProperty("user.dir")+ "dead-pineapple-rabbitmq/src/main/java/com/deadpineapple/rabbitmq/rabbitConfig.xml");
+        return read(System.getProperty("user.dir")+ "/dead-pineapple-rabbitmq/src/main/java/com/deadpineapple/rabbitmq/rabbitConfig.xml");
     }
 
     public static RabbitConfig read(String path) {

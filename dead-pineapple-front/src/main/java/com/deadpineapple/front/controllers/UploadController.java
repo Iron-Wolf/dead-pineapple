@@ -1,7 +1,6 @@
 package com.deadpineapple.front.controllers;
 
 import com.deadpineapple.dal.constante.Constante;
-import com.deadpineapple.dal.dao.ConvertedFileDao;
 import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
@@ -22,7 +21,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.taglibs.standard.extra.spath.Path;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +47,7 @@ import java.util.List;
 /**
  * Created by saziri on 14/03/2016.
  */
+@SuppressWarnings("ALL")
 @Controller
 @RequestMapping("/upload")
 public class UploadController extends HttpServlet {
@@ -129,7 +128,7 @@ public class UploadController extends HttpServlet {
                     convertedFile.setCreationDate(creationDate);
                     convertedFile.setOriginalName(item.getName());
                     convertedFile.setOldType(FilenameUtils.getExtension(filePath));
-                    //convertedFile.setNewType();
+                    convertedFile.setNewType(".avi");
                     // Convert in MB
                     double filesize = ((double)item.getSize() / 1024) / 1024;
                     filesize = Math.round(filesize*100.0)/100.0;
@@ -484,8 +483,8 @@ public class UploadController extends HttpServlet {
         convertedFile.setFilePath(serverPath);
         convertedFile.setCreationDate(creationDate);
         convertedFile.setOriginalName(fileName);
-        convertedFile.setOldType(FilenameUtils.getExtension(dbFilePath));
-        //convertedFile.setNewType();
+        convertedFile.setOldType("."+FilenameUtils.getExtension(dbFilePath));
+        convertedFile.setNewType(".avi");
 
         convertedFile.setSize(size);
         convertedFileDao.createFile(convertedFile);

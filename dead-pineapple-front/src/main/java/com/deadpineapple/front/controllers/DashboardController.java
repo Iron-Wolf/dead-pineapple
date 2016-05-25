@@ -71,7 +71,7 @@ public class DashboardController {
                 + user.getFirstName().trim() + "_"
                 + user.getLastName().trim() + "/";
         invoices = new ArrayList();
-        getHistory();
+        getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
         System.out.println("size" + invoices.size());
         //System.out.println(invoices.get(0).get(0).get("name"));
         model.addAttribute("invoices", invoices);
@@ -151,7 +151,7 @@ public class DashboardController {
         dateTransaction = transaction.getDate();
     }
 
-    private void getHistory() {
+    private void getHistory(String path) {
         // Get transactions from bdd
         transactions = transactionDao.getTransByUser(user);
 
@@ -176,8 +176,8 @@ public class DashboardController {
                     invoice.addConvertedFile(cVideo);
                     // If video is not converted yet start conversion
                     if (aTransaction.getPayed() && cVideo.getConverted() == null) {
-                        FileIsUploaded videoToConvert = new FileIsUploaded(cVideo.getId(), cVideo.getFilePath(), cVideo.getNewType(), "mpeg4");
-                        RabbitInit init = new RabbitInit("//todo:mettre le putain de lien ici");
+                        FileIsUploaded videoToConvert = new FileIsUploaded(cVideo.getId(), cVideo.getFilePath(), cVideo.getNewType(), null);
+                        RabbitInit init = new RabbitInit(path);
                         init.getFileUploadedSender().send(videoToConvert);
                         init.closeAll();
                         cVideo.setConverted(false);
