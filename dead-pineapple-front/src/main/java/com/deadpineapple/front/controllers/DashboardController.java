@@ -47,7 +47,7 @@ public class DashboardController {
     List<Transaction> transactions = new ArrayList();
     ArrayList<Invoice> invoices;
     Invoice invoice;
-    Date dateTransaction;
+    int idTransaction;
     static int totalSpace = 10240;
     double invoicePrice;
 
@@ -68,8 +68,7 @@ public class DashboardController {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getFirstName().trim() + "_"
-                + user.getLastName().trim() + "/";
+                + user.getEmail().trim()+"/";
         invoices = new ArrayList();
         getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
         System.out.println("size" + invoices.size());
@@ -118,8 +117,7 @@ public class DashboardController {
     @RequestMapping(value = "/downloadFileDb", method = RequestMethod.GET)
     protected String uploadInDb(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, JsonReader.FileLoadException {
         String accessToken = (String) request.getSession().getAttribute("ACCESS_TOKEN");
-
-      config = new DbxRequestConfig(
+        config = new DbxRequestConfig(
                 "JavaTutorial/1.0", Locale.getDefault().toString());
         if (accessToken != null || accessToken != "") {
             client = new DbxClientV2(config, accessToken);
@@ -148,7 +146,7 @@ public class DashboardController {
         invoice = new Invoice();
         invoicePrice = 0.0;
         invoice.setDate(transaction.getDate());
-        dateTransaction = transaction.getDate();
+        idTransaction = transaction.getIdTransaction();
     }
 
     private void getHistory(String path) {
@@ -163,7 +161,7 @@ public class DashboardController {
 
                 System.out.println("Price :" + invoicePrice + "id " + aTransaction.getIdTransaction());
                 // if the transaction is different, create new transaction
-                if (!aTransaction.getDate().equals(dateTransaction)) {
+                if (aTransaction.getIdTransaction() != idTransaction) {
                     invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
                     invoices.add(invoice);
                     invoice = new Invoice();

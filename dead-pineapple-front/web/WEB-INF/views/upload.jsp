@@ -93,16 +93,40 @@
             <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
                 <i class="glyphicon glyphicon-upload"></i>
                 <span>Depuis dropbox</span>
-            </button>
-            <div id="dropbox">
-                <c:if test="${not empty dropboxFiles}">
+            </button
+            <c:if test="${not empty dropboxFiles}">
+                <div id="dropbox">
+                    <h2>Mes vidéos </h2>
                     <ul>
-                    <c:forEach var="listValue" items="${dropboxFiles}">
-                        <li><a href="#" class="dropbox_file">${listValue}</a></li>
-                    </c:forEach>
+                        <c:forEach var="listValue" items="${dropboxFiles}">
+                            <li><a href="#" class="dropbox_file">${listValue}</a></li>
+                        </c:forEach>
                     </ul>
-                </c:if>
+                </div>
+            </c:if>
+            <!-- Modal Start here-->
+            <div class="modal fade bs-example-modal-sm" id="myPleaseWait" tabindex="-1"
+                 role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">
+                    <img src="/resources/img/dropbox/dropbox.ico">
+                    </span>Upload dropbox en cours...
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-info
+                    progress-bar-striped active"
+                                     style="width: 100%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- Modal ends Here -->
             <div class="well">
                 <h3>Information sur l'upload</h3>
                 <ul>
@@ -295,7 +319,9 @@
                 }
 
             }
+            // Dropbox
             $(document).on('click', '.dropbox_file', function() {
+                $('#myPleaseWait').modal('show');
                 var filename = $(this).text();
                 getFiles("/upload/uploadDb?fileName="+filename);
             });
@@ -303,7 +329,9 @@
             // Load files
             function getFiles(url){
                 $.getJSON(url, function (data) {
-                    console.log(data);
+                    if(url != "/upload/getFiles"){
+                        $('#myPleaseWait').modal('hide');
+                    }
                     var totalPrice = 0;
                     var fileRow = "";
                     for(var i = 0;i < data.length;i++){
@@ -377,7 +405,6 @@
                         fileRow += "</div>";
                         $(".files").append(fileRow);
                     }
-
                     $("#payButton").attr("price", totalPrice.toFixed(2));
                     $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
                 });

@@ -3,6 +3,7 @@ package com.deadpineapple.front.controllers;
 import com.deadpineapple.dal.constante.Constante;
 import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
+import com.deadpineapple.dal.dao.TransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -94,8 +96,7 @@ public class UploadController extends HttpServlet {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getFirstName().trim() + "_"
-                + user.getLastName().trim() + "/";
+                + user.getEmail().trim()+"/";
 
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
@@ -208,10 +209,19 @@ public class UploadController extends HttpServlet {
 
             videoInformation.generateAThumbnailImage(thumb);
             File file = new File(thumb);
-            if (file.exists()) {
-                System.out.println(file.getAbsolutePath());
-                BufferedImage resizeImagePng = resizeImage(ImageIO.read(file));
-                ImageIO.write(resizeImagePng, "png", new File(thumb));
+            BufferedImage resizeImagePng;
+                if (!file.exists()) {
+                    thumb = "/resources/img/video-player.png";
+                    // Retrieve image from the classpath.
+                    InputStream is = this.getClass().getResourceAsStream(thumb);
+                    resizeImagePng = resizeImage(ImageIO.read(is));
+                    ImageIO.write(resizeImagePng, "png", file);
+                }else{
+                    resizeImagePng = resizeImage(ImageIO.read(file));
+                }
+
+                ImageIO.write(resizeImagePng, "png", file);
+
 
                 int bytes = 0;
                 ServletOutputStream op = response.getOutputStream();
@@ -230,7 +240,7 @@ public class UploadController extends HttpServlet {
                 in.close();
                 op.flush();
                 op.close();
-            }
+
         }
     }
 
@@ -314,6 +324,7 @@ public class UploadController extends HttpServlet {
         Date transactionDate = new Date();
         Double priceTotal = 0.0;
         invoice = new ArrayList<Transaction>();
+        int idTransation = transactionDao.getNextIdTransaction();
         for (VideoFile vf : convertedFiles) {
             Transaction transaction = new Transaction();
             transaction.setConvertedFiles(vf.getConvertedFile());
@@ -321,6 +332,7 @@ public class UploadController extends HttpServlet {
             transaction.setDate(transactionDate);
             transaction.setUserAccount(user);
             transaction.setPayed(false);
+            transaction.setIdTransaction(idTransation);
             invoice.add(transactionDao.createTransaction(transaction));
             priceTotal += vf.getPrice();
         }
@@ -415,7 +427,6 @@ public class UploadController extends HttpServlet {
             ArrayList<String> dropboxFolders = getVideoFiles();
             model.addAttribute("dropboxFiles", dropboxFolders);
         }
-
         return new ModelAndView("upload", "model", model);
     }
 
