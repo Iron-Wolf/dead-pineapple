@@ -27,19 +27,13 @@
                             <i class="glyphicon glyphicon-upload"></i>
                             <span>Uploader</span>
                         </button>
-                        <!--
-                        <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
+                        <span class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
                             <i class="glyphicon glyphicon-upload"></i>
                             <span>Depuis dropbox</span>
-                        </button>
-                        !-->
+                        </span>
                         <button type="reset" class="btn btn-warning cancel">
                             <i class="glyphicon glyphicon-ban-circle"></i>
                             <span>Annuler</span>
-                        </button>
-                        <button type="button" class="btn btn-danger delete">
-                            <i class="glyphicon glyphicon-trash"></i>
-                            <span>Supprimer</span>
                         </button>
                         <!--
                         <button class="btn btn-info" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalDropBox" >
@@ -84,16 +78,12 @@
                 <div class="fileupload-loading"></div>
                 <br>
                 <!-- The table listing the files available for upload/download -->
-                <table role="presentation" id="uploadedFiles" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+                <table role="presentation" id="uploadedFiles" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+
+                </table>
             </form>
             <br>
                 <a href="<spring:url value='/upload/facture'/>" class="btn btn-primary start" id="payButton" price="">Payer et Convertir</a>
-
-            </button>
-            <button class="btn btn-info" onclick="location.href='${dropboxUrl}'" >
-                <i class="glyphicon glyphicon-upload"></i>
-                <span>Depuis dropbox</span>
-            </button
             <c:if test="${not empty dropboxFiles}">
                 <div id="dropbox">
                     <h2>Mes vidéos </h2>
@@ -234,9 +224,8 @@
             <div class="col-sm-2 delete">
                 <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                         <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
+                    <span>Supprimer</span>
                 </button>
-                <input type="checkbox" name="delete" value="1">
             </div>
         </div>
         {% } %}
@@ -365,9 +354,8 @@
                                 deleteurl = "<div class='col-sm-2 delete'>";
                                 deleteurl += "<button class='btn btn-danger' data-type='GET' data-url='"+data[i][attr]+"'>";
                                 deleteurl += "<i class='glyphicon glyphicon-trash'></i>";
-                                deleteurl += "<span>Delete</span>";
+                                deleteurl += "<span>Supprimer</span>";
                                 deleteurl += "</button>";
-                                deleteurl += "<input type='checkbox' name='delete' value='1'>";
                                 deleteurl += "</div>";
                             }
                         }
@@ -423,8 +411,9 @@
                     }
                     return (bytes / 1000).toFixed(2) + ' KB';
             };
-
-
+            $(document).on('click', '.delete', function() {
+                alert("delete element");
+            });
         });
 
         </script>

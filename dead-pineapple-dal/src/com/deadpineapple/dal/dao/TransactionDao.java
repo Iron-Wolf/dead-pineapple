@@ -50,10 +50,13 @@ public class TransactionDao implements ITransactionDao {
         Criteria criteria = sess.createCriteria(Transaction.class)
                 .add( Property.forName("idTransaction").eq(maxId) );
 
-        Transaction maxT = (Transaction) criteria.uniqueResult();
+        Transaction maxT = (Transaction) criteria.setMaxResults(1).uniqueResult();
 
         tx.commit();
         sess.close();
+        if(maxT == null){
+            return 0;
+        }
         return maxT.getIdTransaction()+1;
     }
 
