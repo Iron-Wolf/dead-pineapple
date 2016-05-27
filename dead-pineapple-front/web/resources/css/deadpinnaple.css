@@ -38,8 +38,6 @@ iframe {
     margin-top: 10%;
 }
 
-
-
 #description {
     height: 200px;
     margin-top: 2%;
@@ -53,7 +51,7 @@ iframe {
 #coord {
     height: 450px;
     background-color: white;
-    margin-top:10%;
+    margin-top: 10%;
 }
 
 #msg {
@@ -70,7 +68,20 @@ iframe {
 
 #ajoutez {
     background: url(/resources/img/ananasmort2.svg) center 0 no-repeat fixed;
+}
 
+#ajoutez h1 {
+    padding-top: 10%;
+    font-family: 'Lobster', cursive;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 6em;
+}
+#ajoutez > .btn{
+    margin-top: 20px;
+}
+#ajoutez .small {
+    color: #FFFFFF;
 }
 
 #whats {
@@ -146,6 +157,7 @@ iframe {
     padding-bottom: 10px;
     text-align: center;
 }
+
 #description {
     text-align: left;
 }
@@ -157,12 +169,14 @@ iframe {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.scroll-down-btn{
+
+.scroll-down-btn {
     position: absolute;
     bottom: 40px;
 }
-.scroll-down-btn button{
-    background: rgba(255,255,255,0.7);
+
+.scroll-down-btn button {
+    background: rgba(255, 255, 255, 0.7);
     height: 37px;
     width: 100%;
     text-align: center;
@@ -170,33 +184,42 @@ iframe {
     border-radius: 25px;
     transition: content 0.15s;
 }
-.scroll-down-btn button:hover{
-    background: rgba(255,255,255,0.5);
+
+.scroll-down-btn button:hover {
+    background: rgba(255, 255, 255, 0.5);
 }
-.scroll-down-btn button:hover::before{
+
+.scroll-down-btn button:hover::before {
     content: '↓ ';
 }
-.scroll-down-btn button:hover::after{
-     content: ' ↓';
- }
-.scroll-down-btn button:active{
-     background: rgba(255,255,255,0.8);
- }
-.btn.btn-success{
+
+.scroll-down-btn button:hover::after {
+    content: ' ↓';
+}
+
+.scroll-down-btn button:active {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.btn.btn-success {
     background-color: #1abc9c;
     border-color: #16a085;
 }
-.btn.btn-success:hover, .btn.btn-success:active:focus{
+
+.btn.btn-success:hover, .btn.btn-success:active:focus {
     border-color: #1abc9c;
     background-color: #16a085;
 }
-.btn{
+
+.btn {
     border-radius: 0;
 }
-.membre{
+
+.membre {
     margin-top: 10%;
 }
-.adresses{
+
+.adresses {
     border-top: 1px solid black;
-    height:250px;
+    height: 250px;
 }

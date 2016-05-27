@@ -21,14 +21,14 @@ $(document).ready(function() {
   });
 
 
-  $('a[href],button[goto]').click(function () { // Au clic sur un élément
+  $('a[href], button[goto]').click(function () { // Au clic sur un élément
     var page = $(this).attr('href') || $(this).attr('goto'); // Page cible
     var index;
     if((index =page.indexOf('#')) >= 0){
       var ancre = page.substring(index);
-      //var coordonnees = $(ancre).offset().top;
+      var coordonnees = $(ancre).offset().top;
       var speed = 750; // Durée de l'animation (en ms)
-     // $('html, body').animate({scrollTop: coordonnees}, speed); // Go
+      $('html, body').animate({scrollTop: coordonnees}, speed); // Go
     }
   });
 
