@@ -63,20 +63,16 @@
 
         <div id="1upload" class="etapes col-xs-2 col-md-2 col-xs-offset-1 ">
             <img class="etp img-responsive"
-                 src="/resources/img/upload.svg"
-                 height="250"></div>
+                 src="/resources/img/upload.svg" ></div>
         <div id="2convert" class="etapes col-xs-2 col-md-2 col-xs-offset-1">
             <img class="etp img-responsive"
-                 src="/resources/img/transform.svg"
-                 height="250"></div>
+                 src="/resources/img/transform.svg"></div>
         <div id="3paye" class="etapes col-xs-2 col-md-2 col-xs-offset-1">
             <img class="etp img-responsive"
-                 src="/resources/img/paye.svg"
-                 height="250"></div>
+                 src="/resources/img/paye.svg"></div>
         <div id="4download" class="etapes col-xs-2 col-md-2 col-xs-offset-1">
             <img class="etp img-responsive"
-                 src="/resources/img/download.svg"
-                 height="250"></div>
+                 src="/resources/img/download.svg"></div>
         <div id="explicatif" class="msg col-xs-9 col-xs-offset-2"><h1>
             <span class="small">Selectionnez un module ci-dessus pour plus de détails!</span>
         </h1></div>
@@ -85,29 +81,36 @@
         </div>
     </div>
     <div id="whos" class="col-lg-12 col-md-12 page-para ">
-        <div id="lunettes">
-            <img src="/resources/img/lunettes.svg" height="100">
-        </div>
 
-        <div id="pablo" class="membre col-lg-1 col-lg-offset-1">
+
+        <div id="pablo" class="membre col-xs-1 col-xs-offset-2">
             <img class="etp teamate img-responsive"
-                 src="/resources/img/sofiane.png" height="250">
+                 src="/resources/img/pabloROND.jpg" >
+            <img class="lunnette" src="/resources/img/lunettes.svg" height="100">
+
         </div>
-        <div id="sofiane" class="membre col-lg-1 col-lg-offset-1">
+        <div id="sofiane" class="membre col-xs-1 col-xs-offset-1">
             <img class="etp teamate img-responsive"
-                 src="/resources/img/sofiane.png" height="250">
+                 src="/resources/img/thomasROND.jpg" >
+            <img class="lunnette" src="/resources/img/lunettes.svg" height="100">
+
         </div>
-        <div id="michael" class="membre col-lg-1 col-lg-offset-1">
+        <div id="michael" class="membre col-xs-1 col-xs-offset-1">
             <img class="etp teamate img-responsive"
-                 src="/resources/img/sofiane.png" height="250">
+                 src="/resources/img/michkaelROND.jpg" >
+            <img  class="lunnette" src="/resources/img/lunettes.svg" height="100">
+
         </div>
-        <div id="lucas" class="membre col-lg-1 col-lg-offset-1">
+        <div id="lucas" class="membre col-xs-1 col-xs-offset-1">
             <img class="etp teamate img-responsive"
-                 src="/resources/img/sofiane.png" height="250">
+                 src="/resources/img/sofianeROND.jpg">
+            <img class="lunnette" src="/resources/img/lunettes.svg" height="100">
         </div>
-        <div id="thomas" class="membre col-lg-1 col-lg-offset-1">
+        <div id="thomas" class="membre col-xs-1 col-xs-offset-1">
             <img class="etp teamate img-responsive"
-                 src="/resources/img/sofiane.png" height="250">
+                 src="/resources/img/lucasROND.jpg" >
+            <img class="lunnette" src="/resources/img/lunettes.svg" height="100">
+
         </div>
 
         <div id="description" class="msg col-xs-9 col-xs-offset-2"><h1>

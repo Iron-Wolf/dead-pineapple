@@ -91,7 +91,9 @@ iframe {
 #whos {
     background: url(/resources/img/fondananaslunettes.svg) center 0 no-repeat fixed;
 }
-
+#whos .col-xs-1{
+    padding: 0;
+}
 #contact {
     background: url(/resources/img/fondananascontact.svg) center 0 no-repeat fixed;
 }
@@ -123,16 +125,10 @@ iframe {
 
 #4enjoy {
     background: url(/resources/img/deadpinnaple1.svg) center 0 no-repeat;
-
 }
 
 #uploadaccess {
     height: 34px;
-}
-
-.etp:hover {
-    -webkit-box-shadow: 0px 0px 15px 10px rgba(255, 255, 255, .75);
-    box-shadow: 0px 0px 15px 10px rgba(255, 255, 255, .75);
 }
 
 .etp {
@@ -143,13 +139,26 @@ iframe {
     transition: all 0.7s ease;
 }
 
+.etphv{
+    -webkit-box-shadow: 0px 0px 15px 10px rgba(255, 255, 255, .75);
+    box-shadow: 0px 0px 15px 10px rgba(255, 255, 255, .75);
+}
 #lunettes {
-
-    margin: auto;
+    margin: 0;
     position: relative;
     z-index: 105;
+    width: 100px;
 }
 
+.lunnette{
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    border-radius: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
 .msg {
     margin-top: 40px !important;
     background-color: #edeff1;

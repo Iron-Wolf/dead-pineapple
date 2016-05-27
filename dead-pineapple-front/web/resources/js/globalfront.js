@@ -53,18 +53,19 @@ $(document).ready(function () {
 
 
 //placement des lunettes
-    $("#lunettes").hide();
+    $('.lunnette').hover(function () {
+        $(this).parent().children('.etp').addClass('etphv');
+    }, function () {
+        $(this).parent().children('.etp').removeClass('etphv');
+    });
     $(".membre img").click(function () {
-        cible = $(this);
-        position = cible.offset();
-        console.log("position : " + position.left + " " + position.top);
-        placementLEFT = position.left + ($(this).width() / 2) - 35;
-        placementTOP = position.top + ($(this).height() / 2);
-        placementTOP = placementTOP - 50;
-
-        console.log("placement des lunettes " + placementLEFT + " placaementTOP" + placementTOP);
-        $("#lunettes").show();
-        $("#lunettes").offset({top: placementTOP, left: placementLEFT});
+        cible = $(this).parent().children('.lunnette');
+        $('.lunnette').each(function () {
+            if ($(this).parent().attr('id') != cible.parent().attr('id')) {
+                $(this).animate({opacity: 1});
+            }
+        });
+        cible.animate({opacity: 0});
     });
 
     //affichage de description des membres
