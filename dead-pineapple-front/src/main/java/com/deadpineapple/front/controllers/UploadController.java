@@ -3,6 +3,7 @@ package com.deadpineapple.front.controllers;
 import com.deadpineapple.dal.constante.Constante;
 import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
+import com.deadpineapple.dal.dao.IUserDao;
 import com.deadpineapple.dal.dao.TransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
@@ -66,6 +67,12 @@ public class UploadController extends HttpServlet {
     ITransactionDao transactionDao;
     ArrayList<Transaction> invoice;
 
+    @Autowired
+    IUserDao userBdd;
+    public void setUserDAO(IUserDao userDAO) {
+        this.userBdd = userDAO;
+    }
+
     String UPLOAD_PATH;
     LoginForm userData;
     UserAccount user;
@@ -92,11 +99,27 @@ public class UploadController extends HttpServlet {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String uploadPage(HttpServletRequest request, Model model, HttpServletResponse response) throws JsonReader.FileLoadException, IOException {
+    public String uploadPage(HttpServletRequest request, Model model, HttpServletResponse response, LoginForm loginForm) throws JsonReader.FileLoadException, IOException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
+        if(user == null){
+            // Create an user with ip identifiant
+            String ipAddress = request.getHeader("X-FORWARDED-FOR");
+            user = new UserAccount();
+            TimeSpan date = new TimeSpan();
+            if (ipAddress == null) {
+                ipAddress = request.getRemoteAddr();
+            }
+            user.setEmail(ipAddress+date);
+            user.setPassword(LoginForm.getEncryptedPassword(ipAddress+date));
+            Date creationDate = new Date();
+            user.setCreationDate(creationDate);
+            userBdd.saveUser(user);
+            request.getSession().setAttribute("USER_INFORMATIONS", user);
+            model.addAttribute("loginAttribute", loginForm);
+        }
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getEmail().trim()+"/";
+                + user.getId()+"/";
 
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
@@ -319,6 +342,9 @@ public class UploadController extends HttpServlet {
 
     @RequestMapping(value = "/facture", method = RequestMethod.GET)
     public String convert(HttpServletRequest request) {
+        if(userData == null){
+            return "redirect:/user/add";
+        }
         // Create the Transaction and redirect to PayPal
         //TODO : créer Transaction
         Date transactionDate = new Date();

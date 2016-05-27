@@ -12,12 +12,12 @@ public class LoginInterceptor implements HandlerInterceptor  {
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-
         // Avoid a redirect loop for some urls
         if( !request.getRequestURI().equals("/index") &&
                 !request.getRequestURI().equals("/user/login") &&
                 !request.getRequestURI().startsWith("/resources") &&
                 !request.getRequestURI().equals("/user/add") &&
+                !request.getRequestURI().startsWith("/upload") &&
                 !request.getRequestURI().equals("/user/login.failed"))
         {
             LoginForm userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");

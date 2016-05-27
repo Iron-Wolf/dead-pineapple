@@ -45,11 +45,18 @@ public class UserController{
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String saveUser(@ModelAttribute("user")UserAccount user,
                            BindingResult result, ModelMap model, HttpServletRequest request) throws Exception {
-        user.setPassword(LoginForm.getEncryptedPassword(user.getPassword()));
+        UserAccount newUser = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
+        if(newUser != null){
+            Long newUserId = newUser.getId();
+            newUser = user;
+            newUser.setId(newUserId);
+        }
+        newUser.setPassword(LoginForm.getEncryptedPassword(user.getPassword()));
         Date creationDate = new Date();
-        user.setCreationDate(creationDate);
-        userBdd.saveUser(user);
+        newUser.setCreationDate(creationDate);
+        userBdd.saveUser(newUser);
         // Create a loginform and check in bdd if users exists
+        user = userBdd.checkCredentials(user.getEmail(), user.getPassword());
         LoginForm loginForm = new LoginForm();
         loginForm.setPassword(user.getPassword());
         loginForm.setUsername(user.getEmail());
