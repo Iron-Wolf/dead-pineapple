@@ -41,22 +41,25 @@ $(document).ready(
         var param = url.match(/access_token?(\=.*)$/g);
         var httpUrl = "https://graph.facebook.com/me?"+param;
 
-        // retrieve JSON data with graph API
-        var JSONdata = $.ajax({ type: "GET", url: httpUrl, async: false }).responseText;
-        var resultJson = JSON.parse(JSONdata);
+        if (param != null) {
 
-        // if no error, we pass data to the controller
-        if (resultJson.error == null) {
-            $.ajax({
-                type: "GET",
-                url: "/user/login",
-                data: {
-                    userOAuthID: resultJson.id,
-                    userOAuthFirstName: resultJson.name
-                }
-            }).done(function (msg) {
-                window.location.href = "/upload";
-            });
+            // retrieve JSON data with graph API
+            var JSONdata = $.ajax({type: "GET", url: httpUrl, async: false}).responseText;
+            var resultJson = JSON.parse(JSONdata);
+
+            // if no error, we pass data to the controller
+            if (resultJson.error == null) {
+                $.ajax({
+                    type: "GET",
+                    url: "/user/login",
+                    data: {
+                        userOAuthID: resultJson.id,
+                        userOAuthFirstName: resultJson.name
+                    }
+                }).done(function (msg) {
+                    window.location.href = "/upload";
+                });
+            }
         }
     }
 )

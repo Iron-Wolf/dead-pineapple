@@ -51,7 +51,6 @@
 
     <script src="<spring:url value='/resources/js/jquery-2.1.1.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
-    <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
 
     <!--Register Google Api-->
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
