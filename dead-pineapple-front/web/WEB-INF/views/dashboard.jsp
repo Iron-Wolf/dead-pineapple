@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: saziri
@@ -30,15 +31,32 @@
                 <h3>Historique</h3>
                 <c:if test="${not empty invoices}">
                     <c:forEach items="${invoices}" var="invoice">
-                        Facture du <c:out value="${invoice.date}"/> au prix de <c:out value="${invoice.price}"/> &euro;
+                        <fmt:formatDate value="${invoice.date}" var="formattedDate" type="date" pattern="MM/dd/yyyy" />
+                        Facture du <c:out value="${formattedDate}"/> au prix de <c:out value="${invoice.price}"/> &euro;
+                        <br/>
+                        <label for="sel1">Sélectionnez une vidéo</label>
                         <div class="form-group">
-                            <label for="sel1">Sélectionnez une vidéo</label>
-                            <select class="form-control" id="sel1">
-                                <c:forEach items="${invoice.convertedFiles}" var="file">
-                                    <option><c:out value="${file.originalName}"/></option>
-                                </c:forEach>
-                            </select>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="sel1">
+                                    <c:forEach items="${invoice.convertedFiles}" var="file">
+                                        <option><c:out value="${file.originalName}"/></option>
+                                    </c:forEach>
+                                </select>
+                                </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-primary" data-url="">
+                                    <i class="glyphicon glyphicon-download"></i>
+                                    <span>Télécharger</span>
+                                </button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-danger" data-url="">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                    <span>Supprimer</span>
+                                </button>
+                            </div>
                         </div>
+                        <br/><br/>
                     </c:forEach>
                 </c:if>
             </div>

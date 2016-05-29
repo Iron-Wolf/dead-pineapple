@@ -59,7 +59,7 @@ public class UploadController extends HttpServlet {
     @Autowired
     IConvertedFileDao convertedFileDao;
     ConvertedFile convertedFile;
-    ArrayList<VideoFile> convertedFiles = new ArrayList();
+    ArrayList<VideoFile> convertedFiles = new ArrayList<VideoFile>();
     JSONArray json;
 
     // Transaction variables
@@ -168,7 +168,17 @@ public class UploadController extends HttpServlet {
                     video.setConvertedFile(convertedFile);
                     video.setVideoInformation(videoInformation);
                     video.setPrice(generatePrice(videoInformation.getDuration()));
-                    convertedFiles.add(video);
+
+                    //check if video exist in the array
+                    boolean vidExist=false;
+                    for (VideoFile vidFile : convertedFiles)
+                    {
+                        if (vidFile.getConvertedFile().getOriginalName().equals(video.getConvertedFile().getOriginalName()))
+                            vidExist = true;
+                    }
+
+                    if (!vidExist)
+                        convertedFiles.add(video);
 
                     json.put(generateJsonForPrview(video));
                     System.out.println(json.toString());
@@ -200,7 +210,19 @@ public class UploadController extends HttpServlet {
                 // Save the price
                 video.setPrice(generatePrice(videoInformation.getDuration()));
                 //Save videos in converted files for the transaction later
-                convertedFiles.add(video);
+
+                //check if video exist in the array
+                boolean vidExist=false;
+                for (VideoFile vidFile : convertedFiles)
+                {
+                    if (vidFile.getConvertedFile().getOriginalName().equals(video.getConvertedFile().getOriginalName()))
+                        vidExist = true;
+                }
+
+                if (!vidExist)
+                    convertedFiles.add(video);
+
+
                 history.put(generateJsonForPrview(video));
             }
         }
@@ -346,7 +368,7 @@ public class UploadController extends HttpServlet {
             return "redirect:/user/add";
         }
         // Create the Transaction and redirect to PayPal
-        //TODO : créer Transaction
+
         Date transactionDate = new Date();
         Double priceTotal = 0.0;
         invoice = new ArrayList<Transaction>();

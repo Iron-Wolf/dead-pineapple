@@ -91,7 +91,7 @@ public class ConvertedFileDao implements IConvertedFileDao {
         Transaction tx = sess.beginTransaction();
 
         // set the file to null on Transaction, if the transaction is already create
-        setNullOnTransaction(convertedFile,sess);
+        setNullOnTransaction(convertedFile);
 
         // delete the file and commit
         sess.delete(convertedFile);
@@ -110,7 +110,7 @@ public class ConvertedFileDao implements IConvertedFileDao {
                 .add(Restrictions.eq("id", id)).uniqueResult();
 
         // set the file to null on Transaction, if the transaction is already create
-        setNullOnTransaction(splitFile,sess);
+        setNullOnTransaction(splitFile);
 
         // delete the file
         sess.delete(splitFile);
@@ -119,8 +119,11 @@ public class ConvertedFileDao implements IConvertedFileDao {
         sess.close();
     }
 
-    private void setNullOnTransaction(ConvertedFile file, org.hibernate.Session sess)
+    private void setNullOnTransaction(ConvertedFile file)
     {
+        org.hibernate.Session sess = sessFact.openSession();
+        Transaction tx = sess.beginTransaction();
+
         // set the ConvertedFile to null on Transaction table
         // allow the transaction row to persist in the DB
         Criteria criteria = sess.createCriteria(com.deadpineapple.dal.entity.Transaction.class);
@@ -128,10 +131,17 @@ public class ConvertedFileDao implements IConvertedFileDao {
 
         // get the transaction, set file to null and update
         try {
-            com.deadpineapple.dal.entity.Transaction t = (com.deadpineapple.dal.entity.Transaction) criteria.uniqueResult();
-            t.setConvertedFiles(null);
-            sess.update(t);
+            java.util.List<com.deadpineapple.dal.entity.Transaction> listTrans =
+                    (java.util.List<com.deadpineapple.dal.entity.Transaction>) criteria.list();
+
+            for (com.deadpineapple.dal.entity.Transaction t : listTrans) {
+                t.setConvertedFiles(null);
+                sess.update(t);
+            }
+            tx.commit();
         }
         catch (Exception e){}
+
+        sess.close();
     }
 }

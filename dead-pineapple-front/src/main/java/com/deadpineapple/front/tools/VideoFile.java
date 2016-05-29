@@ -42,7 +42,7 @@ public class VideoFile{
     public static ArrayList<VideoFile> deleteVideoInformation(ArrayList<VideoFile> vfs, ConvertedFile cf){
          for(int i = 0; i < vfs.size(); i++){
              VideoFile vf = vfs.get(i);
-             if(vf.getConvertedFile().equals(cf)){
+             if(vf.getConvertedFile().getOriginalName().equals(cf.getOriginalName())){
                  vfs.remove(i);
              }
          }
