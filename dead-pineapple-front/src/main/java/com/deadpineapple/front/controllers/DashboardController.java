@@ -1,12 +1,15 @@
 package com.deadpineapple.front.controllers;
 
 import com.deadpineapple.dal.RabbitMqEntities.FileIsUploaded;
+import com.deadpineapple.dal.dao.ConvertedFileDao;
+import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
 import com.deadpineapple.front.tools.Invoice;
+import com.deadpineapple.front.tools.VideoFile;
 import com.deadpineapple.rabbitmq.RabbitInit;
 import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader;
@@ -15,6 +18,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.portlet.ModelAndView;
@@ -29,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -44,6 +49,10 @@ public class DashboardController {
     // Transaction
     @Autowired
     ITransactionDao transactionDao;
+
+    @Autowired
+    IConvertedFileDao convertedFileDao;
+
     List<Transaction> transactions = new ArrayList();
     ArrayList<Invoice> invoices;
     Invoice invoice;
@@ -62,6 +71,9 @@ public class DashboardController {
     public void setTransactionDao(ITransactionDao transactionDao) {
         this.transactionDao = transactionDao;
     }
+    public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
+        this.convertedFileDao = convertedFileDao;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getInvoices(HttpServletRequest request, Model model) {
@@ -71,17 +83,7 @@ public class DashboardController {
                 + user.getId()+"/";
         invoices = new ArrayList();
         getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
-        System.out.println("size" + invoices.size());
-        //System.out.println(invoices.get(0).get(0).get("name"));
-        model.addAttribute("invoices", invoices);
-
-        double userSize = user.getTotalSize();
-        System.out.println("Taile totale :" + user.getTotalSize() + " &" + userSize);
-        double spaceLeft = (userSize / totalSpace) * 100;
-        model.addAttribute("spacePercent", spaceLeft);
-        model.addAttribute("userSize", userSize);
-        model.addAttribute("userAccount", new UserAccount());
-        return new ModelAndView("dashboard", "model", model);
+        return getDashBoardModelAndView(model);
     }
 
     @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
@@ -203,7 +205,7 @@ public class DashboardController {
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
-    public org.springframework.web.servlet.ModelAndView auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
+    public ModelAndView auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
         // Load the request token we saved in part 1.
         DbxAuthFinish authFinish = null;
         try {
@@ -225,6 +227,54 @@ public class DashboardController {
 
         String accessToken = authFinish.getAccessToken();
         client = new DbxClientV2(config, accessToken);
-        return new org.springframework.web.servlet.ModelAndView("dashboard", "model", model);
+        return new ModelAndView("dashboard", "model", model);
+    }
+
+    @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)
+    public String deleteFile(HttpServletRequest request, HttpServletResponse resp, Model model) {
+        if (request.getParameter("fileName") != null && !request.getParameter("fileName").isEmpty()) {
+            File file = new File(UPLOAD_PATH + request.getParameter("fileName"));
+            File thumb = new File(UPLOAD_PATH + "thumb_" +request.getParameter("fileName"));
+            int invoiceNumber = Integer.parseInt(request.getParameter("invoiceNumber"));
+            String filePath = UPLOAD_PATH + request.getParameter("fileName");
+            java.nio.file.Path p = Paths.get(filePath);
+            String fileName = p.getFileName().toString();
+            Invoice invoiceToDelete = invoices.get(invoiceNumber);
+            int index = 0;
+            for (ConvertedFile video :
+                    invoiceToDelete.getConvertedFiles()) {
+                if (video.getOriginalName().equals(fileName)) {
+                    // delete file from invoices
+                    // Delete path to the file
+                    invoiceToDelete.getConvertedFiles().get(index).setFilePath("");
+                    // Delete his size for the space user size
+                    invoiceToDelete.getConvertedFiles().get(index).setSize(0.0);
+                    // Update file in bdd
+                    convertedFileDao.updateFile(invoiceToDelete.getConvertedFiles().get(index));
+
+                    // Delete file from SAN
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    if(thumb.exists()){
+                        thumb.delete();
+                    }
+                    resp.setStatus(200);
+                }
+                index++;
+            }
+        }
+        return "redirect:/dashboard";
+    }
+    public ModelAndView getDashBoardModelAndView(Model model){
+        double userSize = user.getTotalSize();
+        System.out.println("Taile totale :" + user.getTotalSize() + " &" + userSize);
+        double spaceLeft = (userSize / totalSpace) * 100;
+        model.addAttribute("invoices", invoices);
+        model.addAttribute("spacePercent", spaceLeft);
+        model.addAttribute("userSize", userSize);
+        model.addAttribute("videoStream", invoices.get(0).getConvertedFiles().get(0).getFilePath());
+        model.addAttribute("userAccount", new UserAccount());
+        return new ModelAndView("dashboard", "model", model);
     }
 }

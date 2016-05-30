@@ -39,3 +39,19 @@
   margin-bottom: 70px;
   background: #edeff1;
 }
+.invoices{
+  overflow: auto;
+  height: 256px;
+}
+.actions{
+  float: right;
+}
+.actions button{
+  width: 25px;
+  height: 25px;
+  padding: 1px;
+}
+.actions img{
+ width: 19px;
+  height: 19px;
+}

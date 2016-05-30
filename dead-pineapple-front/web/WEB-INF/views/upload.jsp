@@ -190,7 +190,6 @@
             <div class="col-sm-1"><span class="price">{%=file.price%} &euro;</span></div>
             <div class="col-sm-1">
                  <div class="form-group">
-                      <label for="sel1">Formats</label>
                       <select class="form-control formats" filename="{%=file.name%}"required>
                         <option value="avi">.avi</option>
                         <option value="mp4">.mp4</option>
@@ -209,9 +208,8 @@
             </div>
             <div class="col-sm-2">
                   <div class="form-group">
-                      <label for="sel1">Encodage :</label>
                       <select class="form-control" filename="{%=file.name%}" required>
-                        <option></option>
+                        <option>Encodage</option>
                         <option>ffv1</option>
                         <option>h.264</option>
                         <option>vp8</option>
@@ -337,7 +335,8 @@
                             }
                             else if(attr == "name"){
                                 fileName = data[i][attr];
-                                name = "<div class='col-sm-3 filename'>";
+                                name = "<div class='download-content'>";
+                                name += "<div class='col-sm-3 filename'>";
                                 name += "<span class='name'>"+data[i][attr]+"</span></div>";
                             }
                             else if(attr == "size") {
@@ -356,14 +355,14 @@
                                 deleteurl += "<i class='glyphicon glyphicon-trash'></i>";
                                 deleteurl += "<span>Supprimer</span>";
                                 deleteurl += "</button>";
-                                deleteurl += "</div>";
+                                deleteurl += "</div></div>";
+
                             }
                         }
                         // Create price, format & encodage
                         price = "<div class='col-sm-1'><span class='price'>"+priceValue+"€</span></div>";
                         price += "<div class='col-sm-1'>";
                         price += "<div class='form-group'>";
-                        price += "<label for='sel1'>Formats</label>";
                         price += "<select class='form-control formats' filename='"+fileName+"' required>";
                         price += "<option value='avi'>.avi</option>";
                         price += "<option value='mp4'>.mp4</option>";
@@ -380,9 +379,8 @@
                         price += "</select></div></div>";
                         price += "<div class='col-sm-2'>";
                         price += "<div class='form-group'>";
-                        price += "<label for='sel1'>Encodage :</label>";
                         price += "<select class='form-control' filename='"+fileName+"' required>"
-                        price += "<option></option>";
+                        price += "<option>Encodage</option>";
                         price += "<option>ffv1</option>";
                         price += "<option>h.264</option>";
                         price += "<option>vp8</option>";
@@ -390,7 +388,7 @@
                         price += "<option>xvid</option>";
                         price += "</select></div></div>";
                         fileRow += preview + name + size + duration + price + deleteurl;
-                        fileRow += "</div>";
+                        fileRow += "</div><hr/>";
                         $(".files").append(fileRow);
                     }
                     $("#payButton").attr("price", totalPrice.toFixed(2));
@@ -412,7 +410,7 @@
                     return (bytes / 1000).toFixed(2) + ' KB';
             };
             $(document).on('click', '.delete', function() {
-                alert("delete element");
+                //alert("delete element");
             });
         });
 

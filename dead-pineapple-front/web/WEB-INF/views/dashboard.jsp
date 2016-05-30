@@ -10,9 +10,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
 <script src="<spring:url value='/resources/js/video.js'/>"></script>
 <link rel="stylesheet" href="<spring:url value='/resources/css/video-js.min.css'/>">
+
 <div class="container dashboard-container">
     <br/>
     <h1>
@@ -27,52 +27,57 @@
     </div>
     <div class="row">
         <div class="col-lg-5 col-lg-offset-1">
-            <div id="invoices">
                 <h3>Historique</h3>
                 <c:if test="${not empty invoices}">
-                    <c:forEach items="${invoices}" var="invoice">
-                        <fmt:formatDate value="${invoice.date}" var="formattedDate" type="date" pattern="MM/dd/yyyy" />
-                        Facture du <c:out value="${formattedDate}"/> au prix de <c:out value="${invoice.price}"/> &euro;
-                        <br/>
-                        <label for="sel1">Sélectionnez une vidéo</label>
-                        <div class="form-group">
-                            <div class="col-sm-4">
-                                <select class="form-control" id="sel1">
-                                    <c:forEach items="${invoice.convertedFiles}" var="file">
-                                        <option><c:out value="${file.originalName}"/></option>
-                                    </c:forEach>
-                                </select>
+                    <div class="invoices">
+                        <c:forEach items="${invoices}" var="invoice" varStatus="loop">
+                            <fmt:formatDate value="${invoice.date}" var="formattedDate" type="date" pattern="MM/dd/yyyy" />
+                            <div class="panel-group" style="margin-bottom: 5px">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#collapse${loop.index}"> Facture du <c:out value="${formattedDate}"/> au prix de <c:out value="${invoice.price}"/> &euro;</a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse${loop.index}" class="panel-collapse collapse">
+                                        <ul class="list-group">
+                                            <c:forEach items="${invoice.convertedFiles}" var="file">
+                                                <li class="list-group-item"><c:out value="${file.originalName}"/>
+                                                    <div class="actions">
+                                                        <c:if test="${not empty file.filePath}">
+                                                            <button class="btn btn-primary" onclick="location.href='dashboard/downloadFile?fileName=${file.originalName}'">
+                                                                <img src="/resources/img/icons/download.png">
+                                                            </button>
+                                                            <button class="btn btn-info" onclick="location.href='dashboard/downloadFileDb?fileName=${file.originalName}'" >
+                                                                <img src="/resources/img/icons/dropbox.png">
+                                                            </button>
+                                                            <button class="btn btn-danger" onclick="location.href='dashboard/deleteFile?fileName=${file.originalName}&invoiceNumber=${loop.index}'">
+                                                                <img src="/resources/img/icons/delete.png">
+                                                            </button>
+                                                        </c:if>
+
+                                                    </div>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+                                        <div class="panel-footer"><a href="#"><b>Télécharger la facture</b></a></div>
+                                    </div>
                                 </div>
-                            <div class="col-sm-4">
-                                <button class="btn btn-primary" data-url="">
-                                    <i class="glyphicon glyphicon-download"></i>
-                                    <span>Télécharger</span>
-                                </button>
                             </div>
-                            <div class="col-sm-4">
-                                <button class="btn btn-danger" data-url="">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                    <span>Supprimer</span>
-                                </button>
-                            </div>
-                        </div>
-                        <br/><br/>
-                    </c:forEach>
+                        </c:forEach>
+                    </div>
                 </c:if>
-            </div>
         </div>
         <div class="col-lg-6">
             <h3>Lecteur video</h3>
             <video id="my-video" class="video-js" controls preload="auto" width="550" height="200"
                    poster="<spring:url value='/resources/img/preview.png'/>" data-setup="{}">
-                <source src="MY_VIDEO.mp4" type='video/mp4'>
-                <source src="MY_VIDEO.webm" type='video/webm'>
+                <source src="${videoStream}" type='video/mp4'>
                 <p class="vjs-no-js">
                     To view this video please enable JavaScript, and consider upgrading to a web browser that
                     <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
                 </p>
             </video>
-            <!-- Occupe toi de mettre le lecteur video ici. Tu t'occupes à présent de cette partie <!-->
         </div>
     </div>
     <div class="row">

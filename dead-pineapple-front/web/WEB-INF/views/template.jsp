@@ -49,8 +49,9 @@
     <script src="http://code.jquery.com/jquery-2.2.2.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>-->
 
-    <script src="<spring:url value='/resources/js/jquery-2.1.1.min.js'/>"></script>
-    <script src="<spring:url value='/resources/js/bootstrap.min.js'/>"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     <!--Register Google Api-->
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>

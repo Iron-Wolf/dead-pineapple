@@ -4,7 +4,6 @@ import com.deadpineapple.dal.constante.Constante;
 import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
 import com.deadpineapple.dal.dao.IUserDao;
-import com.deadpineapple.dal.dao.TransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
 import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
@@ -39,11 +38,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
@@ -59,7 +56,7 @@ public class UploadController extends HttpServlet {
     @Autowired
     IConvertedFileDao convertedFileDao;
     ConvertedFile convertedFile;
-    ArrayList<VideoFile> convertedFiles = new ArrayList<VideoFile>();
+    ArrayList<VideoFile> videoFiles = new ArrayList<VideoFile>();
     JSONArray json;
 
     // Transaction variables
@@ -171,14 +168,14 @@ public class UploadController extends HttpServlet {
 
                     //check if video exist in the array
                     boolean vidExist=false;
-                    for (VideoFile vidFile : convertedFiles)
+                    for (VideoFile vidFile : videoFiles)
                     {
                         if (vidFile.getConvertedFile().getOriginalName().equals(video.getConvertedFile().getOriginalName()))
                             vidExist = true;
                     }
 
                     if (!vidExist)
-                        convertedFiles.add(video);
+                        videoFiles.add(video);
 
                     json.put(generateJsonForPrview(video));
                     System.out.println(json.toString());
@@ -213,14 +210,14 @@ public class UploadController extends HttpServlet {
 
                 //check if video exist in the array
                 boolean vidExist=false;
-                for (VideoFile vidFile : convertedFiles)
+                for (VideoFile vidFile : videoFiles)
                 {
                     if (vidFile.getConvertedFile().getOriginalName().equals(video.getConvertedFile().getOriginalName()))
                         vidExist = true;
                 }
 
                 if (!vidExist)
-                    convertedFiles.add(video);
+                    videoFiles.add(video);
 
 
                 history.put(generateJsonForPrview(video));
@@ -245,7 +242,7 @@ public class UploadController extends HttpServlet {
             imageName = imageName.substring(0, imageName.lastIndexOf('.')) + ".png";
             String thumb = UPLOAD_PATH + "thumb_" + imageName;
             for (VideoFile video :
-                    convertedFiles) {
+                    videoFiles) {
                 if (video.getConvertedFile().getFilePath().equals(filePath)) {
                     videoInformation = video.getVideoInformation();
                     break;
@@ -290,9 +287,10 @@ public class UploadController extends HttpServlet {
     }
 
     @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)
-    public void deleteFile(HttpServletRequest request, HttpServletResponse resp) {
+    public void deleteFile(HttpServletRequest request, HttpServletResponse resp, Model model) throws JsonReader.FileLoadException {
         if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
             File file = new File(UPLOAD_PATH + request.getParameter("delfile"));
+            File thumb = new File(UPLOAD_PATH + "thumb_" +request.getParameter("delfile"));
             String filePath = UPLOAD_PATH + request.getParameter("delfile");
             java.nio.file.Path p = Paths.get(filePath);
             String fileName = p.getFileName().toString();
@@ -303,17 +301,19 @@ public class UploadController extends HttpServlet {
                     // delete file from bdd
                     convertedFileDao.deleteFile(video);
                     // delete file from user array
-                    VideoFile.deleteVideoInformation(convertedFiles, video);
+                    VideoFile.deleteVideoInformation(videoFiles, video);
                     // Delete file from
                     if (file.exists()) {
                         file.delete();
                     }
+                    if(thumb.exists()){
+                        thumb.delete();
+                    }
                     resp.setStatus(200);
-                    return;
                 }
-            }
-            resp.setStatus(404);
+            }resp.setStatus(404);
         }
+
     }
 
     @RequestMapping(value = "/setFormat", method = RequestMethod.GET)
@@ -364,8 +364,13 @@ public class UploadController extends HttpServlet {
 
     @RequestMapping(value = "/facture", method = RequestMethod.GET)
     public String convert(HttpServletRequest request) {
+        // If user is not connected, redirect him to create account
         if(userData == null){
             return "redirect:/user/add";
+        }
+        // IF there is no video uploaded, redirect user to upload page
+        if(videoFiles.size() == 0){
+            return "redirect:/upload";
         }
         // Create the Transaction and redirect to PayPal
 
@@ -373,7 +378,7 @@ public class UploadController extends HttpServlet {
         Double priceTotal = 0.0;
         invoice = new ArrayList<Transaction>();
         int idTransation = transactionDao.getNextIdTransaction();
-        for (VideoFile vf : convertedFiles) {
+        for (VideoFile vf : videoFiles) {
             Transaction transaction = new Transaction();
             transaction.setConvertedFiles(vf.getConvertedFile());
             transaction.setPrix(vf.getPrice());
@@ -561,7 +566,7 @@ public class UploadController extends HttpServlet {
         video.setConvertedFile(convertedFile);
         video.setVideoInformation(videoInformation);
         video.setPrice(generatePrice(videoInformation.getDuration()));
-        convertedFiles.add(video);
+        videoFiles.add(video);
         response.setContentType("application/json");
         t.put(generateJsonForPrview(video));
         writer.write(t.toString());
