@@ -168,3 +168,7 @@ hr{
     left: 45%;
     position: absolute;
 }
+.preview img{
+    width: 80px;
+    height: 57px;
+}

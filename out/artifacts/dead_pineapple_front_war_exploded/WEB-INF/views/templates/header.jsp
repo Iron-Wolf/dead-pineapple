@@ -18,8 +18,6 @@
     <c:when test="${sessionScope.LOGGEDIN_USER == null}">
 
     <form:form action="/user/login" method="post"  modelAttribute="loginAttribute">
-
-
                 <li id="creer" class="mv-item"><a >Se connecter</a></li>
                 <li id="login" class="connect"><form:input type="text"  class="login-inp" path="username" placeholder="login"/></li>
                 <li id="mdp" class="connect"><form:input type="password" onfocus="this.value=''" class="login-inp" path="password" placeholder="mot de passe"/></li>

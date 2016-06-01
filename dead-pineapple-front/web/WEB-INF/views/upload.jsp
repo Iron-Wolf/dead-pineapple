@@ -133,8 +133,12 @@
         <script id="template-upload" type="text/x-tmpl">
             {% console.log("Suppression file");
             for (var i=0, file; file=o.files[i]; i++) { %}
-        <div class="row template-upload fade">
-            <div class="col-sm-4 name"><span>{%=file.name%}</span></div>
+        <div class="row template-upload fade" style="margin-top: 10px">
+            <div class="col-sm-1">
+            <span class="preview">
+                <img src="/resources/img/video-player.png" style="margin-top: 5px;"/>
+            </span></div>
+            <div class="col-sm-3 name"><span>{%=file.name%}</span></div>
             <div class="col-sm-1 size"><span>{%=o.formatFileSize(file.size)%}</span></div>
             {% if (file.error) { %}
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
@@ -181,6 +185,7 @@
             <span class="preview">{% if (file.thumbnail_url) { %}
                 <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}" style="margin-top: 5px;"></a>
                 {% } %}</span></div>
+            <div class='download-content'>
             <div class="col-sm-3 filename">
                 <span class="name">{%=file.name%}</span>
             </div>
@@ -225,7 +230,8 @@
                     <span>Supprimer</span>
                 </button>
             </div>
-        </div>
+            </div>
+        </div> <hr/>
         {% } %}
         {% {$=totalPrice = totalPrice;$}
         var priceString = document.getElementById("payButton").getAttribute("price");

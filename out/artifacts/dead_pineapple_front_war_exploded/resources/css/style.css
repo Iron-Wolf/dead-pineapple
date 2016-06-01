@@ -111,6 +111,17 @@ legend {
     border-right: solid black 3px;
     word-wrap: break-word;
 }
+#uploadedFiles hr{
+    background: #1abc9c none repeat scroll 0 0;
+    height: 1px;
+    margin-left: 2px;
+    width: 95%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.download-content{
+    margin-top: 22px;
+}
 
 #uploadedFiles {
     margin-left: 30px;
@@ -156,4 +167,8 @@ hr{
 #progressStatus{
     left: 45%;
     position: absolute;
+}
+.preview img{
+    width: 80px;
+    height: 57px;
 }
