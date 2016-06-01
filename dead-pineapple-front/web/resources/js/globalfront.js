@@ -74,7 +74,7 @@ $(document).ready(function () {
     });
 
     $("#thomas").click(function () {
-        ("#description h1").html('Thomas GERARDIN<br/> Principaux travaux <span class="small">Architecture system, administrateur system</span><br/>Bio <span class="small">des trucs</span><br/>');
+        $("#description h1").html('Thomas GERARDIN<br/> Principaux travaux <span class="small">Architecture system, administrateur system</span><br/>Bio <span class="small">DUT Informatique (spécialité réseaux et gestion de projet)<br/>Licence, Gestion de ressources informatiques<br/>Master of Science, Ingénierie informatique</span><br/>');
     });
     $("#sofiane").click(function () {
         $("#description h1").html('Sofiane AZIRI <br/> Principaux travaux <span class="small">Architecture Java Framework Spring, API Dropbox , Manipulation & Upload fichiers Asynchrones</span><br/>Bio <span class="small">BTS Services Informatique aux Organisations <br/> Licence Profesionnelle SIL - Systèmes Informatiques et Logicieles <br/> Master 1 & 2 : Supinfo Expert en informatique <br/>' +
@@ -85,8 +85,8 @@ $(document).ready(function () {
         $("#description h1").html('Lucas ZIENTEK<br/> Principaux travaux <span class="small">Worker ffmpeg, architecture logiciel, front, manequin officiel!</span><br/>Bio <span class="small">des trucs</span><br/>');
     });
 
-    $("#michael").click(function () {
-        $("#description h1").html('Michael LEMACHIN<br/> Principaux travaux <span class="small">gestion et deploiement des données, archi logiciel </span><br/>Bio <span class="small">des trucs</span><br/>    ');
+    $("#mikael").click(function () {
+        $("#description h1").html('Mikaël LE FALHER<br/> Principaux travaux <span class="small">Gestion et intégration de la base de donnée, API facebook & Google, API PayPal</span><br/>Bio <span class="small">DUT Informatique (spécialité réseaux et gestion de projet)<br/>Licence Profesionnelle SIL - Système d\'Information et Service Web <br/>Master of Science, Ingénierie informatique</span><br/>    ');
     });
 
 
