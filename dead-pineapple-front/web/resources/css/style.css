@@ -112,7 +112,7 @@ legend {
     word-wrap: break-word;
 }
 #uploadedFiles hr{
-    background: #1abc9c none repeat scroll 0 0;
+    border-color: #1abc9c;
     height: 1px;
     margin-left: 2px;
     width: 95%;

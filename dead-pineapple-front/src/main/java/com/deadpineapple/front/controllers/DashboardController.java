@@ -22,6 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -93,27 +94,28 @@ public class DashboardController {
             throw new ServletException("File Name can't be null or empty");
         }
         File file = new File(UPLOAD_PATH, fileName);
-        if (!file.exists()) {
-            throw new ServletException("File doesn't exists on server.");
-        }
-        System.out.println("File location on server::" + file.getAbsolutePath());
-        ServletContext ctx = request.getServletContext();
-        InputStream fis = new FileInputStream(file);
-        String mimeType = ctx.getMimeType(file.getAbsolutePath());
-        response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
-        response.setContentLength((int) file.length());
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+        if (file.exists()) {
+            //throw new ServletException("File doesn't exists on server.");
+            System.out.println("File location on server::" + file.getAbsolutePath());
+            ServletContext ctx = request.getServletContext();
+            InputStream fis = new FileInputStream(file);
+            String mimeType = ctx.getMimeType(file.getAbsolutePath());
+            response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
+            response.setContentLength((int) file.length());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
-        ServletOutputStream os = response.getOutputStream();
-        byte[] bufferData = new byte[1024];
-        int read = 0;
-        while ((read = fis.read(bufferData)) != -1) {
-            os.write(bufferData, 0, read);
+            ServletOutputStream os = response.getOutputStream();
+            byte[] bufferData = new byte[1024];
+            int read = 0;
+            while ((read = fis.read(bufferData)) != -1) {
+                os.write(bufferData, 0, read);
+            }
+            os.flush();
+            os.close();
+            fis.close();
+            System.out.println("File downloaded at client successfully");
         }
-        os.flush();
-        os.close();
-        fis.close();
-        System.out.println("File downloaded at client successfully");
+
     }
 
     @RequestMapping(value = "/downloadFileDb", method = RequestMethod.GET)
@@ -121,7 +123,7 @@ public class DashboardController {
         String accessToken = (String) request.getSession().getAttribute("ACCESS_TOKEN");
         config = new DbxRequestConfig(
                 "JavaTutorial/1.0", Locale.getDefault().toString());
-        if (accessToken != null || accessToken != "") {
+        if (accessToken != null && accessToken != "") {
             client = new DbxClientV2(config, accessToken);
             String fileName = request.getParameter("fileName");
             if (fileName == null || fileName.equals("")) {
@@ -132,9 +134,10 @@ public class DashboardController {
                 throw new ServletException("File doesn't exists on server.");
             }
             System.out.println("File location on server::" + file.getAbsolutePath());
-            InputStream in = new FileInputStream(fileName);
+
             try {
-                FileMetadata metadata = client.files().uploadBuilder(fileName).uploadAndFinish(in);
+                InputStream in = new FileInputStream(file.getAbsolutePath());
+                FileMetadata metadata = client.files().uploadBuilder("/"+fileName).uploadAndFinish(in);
             } catch (DbxException e) {
                 e.printStackTrace();
             }
@@ -205,7 +208,7 @@ public class DashboardController {
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
-    public ModelAndView auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
+    public String auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
         // Load the request token we saved in part 1.
         DbxAuthFinish authFinish = null;
         try {
@@ -226,8 +229,9 @@ public class DashboardController {
         }
 
         String accessToken = authFinish.getAccessToken();
+        request.getSession().setAttribute("ACCESS_TOKEN", accessToken);
         client = new DbxClientV2(config, accessToken);
-        return new ModelAndView("dashboard", "model", model);
+        return "redirect:/dashboard";
     }
 
     @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)

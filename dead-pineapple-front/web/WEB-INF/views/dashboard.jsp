@@ -45,13 +45,13 @@
                                                 <li class="list-group-item"><c:out value="${file.originalName}"/>
                                                     <div class="actions">
                                                         <c:if test="${not empty file.filePath}">
-                                                            <button class="btn btn-primary" onclick="location.href='dashboard/downloadFile?fileName=${file.originalName}'">
+                                                            <button class="btn btn-primary" onclick="location.href='<spring:url value='dashboard/downloadFile?fileName=${file.originalName}'/>'">
                                                                 <img src="/resources/img/icons/download.png">
                                                             </button>
-                                                            <button class="btn btn-info" onclick="location.href='dashboard/downloadFileDb?fileName=${file.originalName}'" >
+                                                            <button class="btn btn-info" onclick="location.href='<spring:url value='dashboard/downloadFileDb?fileName=${file.originalName}'/>'">
                                                                 <img src="/resources/img/icons/dropbox.png">
                                                             </button>
-                                                            <button class="btn btn-danger" onclick="location.href='dashboard/deleteFile?fileName=${file.originalName}&invoiceNumber=${loop.index}'">
+                                                            <button class="btn btn-danger" onclick="location.href='<spring:url value='dashboard/deleteFile?fileName=${file.originalName}&invoiceNumber=${loop.index}'/>'">
                                                                 <img src="/resources/img/icons/delete.png">
                                                             </button>
                                                         </c:if>
