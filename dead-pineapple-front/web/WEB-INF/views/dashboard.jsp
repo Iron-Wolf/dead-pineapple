@@ -44,7 +44,8 @@
                                             <c:forEach items="${invoice.convertedFiles}" var="file">
                                                 <li class="list-group-item"><c:out value="${file.originalName}"/>
                                                     <div class="actions">
-                                                        <c:if test="${not empty file.filePath}">
+                                                        <c:choose>
+                                                        <c:when test="${not empty file.filePath}">
                                                             <button class="btn btn-primary" onclick="location.href='<spring:url value='dashboard/downloadFile?fileName=${file.originalName}'/>'">
                                                                 <img src="/resources/img/icons/download.png">
                                                             </button>
@@ -54,7 +55,13 @@
                                                             <button class="btn btn-danger" onclick="location.href='<spring:url value='dashboard/deleteFile?fileName=${file.originalName}&invoiceNumber=${loop.index}'/>'">
                                                                 <img src="/resources/img/icons/delete.png">
                                                             </button>
-                                                        </c:if>
+                                                        </c:when>
+                                                            <c:otherwise>
+                                                                    Vidéo supprimée
+                                                            </c:otherwise>
+
+                                                        </c:choose>
+
 
                                                     </div>
                                                 </li>
