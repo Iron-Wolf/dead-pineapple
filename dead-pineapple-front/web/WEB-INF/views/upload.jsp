@@ -416,7 +416,14 @@
                     return (bytes / 1000).toFixed(2) + ' KB';
             };
             $(document).on('click', '.delete', function() {
-                //alert("delete element");
+                var totalPrice = 0.0;
+                setTimeout(function(){
+                    $( ".price" ).each(function( index ) {
+                        totalPrice += parseFloat($( this ).text())
+                    });
+                    $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
+                },1000);
+
             });
         });
 
