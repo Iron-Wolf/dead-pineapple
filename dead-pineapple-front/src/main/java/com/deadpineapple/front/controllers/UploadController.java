@@ -310,6 +310,7 @@ public class UploadController extends HttpServlet {
                         thumb.delete();
                     }
                     resp.setStatus(200);
+                    return;
                 }
             }resp.setStatus(404);
         }
