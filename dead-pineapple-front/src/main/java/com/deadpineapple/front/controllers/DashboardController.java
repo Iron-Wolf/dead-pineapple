@@ -130,17 +130,18 @@ public class DashboardController {
                 throw new ServletException("File Name can't be null or empty");
             }
             File file = new File(UPLOAD_PATH, fileName);
-            if (!file.exists()) {
-                throw new ServletException("File doesn't exists on server.");
-            }
-            System.out.println("File location on server::" + file.getAbsolutePath());
+            if (file.exists()) {
+                //throw new ServletException(\"File doesn't exists on server.");
+                System.out.println("File location on server::" + file.getAbsolutePath());
 
-            try {
-                InputStream in = new FileInputStream(file.getAbsolutePath());
-                FileMetadata metadata = client.files().uploadBuilder("/"+fileName).uploadAndFinish(in);
-            } catch (DbxException e) {
-                e.printStackTrace();
+                try {
+                    InputStream in = new FileInputStream(file.getAbsolutePath());
+                    FileMetadata metadata = client.files().uploadBuilder("/"+fileName).uploadAndFinish(in);
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
             }
+
         } else {
             return "redirect:" + getDropBoxUrl(request);
         }
