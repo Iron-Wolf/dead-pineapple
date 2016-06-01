@@ -5,7 +5,7 @@ package com.deadpineapple.dal.constante;
  */
 public class Constante {
     public final static String[] AcceptedConversionTypes = {
-            ".avi", "mp4", "mp3",
+            ".avi", ".mp4", ".mp3",
             ".aac", ".wav", ".wma",
             ".wmv", ".ogg", ".flv",
             ".swf", ".dv", ".gif",
@@ -13,7 +13,7 @@ public class Constante {
     };
 
     public final static String[] AcceptedUploadedTypes = {
-            ".avi", "mp4", ".wma",
+            ".avi", ".mp4", ".wma",
             ".wmv", ".flv", ".swf",
             ".dv", ".mov", ".mkv"};
 

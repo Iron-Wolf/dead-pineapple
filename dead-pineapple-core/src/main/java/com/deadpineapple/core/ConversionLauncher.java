@@ -20,6 +20,7 @@ import org.hibernate.SessionFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -126,6 +127,7 @@ public class ConversionLauncher {
                         //mis a jour en bdd
                         System.out.println("joined");
                         convertedFile.setConverted(true);
+                        convertedFile.setConvertedDate(new Date());
                         convertedFile.setFilePath(joinFile.getAbsolutePath());
                         convertedFileDao.updateFile(convertedFile);//todo:voir le bug avec mika demain
                         System.out.println("file is converted " + joinFile.getAbsolutePath());
@@ -141,7 +143,7 @@ public class ConversionLauncher {
             }
         }
 
-        // TODO: 03/04/2016 send error mail with refund
+        // TODO: 03/04/2016 send error mail with refund fuck them
 
     }
 

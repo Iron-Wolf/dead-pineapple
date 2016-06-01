@@ -68,6 +68,7 @@ public class DashboardController {
     public void setTransactionDao(ITransactionDao transactionDao) {
         this.transactionDao = transactionDao;
     }
+
     public void setConvertedFileDao(IConvertedFileDao convertedFileDao) {
         this.convertedFileDao = convertedFileDao;
     }
@@ -77,7 +78,7 @@ public class DashboardController {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         DOWNLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getId()+"/";
+                + user.getId() + "/";
         invoices = new ArrayList();
         getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
         return getDashBoardModelAndView(model);
@@ -132,7 +133,7 @@ public class DashboardController {
 
                 try {
                     InputStream in = new FileInputStream(file.getAbsolutePath());
-                    FileMetadata metadata = client.files().uploadBuilder("/"+fileName).uploadAndFinish(in);
+                    FileMetadata metadata = client.files().uploadBuilder("/" + fileName).uploadAndFinish(in);
                 } catch (DbxException e) {
                     e.printStackTrace();
                 }
@@ -183,6 +184,8 @@ public class DashboardController {
                         init.getFileUploadedSender().send(videoToConvert);
                         init.closeAll();
                         cVideo.setConverted(false);
+                        cVideo.setInConvertion(true);
+                        convertedFileDao.updateFile(cVideo);
                         System.out.println("Conversion du fichier : " + cVideo.getOriginalName());
                     }
                 }
@@ -190,7 +193,6 @@ public class DashboardController {
             }
             invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
             invoices.add(invoice);
-            //init.closeAll();
         }
 
     }
@@ -216,7 +218,7 @@ public class DashboardController {
             response.sendError(400);
         } catch (DbxWebAuth.BadStateException ex) {
             // Send them back to the start of the auth flow.
-            response.sendRedirect("http://localhost:8080/dashboard/");
+            response.sendRedirect("/dashboard");
         } catch (DbxWebAuth.CsrfException ex) {
         } catch (DbxWebAuth.NotApprovedException ex) {
             // When Dropbox asked "Do you want to allow this app to access your
@@ -237,7 +239,7 @@ public class DashboardController {
     public String deleteFile(HttpServletRequest request, HttpServletResponse resp, Model model) {
         if (request.getParameter("fileName") != null && !request.getParameter("fileName").isEmpty()) {
             File file = new File(DOWNLOAD_PATH + request.getParameter("fileName"));
-            File thumb = new File(DOWNLOAD_PATH + "thumb_" +request.getParameter("fileName"));
+            File thumb = new File(DOWNLOAD_PATH + "thumb_" + request.getParameter("fileName"));
             int invoiceNumber = Integer.parseInt(request.getParameter("invoiceNumber"));
             String filePath = DOWNLOAD_PATH + request.getParameter("fileName");
             java.nio.file.Path p = Paths.get(filePath);
@@ -259,7 +261,7 @@ public class DashboardController {
                     if (file.exists()) {
                         file.delete();
                     }
-                    if(thumb.exists()){
+                    if (thumb.exists()) {
                         thumb.delete();
                     }
                     resp.setStatus(200);
@@ -269,14 +271,17 @@ public class DashboardController {
         }
         return "redirect:/dashboard";
     }
-    public ModelAndView getDashBoardModelAndView(Model model){
+
+    public ModelAndView getDashBoardModelAndView(Model model) {
         double userSize = user.getTotalSize();
         System.out.println("Taile totale :" + user.getTotalSize() + " &" + userSize);
         double spaceLeft = (userSize / totalSpace) * 100;
         model.addAttribute("invoices", invoices);
         model.addAttribute("spacePercent", spaceLeft);
         model.addAttribute("userSize", userSize);
-        model.addAttribute("videoStream", invoices.get(0).getConvertedFiles().get(0).getFilePath());
+        if (invoices.size() > 0 && invoices.get(0).getConvertedFiles().size()>0) {
+            model.addAttribute("videoStream", invoices.get(0).getConvertedFiles().get(0).getFilePath());
+        }
         model.addAttribute("userAccount", new UserAccount());
         return new ModelAndView("dashboard", "model", model);
     }

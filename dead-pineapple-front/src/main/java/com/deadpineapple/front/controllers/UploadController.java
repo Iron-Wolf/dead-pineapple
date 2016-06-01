@@ -201,7 +201,7 @@ public class UploadController extends HttpServlet {
         history = new JSONArray();
         List<ConvertedFile> cfs = convertedFileDao.findByUser(user);
         for (ConvertedFile cf : cfs) {
-            if (cf.getConverted() == null || !cf.getConverted() || cf.getInConvertion() == null || !cf.getInConvertion()) {
+            if ((cf.getConverted() == null || !cf.getConverted() || cf.getInConvertion() == null || !cf.getInConvertion()) && !cf.getConverted()) {
                 // Generate video Information for the uploaded file (ffmpeg)
                 videoInformation = new VideoInformation(cf.getFilePath());
                 // Link the converted file with it's video information
