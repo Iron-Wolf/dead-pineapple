@@ -75,6 +75,7 @@ public class UploadController extends HttpServlet {
     UserAccount user;
     VideoInformation videoInformation;
     PayPalService ps;
+    ArrayList<String> dropboxFolders;
 
     // Dropbox config
     final String APP_KEY = "3xt31on71g5n2d6";
@@ -120,6 +121,9 @@ public class UploadController extends HttpServlet {
 
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
+        if(dropboxFolders != null){
+            model.addAttribute("dropboxFiles", dropboxFolders);
+        }
         return "upload";
     }
 
@@ -450,7 +454,7 @@ public class UploadController extends HttpServlet {
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
-    public ModelAndView auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
+    public String auth(HttpServletRequest request, HttpServletResponse response, Model model) throws DbxException, IOException {
         // Load the request token we saved in part 1.
         DbxAuthFinish authFinish = null;
         try {
@@ -478,10 +482,9 @@ public class UploadController extends HttpServlet {
             String accessToken = authFinish.getAccessToken();
             client = new DbxClientV2(config, accessToken);
             //System.out.println("Linked account: " + client.getAccountInfo().displayName);
-            ArrayList<String> dropboxFolders = getVideoFiles();
-            model.addAttribute("dropboxFiles", dropboxFolders);
+            dropboxFolders = getVideoFiles();
         }
-        return new ModelAndView("upload", "model", model);
+        return "redirect:/upload";
     }
 
     private ArrayList<String> getVideoFiles() throws DbxException {
