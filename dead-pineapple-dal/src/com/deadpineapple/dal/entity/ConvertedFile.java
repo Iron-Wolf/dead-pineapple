@@ -17,7 +17,7 @@ public class ConvertedFile implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "convertedFile", targetEntity = SplitFile.class)
+    @OneToMany(mappedBy = "convertedFile", targetEntity = SplitFile.class,fetch =FetchType.EAGER )
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<SplitFile> splitFiles;
 

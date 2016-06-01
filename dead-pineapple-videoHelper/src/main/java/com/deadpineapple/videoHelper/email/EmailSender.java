@@ -27,20 +27,21 @@ public class EmailSender {
         // Get system properties & Setup mail server
         Properties props = System.getProperties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "false");
-        props.put("mail.smtp.host", "deadpineapple.fr");//// TODO: 13/03/2016 faire les changements pour l'envoie
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");// TODO: 13/03/2016 faire les changements pour l'envoie
+        props.put("mail.smtp.port", "587");
 
         // Get the default Session subject & auth
         Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("root","Jeenohz9");
+                return new PasswordAuthentication("deadpineapple1@gmail.com ","deadpine");
             }
         });
 
         try{
             // Create a default MimeMessage
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("no-reply@deadpineapple.fr","deadpineapple"));
+            message.setFrom(new InternetAddress("deadpineapple1@gmail.com","deadpineapple"));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(getDestination()));
             message.setSubject(getSubject(),"UTF-8");
 

@@ -73,6 +73,9 @@ public class RabbitInit {
             getFileIsConvertedSender().close();
             getFileToConvertSender().close();
             getFileUploadedSender().close();
+            getFileIsConvertedReceiver().close();
+            getFileToConvertReceiver().close();
+            getFileUploadedReceiver().close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {

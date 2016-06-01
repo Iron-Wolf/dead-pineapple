@@ -58,6 +58,9 @@ public abstract class AbstractRabbitReceiver<T> {
         }
     }
 
+    public void close() throws IOException, TimeoutException {
+        rabbitConnection.close();
+    }
 
     public String getConfigPath() {
         return configPath;
