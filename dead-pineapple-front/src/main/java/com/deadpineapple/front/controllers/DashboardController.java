@@ -1,7 +1,6 @@
 package com.deadpineapple.front.controllers;
 
 import com.deadpineapple.dal.RabbitMqEntities.FileIsUploaded;
-import com.deadpineapple.dal.dao.ConvertedFileDao;
 import com.deadpineapple.dal.dao.IConvertedFileDao;
 import com.deadpineapple.dal.dao.ITransactionDao;
 import com.deadpineapple.dal.entity.ConvertedFile;
@@ -9,7 +8,6 @@ import com.deadpineapple.dal.entity.Transaction;
 import com.deadpineapple.dal.entity.UserAccount;
 import com.deadpineapple.front.Forms.LoginForm;
 import com.deadpineapple.front.tools.Invoice;
-import com.deadpineapple.front.tools.VideoFile;
 import com.deadpineapple.rabbitmq.RabbitInit;
 import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader;
@@ -18,11 +16,9 @@ import com.dropbox.core.v2.files.FileMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.portlet.ModelAndView;
-import org.springframework.web.servlet.View;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -45,7 +41,7 @@ import java.util.*;
 public class DashboardController {
     LoginForm userData;
     UserAccount user;
-    String UPLOAD_PATH;
+    String DOWNLOAD_PATH;
 
     // Transaction
     @Autowired
@@ -80,7 +76,7 @@ public class DashboardController {
     public ModelAndView getInvoices(HttpServletRequest request, Model model) {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
-        UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
+        DOWNLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
                 + user.getId()+"/";
         invoices = new ArrayList();
         getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
@@ -93,7 +89,7 @@ public class DashboardController {
         if (fileName == null || fileName.equals("")) {
             throw new ServletException("File Name can't be null or empty");
         }
-        File file = new File(UPLOAD_PATH, fileName);
+        File file = new File(DOWNLOAD_PATH, fileName);
         if (file.exists()) {
             //throw new ServletException("File doesn't exists on server.");
             System.out.println("File location on server::" + file.getAbsolutePath());
@@ -129,7 +125,7 @@ public class DashboardController {
             if (fileName == null || fileName.equals("")) {
                 throw new ServletException("File Name can't be null or empty");
             }
-            File file = new File(UPLOAD_PATH, fileName);
+            File file = new File(DOWNLOAD_PATH, fileName);
             if (file.exists()) {
                 //throw new ServletException(\"File doesn't exists on server.");
                 System.out.println("File location on server::" + file.getAbsolutePath());
@@ -238,10 +234,10 @@ public class DashboardController {
     @RequestMapping(value = "/deleteFile", method = RequestMethod.GET)
     public String deleteFile(HttpServletRequest request, HttpServletResponse resp, Model model) {
         if (request.getParameter("fileName") != null && !request.getParameter("fileName").isEmpty()) {
-            File file = new File(UPLOAD_PATH + request.getParameter("fileName"));
-            File thumb = new File(UPLOAD_PATH + "thumb_" +request.getParameter("fileName"));
+            File file = new File(DOWNLOAD_PATH + request.getParameter("fileName"));
+            File thumb = new File(DOWNLOAD_PATH + "thumb_" +request.getParameter("fileName"));
             int invoiceNumber = Integer.parseInt(request.getParameter("invoiceNumber"));
-            String filePath = UPLOAD_PATH + request.getParameter("fileName");
+            String filePath = DOWNLOAD_PATH + request.getParameter("fileName");
             java.nio.file.Path p = Paths.get(filePath);
             String fileName = p.getFileName().toString();
             Invoice invoiceToDelete = invoices.get(invoiceNumber);
