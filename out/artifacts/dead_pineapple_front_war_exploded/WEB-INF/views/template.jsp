@@ -26,9 +26,8 @@
     <!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap.min.css'/>" type="text/css">
-    <!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
-    <link rel="stylesheet" href="<spring:url value='/resources/css/bootstrap-responsive.min.css'/>">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
     <!-- Bootstrap CSS fixes for IE6 -->
     <!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
     <!-- Bootstrap Image Gallery styles -->
@@ -49,7 +48,6 @@
     <script src="http://code.jquery.com/jquery-2.2.2.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>-->
 
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 

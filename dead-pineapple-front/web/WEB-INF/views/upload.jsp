@@ -173,7 +173,7 @@
     <script id="template-download" type="text/x-tmpl">
         {% var totalPrice = 0.0;
         for (var i=0, file; file=o.files[i]; i++) {
-        {$=totalPrice+=parseFloat(file.price);$}
+        totalPrice+=parseFloat(file.price);
         console.log("Price ="+totalPrice);%}
         <div class="row template-download fade">
             {% if (file.error) { %}
@@ -233,7 +233,7 @@
             </div>
         </div> <hr/>
         {% } %}
-        {% {$=totalPrice = totalPrice;$}
+        {%
         var priceString = document.getElementById("payButton").getAttribute("price");
         var price = parseFloat(priceString);
         totalPrice += price;
