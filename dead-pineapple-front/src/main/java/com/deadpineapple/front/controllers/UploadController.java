@@ -155,7 +155,7 @@ public class UploadController extends HttpServlet {
                     convertedFile.setFilePath(filePath);
                     convertedFile.setCreationDate(creationDate);
                     convertedFile.setOriginalName(item.getName());
-                    convertedFile.setOldType(FilenameUtils.getExtension(filePath));
+                    convertedFile.setOldType("."+FilenameUtils.getExtension(filePath));
                     convertedFile.setNewType(".avi");
                     // Convert in MB
                     double filesize = ((double) item.getSize() / 1024) / 1024;
@@ -297,6 +297,7 @@ public class UploadController extends HttpServlet {
             File thumb = new File(UPLOAD_PATH + "thumb_" +request.getParameter("delfile"));
             String filePath = UPLOAD_PATH + request.getParameter("delfile");
             java.nio.file.Path p = Paths.get(filePath);
+
             String fileName = p.getFileName().toString();
             List<ConvertedFile> cf = convertedFileDao.findByUser(user);
             for (ConvertedFile video :

@@ -173,6 +173,8 @@ public class DashboardController {
                 invoicePrice += aTransaction.getPrix();
                 ConvertedFile cVideo = aTransaction.getConvertedFiles();
                 if (cVideo != null) {
+                    String newName = cVideo.getOriginalName().replace(cVideo.getOldType(), cVideo.getNewType());
+                    cVideo.setOriginalName(newName);
                     invoice.addConvertedFile(cVideo);
                     // If video is not converted yet start conversion
                     if (aTransaction.getPayed() && (cVideo.getConverted() == null || !cVideo.getConverted()) && (cVideo.getInConvertion() == null || !cVideo.getInConvertion())) {

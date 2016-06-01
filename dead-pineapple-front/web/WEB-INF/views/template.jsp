@@ -62,7 +62,7 @@
     <script src="<spring:url value='/resources/js/dashboard.js'/>"></script>
     <script src="<spring:url value='/resources/js/loading.js'/>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <title>deadpineapple - Index</title>
+    <title>deadpineapple</title>
 </head>
 <body>
 <header>
