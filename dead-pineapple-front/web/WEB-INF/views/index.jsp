@@ -95,7 +95,7 @@
             <img class="lunnette" src="/resources/img/lunettes.svg" height="100">
 
         </div>
-        <div id="michael" class="membre col-xs-1 col-xs-offset-1">
+        <div id="mikael" class="membre col-xs-1 col-xs-offset-1">
             <img class="etp teamate img-responsive"
                  src="/resources/img/michkaelROND.jpg" >
             <img  class="lunnette" src="/resources/img/lunettes.svg" height="100">
@@ -129,9 +129,9 @@
                 <h4>N'hésitez pas nous contacter aux différentes adresses suivantes : </h4><br/><br/>
                 <b>Pablo MERIDJEN </b><br/><A HREF="mailto:216369@supinfo.com"> 216369@supinfo.com </A><br/><br/>
                 <b>Sofiane AZIRI </b><br/><A HREF="mailto:215546@supinfo.com"> 215546@supinfo.com</A><br/><br/>
-                <b>Michael LE FALHER </b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
-                <b> Lucas ZIENTEK</b> <br/><A HREF="mailto:152565@supinfo.com"> 152565@supinfo.com</A><br/><br/>
-                <b> Tomas GERARDIN</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                <b>Mikaël LE FALHER </b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
+                <b>Lucas ZIENTEK</b> <br/><A HREF="mailto:152565@supinfo.com"> 152565@supinfo.com</A><br/><br/>
+                <b>Tomas GERARDIN</b> <br/><A HREF="mailto:216369@supinfo.com"> 222222@supinfo.com</A><br/><br/>
             </div>
         </div>
     </div>
