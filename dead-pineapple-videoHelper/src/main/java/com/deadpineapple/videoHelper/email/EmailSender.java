@@ -52,8 +52,6 @@ public class EmailSender {
             mp.addBodyPart(htmlPart);
             message.setContent(mp);
 
-            // Send message
-
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {

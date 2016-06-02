@@ -66,6 +66,7 @@ public class UploadController extends HttpServlet {
 
     @Autowired
     IUserDao userBdd;
+
     public void setUserDAO(IUserDao userDAO) {
         this.userBdd = userDAO;
     }
@@ -100,7 +101,7 @@ public class UploadController extends HttpServlet {
     public String uploadPage(HttpServletRequest request, Model model, HttpServletResponse response, LoginForm loginForm) throws JsonReader.FileLoadException, IOException {
         userData = (LoginForm) request.getSession().getAttribute("LOGGEDIN_USER");
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
-        if(user == null){
+        if (user == null) {
             // Create an user with ip identifiant
             String ipAddress = request.getHeader("X-FORWARDED-FOR");
             user = new UserAccount();
@@ -108,8 +109,8 @@ public class UploadController extends HttpServlet {
             if (ipAddress == null) {
                 ipAddress = request.getRemoteAddr();
             }
-            user.setEmail(ipAddress+date);
-            user.setPassword(LoginForm.getEncryptedPassword(ipAddress+date));
+            user.setEmail(ipAddress + date);
+            user.setPassword(LoginForm.getEncryptedPassword(ipAddress + date));
             Date creationDate = new Date();
             user.setCreationDate(creationDate);
             userBdd.saveUser(user);
@@ -117,11 +118,11 @@ public class UploadController extends HttpServlet {
             model.addAttribute("loginAttribute", loginForm);
         }
         UPLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
-                + user.getId()+"/";
+                + user.getId() + "/";
 
         // Initiate an instance of dropbox
         model.addAttribute("dropboxUrl", getDropBoxUrl(request));
-        if(dropboxFolders != null){
+        if (dropboxFolders != null) {
             model.addAttribute("dropboxFiles", dropboxFolders);
         }
         return "upload";
@@ -155,7 +156,7 @@ public class UploadController extends HttpServlet {
                     convertedFile.setFilePath(filePath);
                     convertedFile.setCreationDate(creationDate);
                     convertedFile.setOriginalName(item.getName());
-                    convertedFile.setOldType("."+FilenameUtils.getExtension(filePath));
+                    convertedFile.setOldType("." + FilenameUtils.getExtension(filePath));
                     convertedFile.setNewType(".avi");
                     // Convert in MB
                     double filesize = ((double) item.getSize() / 1024) / 1024;
@@ -171,9 +172,8 @@ public class UploadController extends HttpServlet {
                     video.setPrice(generatePrice(videoInformation.getDuration()));
 
                     //check if video exist in the array
-                    boolean vidExist=false;
-                    for (VideoFile vidFile : videoFiles)
-                    {
+                    boolean vidExist = false;
+                    for (VideoFile vidFile : videoFiles) {
                         if (vidFile.getConvertedFile().getOriginalName().equals(video.getConvertedFile().getOriginalName()))
                             vidExist = true;
                     }
@@ -213,9 +213,8 @@ public class UploadController extends HttpServlet {
                 //Save videos in converted files for the transaction later
 
                 //check if video exist in the array
-                boolean vidExist=false;
-                for (VideoFile vidFile : videoFiles)
-                {
+                boolean vidExist = false;
+                for (VideoFile vidFile : videoFiles) {
                     if (vidFile.getConvertedFile().getOriginalName().equals(video.getConvertedFile().getOriginalName()))
                         vidExist = true;
                 }
@@ -256,36 +255,36 @@ public class UploadController extends HttpServlet {
             videoInformation.generateAThumbnailImage(thumb);
             File file = new File(thumb);
             BufferedImage resizeImagePng;
-                if (!file.exists()) {
-                    thumb = "/resources/img/video-player.png";
-                    // Retrieve image from the classpath.
-                    InputStream is = this.getClass().getResourceAsStream(thumb);
-                    resizeImagePng = resizeImage(ImageIO.read(is));
-                    ImageIO.write(resizeImagePng, "png", file);
-                }else{
-                    resizeImagePng = resizeImage(ImageIO.read(file));
-                }
-
+            if (!file.exists()) {
+                thumb = "/resources/img/video-player.png";
+                // Retrieve image from the classpath.
+                InputStream is = this.getClass().getResourceAsStream(thumb);
+                resizeImagePng = resizeImage(ImageIO.read(is));
                 ImageIO.write(resizeImagePng, "png", file);
+            } else {
+                resizeImagePng = resizeImage(ImageIO.read(file));
+            }
+
+            ImageIO.write(resizeImagePng, "png", file);
 
 
-                int bytes = 0;
-                ServletOutputStream op = response.getOutputStream();
+            int bytes = 0;
+            ServletOutputStream op = response.getOutputStream();
 
-                response.setContentType("image/png");
-                response.setContentLength((int) file.length());
-                response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+            response.setContentType("image/png");
+            response.setContentLength((int) file.length());
+            response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
 
-                byte[] bbuf = new byte[1024];
-                DataInputStream in = new DataInputStream(new FileInputStream(file));
+            byte[] bbuf = new byte[1024];
+            DataInputStream in = new DataInputStream(new FileInputStream(file));
 
-                while ((in != null) && ((bytes = in.read(bbuf)) != -1)) {
-                    op.write(bbuf, 0, bytes);
-                }
+            while ((in != null) && ((bytes = in.read(bbuf)) != -1)) {
+                op.write(bbuf, 0, bytes);
+            }
 
-                in.close();
-                op.flush();
-                op.close();
+            in.close();
+            op.flush();
+            op.close();
 
         }
     }
@@ -294,7 +293,7 @@ public class UploadController extends HttpServlet {
     public void deleteFile(HttpServletRequest request, HttpServletResponse resp, Model model) throws JsonReader.FileLoadException {
         if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
             File file = new File(UPLOAD_PATH + request.getParameter("delfile"));
-            File thumb = new File(UPLOAD_PATH + "thumb_" +request.getParameter("delfile"));
+            File thumb = new File(UPLOAD_PATH + "thumb_" + request.getParameter("delfile"));
             String filePath = UPLOAD_PATH + request.getParameter("delfile");
             java.nio.file.Path p = Paths.get(filePath);
 
@@ -311,13 +310,14 @@ public class UploadController extends HttpServlet {
                     if (file.exists()) {
                         file.delete();
                     }
-                    if(thumb.exists()){
+                    if (thumb.exists()) {
                         thumb.delete();
                     }
                     resp.setStatus(200);
                     return;
                 }
-            }resp.setStatus(404);
+            }
+            resp.setStatus(404);
         }
 
     }
@@ -371,11 +371,11 @@ public class UploadController extends HttpServlet {
     @RequestMapping(value = "/facture", method = RequestMethod.GET)
     public String convert(HttpServletRequest request) {
         // If user is not connected, redirect him to create account
-        if(userData == null){
+        if (userData == null) {
             return "redirect:/user/add";
         }
         // IF there is no video uploaded, redirect user to upload page
-        if(videoFiles.size() == 0){
+        if (videoFiles.size() == 0) {
             return "redirect:/upload";
         }
         // Create the Transaction and redirect to PayPal
@@ -610,10 +610,39 @@ public class UploadController extends HttpServlet {
         price = Math.round(price * 100.0) / 100.0;
         return price;
     }
-    private void setInvoicePayed(ArrayList<Transaction> invoice){
-        for(Transaction transaction: invoice){
+
+    private void setInvoicePayed(ArrayList<Transaction> invoice) {
+        for (Transaction transaction : invoice) {
             transaction.setPayed(true);
             transactionDao.createTransaction(transaction);
         }
+        generateFacture(invoice);
+    }
+
+    private String generateFacture(ArrayList<Transaction> invoice) {
+        String str = "<html><head><title>Facture numero :" + invoice.get(0).getId() + "</title></head>" +
+                "<body>" +
+                "<h1>Facture numero " + invoice.get(0).getId() + "</h1>" +
+                "<p>Dead pineapple</p>" +
+                "<p>25 rue du sapin</p>" +
+                "<p>75016 Paris</p>" +
+                "<p></p><p>" + invoice.get(0).getUserAccount().getLastName() + " " +
+                "" + invoice.get(0).getUserAccount().getFirstName() + "</p>" +
+                "<p></p>" +
+                "<table>";
+        str += "<th><td>Name</td><td>Convertion</td><td>Encoding</td><td>Prix</td></th>";
+        double prixTotal = 0;
+        for (Transaction transaction : invoice) {
+            str += "<tr>";
+            str += "<td>" + transaction.getConvertedFiles().getOriginalName() + "</td>";
+            str += "<td>" + transaction.getConvertedFiles().getOldType() + " -> " + transaction.getConvertedFiles().getNewType() + "</td>";
+            str += "<td>" + transaction.getConvertedFiles().getNewEncoding() + "</td>";
+            str += "<td>" + transaction.getPrix() + "</td>";
+            str += "</tr>";
+            prixTotal += transaction.getPrix();
+        }
+        str += "<tr><td></td><td></td><td><strong>Total :</strong></td><td>" + prixTotal + "€</td></tr>";
+        str += "</table></body>";
+        return str;
     }
 }
