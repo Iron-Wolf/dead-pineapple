@@ -15,10 +15,12 @@ import com.deadpineapple.rabbitmq.RabbitInit;
 import com.deadpineapple.rabbitmq.RabbitReceiver.IReceiver;
 import com.deadpineapple.videoHelper.fileEdit.FileJoiner;
 import com.deadpineapple.videoHelper.fileEdit.FileSplitter;
+import org.apache.commons.io.FilenameUtils;
 import org.hibernate.SessionFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class ConversionLauncher {
     }
 
     public void start() {
-        if (convertedFileDao == null){
+        if (convertedFileDao == null) {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             convertedFileDao = new ConvertedFileDao(sessionFactory);
             splitFileDao = new SplitFileDao(sessionFactory);
@@ -111,22 +113,24 @@ public class ConversionLauncher {
             List<SplitFile> splitFiles = convertedFile.getSplitFiles();
             if (allSplitAreConverted(splitFiles)) { //tout les fichiers sont convertiss
                 try {
+                    convertedFile.setFilePath(convertedFile.getFilePath().replace( convertedFile.getOldType(), convertedFile.getNewType()));
                     File joinFile = joinFile(splitFilesToFiles(splitFiles), convertedFile.getFilePath());
                     if (joinFile.exists()) {
                         //sending the email
-                        Hashtable<String,String> generatorHashTable = MailGenerator.getConvertedFileConrespondanceTable(
-                                convertedFile.getUserAccount().getFirstName()+" "+convertedFile.getUserAccount().getLastName(),
-                                convertedFile.getOriginalName(),convertedFile.getFilePath(),"https://photos-6.dropbox.com/t/2/AAAEFI367SZuTY4cByBgm67lc9aFD7eu8hVPDisYUb4DBg/12/114048003/png/32x32/3/1463083200/0/2/donwload.png/EOnYhFgY7M8DIAIoAigE/orL1LMvZy8K1hgt2nVJbAo4dikC9dbhuFvM90hFuzn0?size_mode=5&size=32x32");
-                        MailGenerator generator = new MailGenerator(MailGenerator.FICHIER_CONVERTIE_TEMPLATE,generatorHashTable);
-                        EmailSender sender = new EmailSender(convertedFile.getUserAccount().getEmail(),"Votre fichier est convertie!",generator.generateTheEmail());
+                        Hashtable<String, String> generatorHashTable = MailGenerator.getConvertedFileConrespondanceTable(
+                                convertedFile.getUserAccount().getFirstName() + " " + convertedFile.getUserAccount().getLastName(),
+                                convertedFile.getOriginalName(), convertedFile.getFilePath(), "https://photos-6.dropbox.com/t/2/AAAEFI367SZuTY4cByBgm67lc9aFD7eu8hVPDisYUb4DBg/12/114048003/png/32x32/3/1463083200/0/2/donwload.png/EOnYhFgY7M8DIAIoAigE/orL1LMvZy8K1hgt2nVJbAo4dikC9dbhuFvM90hFuzn0?size_mode=5&size=32x32");
+                        MailGenerator generator = new MailGenerator(MailGenerator.FICHIER_CONVERTIE_TEMPLATE, generatorHashTable);
+                        EmailSender sender = new EmailSender(convertedFile.getUserAccount().getEmail(), "Votre fichier est convertie!", generator.generateTheEmail());
                         sender.send();
 
                         //mis a jour en bdd
                         System.out.println("joined");
                         convertedFile.setConverted(true);
+                        convertedFile.setConvertedDate(new Date());
                         convertedFile.setFilePath(joinFile.getAbsolutePath());
                         convertedFileDao.updateFile(convertedFile);//todo:voir le bug avec mika demain
-                        System.out.println("file is converted "+joinFile.getAbsolutePath());
+                        System.out.println("file is converted " + joinFile.getAbsolutePath());
                         return;
                     }
 
@@ -139,7 +143,7 @@ public class ConversionLauncher {
             }
         }
 
-        // TODO: 03/04/2016 send error mail with refund
+        // TODO: 03/04/2016 send error mail with refund fuck them
 
     }
 

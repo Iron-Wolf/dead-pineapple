@@ -53,39 +53,39 @@ $(document).ready(function () {
 
 
 //placement des lunettes
-    $('.lunnette').hover(function () {
+    $('.lunnette').mouseover(function () {
         $(this).parent().children('.etp').addClass('etphv');
     }, function () {
         $(this).parent().children('.etp').removeClass('etphv');
     });
-    $(".membre img").click(function () {
+    $(".membre img").mouseover(function () {
         cible = $(this).parent().children('.lunnette');
         $('.lunnette').each(function () {
             if ($(this).parent().attr('id') != cible.parent().attr('id')) {
-                $(this).animate({opacity: 1});
+                $(this).stop(true, true).animate({opacity: 1});
             }
         });
         cible.animate({opacity: 0});
     });
 
     //affichage de description des membres
-    $("#pablo").click(function () {
+    $("#pablo").mouseover(function () {
         $("#description h1").html('Pablo MERIDJEN<br/>Principaux travaux<span class="small"> Front design, Mise ne place des outils agile, scrum master</span><br/>Bio <span class="small">Ayant un parcours assez atypique, Pablo a fait des études aux thématiques différentes en abordant le multimedia, le communication et la programmation web et 3D. En alternance à ICDC et ccupant le poste dassistant MOA dans un équipe Agile, il cest naturrelement proposé pour mettre en place une gestion agile du projet et soccuper du front </span><br/>');
     });
 
-    $("#thomas").click(function () {
+    $("#thomas").mouseover(function () {
         $("#description h1").html('Thomas GERARDIN<br/> Principaux travaux <span class="small">Architecture system, administrateur system</span><br/>Bio <span class="small">DUT Informatique (spécialité réseaux et gestion de projet)<br/>Licence, Gestion de ressources informatiques<br/>Master of Science, Ingénierie informatique</span><br/>');
     });
-    $("#sofiane").click(function () {
+    $("#sofiane").mouseover(function () {
         $("#description h1").html('Sofiane AZIRI <br/> Principaux travaux <span class="small">Architecture Java Framework Spring, API Dropbox , Manipulation & Upload fichiers Asynchrones</span><br/>Bio <span class="small">BTS Services Informatique aux Organisations <br/> Licence Profesionnelle SIL - Systèmes Informatiques et Logicieles <br/> Master 1 & 2 : Supinfo Expert en informatique <br/>' +
             'Passionné par le développement d\'architectures et d\'infrastructures, j\'apporte aux projets mon expertise sur le fonctionnement et la navigation d\'un site' +
             'Retrouvez moi sur <a href="https://fr.linkedin.com/in/sofiane-aziri-b45761104">Linkedin</a></span>');
     });
-    $("#lucas").click(function () {
+    $("#lucas").mouseover(function () {
         $("#description h1").html('Lucas ZIENTEK<br/> Principaux travaux <span class="small">Worker ffmpeg, architecture logiciel, front, manequin officiel!</span><br/>Bio <span class="small">des trucs</span><br/>');
     });
 
-    $("#mikael").click(function () {
+    $("#mikael").mouseover(function () {
         $("#description h1").html('Mikaël LE FALHER<br/> Principaux travaux <span class="small">Gestion et intégration de la base de donnée, API facebook & Google, API PayPal</span><br/>Bio <span class="small">DUT Informatique (spécialité réseaux et gestion de projet)<br/>Licence Profesionnelle SIL - Système d\'Information et Service Web <br/>Master of Science, Ingénierie informatique</span><br/>    ');
     });
 

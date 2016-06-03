@@ -42,7 +42,7 @@ public abstract class AbstractRabbitReceiver<T> {
     }
 
 
-    public void receiver(final IReceiver<T> receiver)  {
+    public void receiver(final IReceiver<T> receiver) {
         Consumer consumer = new DefaultConsumer(getRabbitConnection().getChannel()) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
@@ -58,6 +58,11 @@ public abstract class AbstractRabbitReceiver<T> {
         }
     }
 
+    public void close() throws IOException, TimeoutException {
+        if (rabbitConnection != null) {
+            rabbitConnection.close();
+        }
+    }
 
     public String getConfigPath() {
         return configPath;

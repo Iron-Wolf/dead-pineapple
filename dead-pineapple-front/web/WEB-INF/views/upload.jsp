@@ -241,9 +241,7 @@
         document.getElementById("payButton").innerHTML = "Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir";
         %}
     </script>
-
-    <script src="/resources/js/jquery_1.12.2.min.js"></script>
-    <script src="/resources/js/bootstrap_3.3.6.min.js"></script>
+//c'est extremement sale on en a pas besoin normalement
     <script src="<spring:url value='/resources/js/vendor/jquery.ui.widget.js'/>"></script>
     <script src="<spring:url value='/resources/js/tmpl.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/load-image.min.js'/>"></script>
@@ -398,7 +396,7 @@
                         $(".files").append(fileRow);
                     }
                     $("#payButton").attr("price", totalPrice.toFixed(2));
-                    $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
+                    $("#payButton").val("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
                 });
             };
             getFiles("/upload/getFiles");
