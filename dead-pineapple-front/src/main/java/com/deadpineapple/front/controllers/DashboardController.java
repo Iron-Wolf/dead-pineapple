@@ -294,7 +294,7 @@ public class DashboardController {
 
     @RequestMapping(value = "/getInvoice", method = RequestMethod.GET)
     public void getPdfInvoice(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String invoiceId = (String) request.getSession().getAttribute("invoiceId");
+        String invoiceId = (String) request.getParameter("invoiceId");
         String fileName = "facture_" + invoiceId + ".pdf";
         File file = new File(INVOICE_PATH, fileName);
         if (file.exists()) {
