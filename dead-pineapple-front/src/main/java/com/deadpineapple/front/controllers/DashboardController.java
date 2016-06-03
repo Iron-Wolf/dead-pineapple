@@ -81,6 +81,7 @@ public class DashboardController {
         DOWNLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
                 + user.getId() + "/";
         INVOICE_PATH = DOWNLOAD_PATH + "invoices/";
+        new File(this.INVOICE_PATH).mkdirs();
         invoices = new ArrayList();
         getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
         return getDashBoardModelAndView(model);
@@ -93,7 +94,7 @@ public class DashboardController {
             throw new ServletException("File Name can't be null or empty");
         }
         File file = new File(DOWNLOAD_PATH, fileName);
-        if(file.exists()){
+        if (file.exists()) {
             //throw new ServletException("File doesn't exists on server.");
             System.out.println("File location on server::" + file.getAbsolutePath());
             ServletContext ctx = request.getServletContext();
@@ -169,7 +170,8 @@ public class DashboardController {
                 if (aTransaction.getIdTransaction() != idTransaction) {
                     invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
                     invoices.add(invoice);
-                    // TO DO : GENERATE PDF
+                    getPdfFromHtml(this.INVOICE_PATH + "facture_" + invoice.getInvoiceId() + ".pdf", generateFacture(invoice));
+
                     invoice = new Invoice();
                     //jsonTransactions.put(jsonTransaction);
                     initTransaction(aTransaction);
@@ -196,7 +198,7 @@ public class DashboardController {
             }
             invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
             invoices.add(invoice);
-            // TO DO : GENERATE PDF
+            getPdfFromHtml(this.INVOICE_PATH + "facture_" + invoice.getInvoiceId() + ".pdf", generateFacture(invoice));
         }
 
     }
@@ -283,18 +285,19 @@ public class DashboardController {
         model.addAttribute("invoices", invoices);
         model.addAttribute("spacePercent", spaceLeft);
         model.addAttribute("userSize", userSize);
-        if (invoices.size() > 0 && invoices.get(0).getConvertedFiles().size()>0) {
+        if (invoices.size() > 0 && invoices.get(0).getConvertedFiles().size() > 0) {
             model.addAttribute("videoStream", invoices.get(0).getConvertedFiles().get(0).getFilePath());
         }
         model.addAttribute("userAccount", new UserAccount());
         return new ModelAndView("dashboard", "model", model);
     }
+
     @RequestMapping(value = "/getInvoice", method = RequestMethod.GET)
     public void getPdfInvoice(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String invoiceId = (String) request.getSession().getAttribute("invoiceId");
-        String fileName = "facture_"+invoiceId;
+        String fileName = "facture_" + invoiceId + ".pdf";
         File file = new File(INVOICE_PATH, fileName);
-        if(file.exists()){
+        if (file.exists()) {
             //throw new ServletException("File doesn't exists on server.");
             System.out.println("File location on server::" + file.getAbsolutePath());
             ServletContext ctx = request.getServletContext();
@@ -317,48 +320,47 @@ public class DashboardController {
 
     }
 
-    private String generateFacture(ArrayList<Transaction> invoice) {
-        String str = "<html><head><title>Facture numero :" + invoice.get(0).getId() + "</title></head>" +
+    private String generateFacture(Invoice invoice) {
+        String str = "<html><head><title>Facture numero :" + invoice.getInvoiceId() + "</title></head>" +
                 "<body>" +
-                "<h1>Facture numero " + invoice.get(0).getId() + "</h1>" +
+                "<h1>Facture numero " + invoice.getInvoiceId() + "</h1>" +
                 "<p>Dead pineapple</p>" +
                 "<p>25 rue du sapin</p>" +
                 "<p>75016 Paris</p>" +
-                "<p></p><p>" + invoice.get(0).getUserAccount().getLastName() + " " +
-                "" + invoice.get(0).getUserAccount().getFirstName() + "</p>" +
+                "<p></p><p>" + user.getLastName() + " " +
+                "" + user.getLastName() + "</p>" +
                 "<p></p>" +
                 "<table>";
-        str += "<th><td>Name</td><td>Convertion</td><td>Encoding</td><td>Prix</td></th>";
-        double prixTotal = 0;
-        for (Transaction transaction : invoice) {
+        str += "<tr><th>Name</th><th>Convertion</th><th>Encoding</th><th>Prix</th></tr>";
+        for (ConvertedFile file : invoice.getConvertedFiles()) {
             str += "<tr>";
-            str += "<td>" + transaction.getConvertedFiles().getOriginalName() + "</td>";
-            str += "<td>" + transaction.getConvertedFiles().getOldType() + " -> " + transaction.getConvertedFiles().getNewType() + "</td>";
-            str += "<td>" + transaction.getConvertedFiles().getNewEncoding() + "</td>";
-            str += "<td>" + transaction.getPrix() + "</td>";
+            str += "<td>" + file.getOriginalName() + "</td>";
+            str += "<td>" + file.getOldType() + " -> " + file.getNewType() + "</td>";
+            str += "<td>" + file.getNewEncoding() + "</td>";
+            str += "<td>" + "</td>";
             str += "</tr>";
-            prixTotal += transaction.getPrix();
         }
-        str += "<tr><td></td><td></td><td><strong>Total :</strong></td><td>" + prixTotal + "€</td></tr>";
+        str += "<tr><td></td><td></td><td><strong>Total :</strong></td><td>" + invoice.getPrice() + "€</td></tr>";
         str += "</table></body>";
         return str;
     }
-    private void getPdfFromHtml(){
+
+    private void getPdfFromHtml(String filename, String html) {
         try {
-            String k = "<html><body> <b>This is my Project</b> </body></html>";
-            OutputStream file = new FileOutputStream(new File(DOWNLOAD_PATH + "test.pdf"));
-            Document document = new Document();
-            PdfWriter.getInstance(document, file);
-            document.open();
-            HTMLWorker htmlWorker = new HTMLWorker(document);
-            htmlWorker.parse(new StringReader(k));
-            document.close();
-            file.close();
+            if (!new File(filename).exists()) {
+                OutputStream file = new FileOutputStream(new File(filename));
+                Document document = new Document();
+                PdfWriter.getInstance(document, file);
+                document.open();
+                HTMLWorker htmlWorker = new HTMLWorker(document);
+                htmlWorker.parse(new StringReader(html));
+                document.close();
+                file.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 
 }
