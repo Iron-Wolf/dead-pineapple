@@ -67,7 +67,7 @@
                                                 </li>
                                             </c:forEach>
                                         </ul>
-                                        <div class="panel-footer"><a href="#"><b>Télécharger la facture</b></a></div>
+                                        <div class="panel-footer"><a href="<spring:url value='dashboard/getInvoice?invoiceId=${invoice.invoiceId}'/>"><b>Télécharger la facture</b></a></div>
                                     </div>
                                 </div>
                             </div>

@@ -42,6 +42,7 @@ public class DashboardController {
     LoginForm userData;
     UserAccount user;
     String DOWNLOAD_PATH;
+    String INVOICE_PATH;
 
     // Transaction
     @Autowired
@@ -79,8 +80,8 @@ public class DashboardController {
         user = (UserAccount) request.getSession().getAttribute("USER_INFORMATIONS");
         DOWNLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
                 + user.getId() + "/";
+        INVOICE_PATH = DOWNLOAD_PATH + "invoices/";
         invoices = new ArrayList();
-        getPdfInvoice();
         getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
         return getDashBoardModelAndView(model);
     }
@@ -92,7 +93,7 @@ public class DashboardController {
             throw new ServletException("File Name can't be null or empty");
         }
         File file = new File(DOWNLOAD_PATH, fileName);
-        if (file.exists()) {
+        if(file.exists()){
             //throw new ServletException("File doesn't exists on server.");
             System.out.println("File location on server::" + file.getAbsolutePath());
             ServletContext ctx = request.getServletContext();
@@ -100,7 +101,7 @@ public class DashboardController {
             String mimeType = ctx.getMimeType(file.getAbsolutePath());
             response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
             response.setContentLength((int) file.length());
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 
             ServletOutputStream os = response.getOutputStream();
             byte[] bufferData = new byte[1024];
@@ -113,7 +114,6 @@ public class DashboardController {
             fis.close();
             System.out.println("File downloaded at client successfully");
         }
-
     }
 
     @RequestMapping(value = "/downloadFileDb", method = RequestMethod.GET)
@@ -150,6 +150,7 @@ public class DashboardController {
         invoice = new Invoice();
         invoicePrice = 0.0;
         invoice.setDate(transaction.getDate());
+        invoice.setInvoiceId(transaction.getId());
         idTransaction = transaction.getIdTransaction();
     }
 
@@ -168,6 +169,7 @@ public class DashboardController {
                 if (aTransaction.getIdTransaction() != idTransaction) {
                     invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
                     invoices.add(invoice);
+                    // TO DO : GENERATE PDF
                     invoice = new Invoice();
                     //jsonTransactions.put(jsonTransaction);
                     initTransaction(aTransaction);
@@ -194,6 +196,7 @@ public class DashboardController {
             }
             invoice.setPrice(Math.round(invoicePrice * 100.0) / 100.0);
             invoices.add(invoice);
+            // TO DO : GENERATE PDF
         }
 
     }
@@ -286,10 +289,64 @@ public class DashboardController {
         model.addAttribute("userAccount", new UserAccount());
         return new ModelAndView("dashboard", "model", model);
     }
-    public void getPdfInvoice(){
+    @RequestMapping(value = "/getInvoice", method = RequestMethod.GET)
+    public void getPdfInvoice(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String invoiceId = (String) request.getSession().getAttribute("invoiceId");
+        String fileName = "facture_"+invoiceId;
+        File file = new File(INVOICE_PATH, fileName);
+        if(file.exists()){
+            //throw new ServletException("File doesn't exists on server.");
+            System.out.println("File location on server::" + file.getAbsolutePath());
+            ServletContext ctx = request.getServletContext();
+            InputStream fis = new FileInputStream(file);
+            String mimeType = ctx.getMimeType(file.getAbsolutePath());
+            response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
+            response.setContentLength((int) file.length());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+
+            ServletOutputStream os = response.getOutputStream();
+            byte[] bufferData = new byte[1024];
+            int read = 0;
+            while ((read = fis.read(bufferData)) != -1) {
+                os.write(bufferData, 0, read);
+            }
+            os.flush();
+            os.close();
+            fis.close();
+        }
+
+    }
+
+    private String generateFacture(ArrayList<Transaction> invoice) {
+        String str = "<html><head><title>Facture numero :" + invoice.get(0).getId() + "</title></head>" +
+                "<body>" +
+                "<h1>Facture numero " + invoice.get(0).getId() + "</h1>" +
+                "<p>Dead pineapple</p>" +
+                "<p>25 rue du sapin</p>" +
+                "<p>75016 Paris</p>" +
+                "<p></p><p>" + invoice.get(0).getUserAccount().getLastName() + " " +
+                "" + invoice.get(0).getUserAccount().getFirstName() + "</p>" +
+                "<p></p>" +
+                "<table>";
+        str += "<th><td>Name</td><td>Convertion</td><td>Encoding</td><td>Prix</td></th>";
+        double prixTotal = 0;
+        for (Transaction transaction : invoice) {
+            str += "<tr>";
+            str += "<td>" + transaction.getConvertedFiles().getOriginalName() + "</td>";
+            str += "<td>" + transaction.getConvertedFiles().getOldType() + " -> " + transaction.getConvertedFiles().getNewType() + "</td>";
+            str += "<td>" + transaction.getConvertedFiles().getNewEncoding() + "</td>";
+            str += "<td>" + transaction.getPrix() + "</td>";
+            str += "</tr>";
+            prixTotal += transaction.getPrix();
+        }
+        str += "<tr><td></td><td></td><td><strong>Total :</strong></td><td>" + prixTotal + "€</td></tr>";
+        str += "</table></body>";
+        return str;
+    }
+    private void getPdfFromHtml(){
         try {
             String k = "<html><body> <b>This is my Project</b> </body></html>";
-            OutputStream file = new FileOutputStream(new File(DOWNLOAD_PATH+"test.pdf"));
+            OutputStream file = new FileOutputStream(new File(DOWNLOAD_PATH + "test.pdf"));
             Document document = new Document();
             PdfWriter.getInstance(document, file);
             document.open();
@@ -301,4 +358,7 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
+
+
+
 }

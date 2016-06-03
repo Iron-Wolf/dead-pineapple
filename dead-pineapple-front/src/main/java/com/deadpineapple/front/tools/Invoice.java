@@ -14,8 +14,18 @@ public class Invoice {
     private Date date;
     private double price;
 
+    private Long invoiceId;
+
     public Invoice() {
         this.convertedFiles = new ArrayList();
+    }
+
+    public Long getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(Long invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
     public double getPrice() {

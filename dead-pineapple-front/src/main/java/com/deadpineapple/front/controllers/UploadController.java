@@ -616,33 +616,7 @@ public class UploadController extends HttpServlet {
             transaction.setPayed(true);
             transactionDao.createTransaction(transaction);
         }
-        generateFacture(invoice);
     }
 
-    private String generateFacture(ArrayList<Transaction> invoice) {
-        String str = "<html><head><title>Facture numero :" + invoice.get(0).getId() + "</title></head>" +
-                "<body>" +
-                "<h1>Facture numero " + invoice.get(0).getId() + "</h1>" +
-                "<p>Dead pineapple</p>" +
-                "<p>25 rue du sapin</p>" +
-                "<p>75016 Paris</p>" +
-                "<p></p><p>" + invoice.get(0).getUserAccount().getLastName() + " " +
-                "" + invoice.get(0).getUserAccount().getFirstName() + "</p>" +
-                "<p></p>" +
-                "<table>";
-        str += "<th><td>Name</td><td>Convertion</td><td>Encoding</td><td>Prix</td></th>";
-        double prixTotal = 0;
-        for (Transaction transaction : invoice) {
-            str += "<tr>";
-            str += "<td>" + transaction.getConvertedFiles().getOriginalName() + "</td>";
-            str += "<td>" + transaction.getConvertedFiles().getOldType() + " -> " + transaction.getConvertedFiles().getNewType() + "</td>";
-            str += "<td>" + transaction.getConvertedFiles().getNewEncoding() + "</td>";
-            str += "<td>" + transaction.getPrix() + "</td>";
-            str += "</tr>";
-            prixTotal += transaction.getPrix();
-        }
-        str += "<tr><td></td><td></td><td><strong>Total :</strong></td><td>" + prixTotal + "€</td></tr>";
-        str += "</table></body>";
-        return str;
-    }
+
 }
