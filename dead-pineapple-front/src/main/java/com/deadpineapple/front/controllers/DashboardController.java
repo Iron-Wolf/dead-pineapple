@@ -13,6 +13,9 @@ import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.lowagie.text.Document;
+import com.lowagie.text.html.simpleparser.HTMLWorker;
+import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,10 +29,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -79,6 +79,7 @@ public class DashboardController {
         DOWNLOAD_PATH = request.getServletContext().getRealPath("/") + "upload/"
                 + user.getId()+"/";
         invoices = new ArrayList();
+        getPdfInvoice();
         getHistory(request.getRealPath("/WEB-INF/rabbitConfig.xml"));
         return getDashBoardModelAndView(model);
     }
@@ -279,5 +280,20 @@ public class DashboardController {
         model.addAttribute("videoStream", invoices.get(0).getConvertedFiles().get(0).getFilePath());
         model.addAttribute("userAccount", new UserAccount());
         return new ModelAndView("dashboard", "model", model);
+    }
+    public void getPdfInvoice(){
+        try {
+            String k = "<html><body> This is my Project </body></html>";
+            OutputStream file = new FileOutputStream(new File(DOWNLOAD_PATH+"test.pdf"));
+            Document document = new Document();
+            PdfWriter.getInstance(document, file);
+            document.open();
+            HTMLWorker htmlWorker = new HTMLWorker(document);
+            htmlWorker.parse(new StringReader(k));
+            document.close();
+            file.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
