@@ -288,7 +288,7 @@ public class DashboardController {
     }
     public void getPdfInvoice(){
         try {
-            String k = "<html><body> This is my Project </body></html>";
+            String k = "<html><body> <b>This is my Project</b> </body></html>";
             OutputStream file = new FileOutputStream(new File(DOWNLOAD_PATH+"test.pdf"));
             Document document = new Document();
             PdfWriter.getInstance(document, file);
