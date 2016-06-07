@@ -83,7 +83,7 @@
                 </table>
             </form>
             <br>
-                <a href="<spring:url value='/upload/facture'/>" class="btn btn-primary start" id="payButton" price="">Payer et Convertir</a>
+                <a href="<spring:url value='/upload/facture'/>" class="btn btn-primary start" id="payButton" price="" disabled>Payer et Convertir</a>
             <c:if test="${not empty dropboxFiles}">
                 <div id="dropbox">
                     <h2>Mes vidéos </h2>
@@ -120,7 +120,7 @@
             <div class="well">
                 <h3>Information sur l'upload</h3>
                 <ul>
-                    <li>The maximum file size for uploads is <strong>1 GB</strong></li>
+                    <li>The maximum file size for uploads is <strong>10 GB</strong></li>
                     <li>Only video files (<strong>".avi", "mp4", ".ogg", ".flv",".swf",".dv",".mov"</strong>) are allowed.</li>
                     <li>Uploaded files will be deleted automatically after <strong>5 minutes</strong>.</li>
                     <li>You can <strong>drag &amp; drop</strong> files from your desktop on this webpage with Google Chrome, Mozilla Firefox and Apple Safari.</li>
@@ -173,8 +173,7 @@
     <script id="template-download" type="text/x-tmpl">
         {% var totalPrice = 0.0;
         for (var i=0, file; file=o.files[i]; i++) {
-        totalPrice+=parseFloat(file.price);
-        console.log("Price ="+totalPrice);%}
+        totalPrice +=parseFloat(file.price);%}
         <div class="row template-download fade">
             {% if (file.error) { %}
             <td ><span class="name">{%=file.name%}</span></td>
@@ -189,7 +188,7 @@
             <div class="col-sm-3 filename">
                 <span class="name">{%=file.name%}</span>
             </div>
-            <div class="col-sm-1"><span class="size">{%=o.formatFileSize(file.size)%}</span></div>
+            <div class="col-sm-1"><span class="size">{%=o.formatFileSize(file.size*1000000)%}</span></div>
             <div class="col-sm-1"><span class="duration">{%=file.duration%}</span></div>
 
             <div class="col-sm-1"><span class="price">{%=file.price%} &euro;</span></div>
@@ -230,18 +229,21 @@
                     <span>Supprimer</span>
                 </button>
             </div>
+            <div class="col-sm-12"><hr> </div>
             </div>
-        </div> <hr/>
+        </div>
         {% } %}
         {%
         var priceString = document.getElementById("payButton").getAttribute("price");
-        var price = parseFloat(priceString);
-        totalPrice += price;
+        if(priceString != ""){
+            var price = parseFloat(priceString)
+            totalPrice += price;
+        }
         document.getElementById("payButton").setAttribute("price", totalPrice);
         document.getElementById("payButton").innerHTML = "Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir";
+        document.getElementById("payButton").removeAttribute("disabled");
         %}
     </script>
-//c'est extremement sale on en a pas besoin normalement
     <script src="<spring:url value='/resources/js/vendor/jquery.ui.widget.js'/>"></script>
     <script src="<spring:url value='/resources/js/tmpl.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/load-image.min.js'/>"></script>
@@ -255,7 +257,7 @@
     <script src="<spring:url value='/resources/js/main.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.easing.js'/>"></script>
     <script src="<spring:url value='/resources/js/jqueryFileTree.js"'/>"></script>
-   <script type="text/javascript">
+    <script type="text/javascript">
 
         function setFormat(format, fileName){
             // When user choose a format for the file, send it to the bdd
@@ -392,11 +394,15 @@
                         price += "<option>xvid</option>";
                         price += "</select></div></div>";
                         fileRow += preview + name + size + duration + price + deleteurl;
-                        fileRow += "</div><hr/>";
+                        fileRow += "<div class='col-sm-12'><hr> </div></div>";
                         $(".files").append(fileRow);
                     }
-                    $("#payButton").attr("price", totalPrice.toFixed(2));
-                    $("#payButton").val("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
+                    if(totalPrice > 0){
+                        $("#payButton").attr("price", totalPrice.toFixed(2));
+                        $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
+                        $("#payButton").removeAttr("disabled");
+                    }
+
                 });
             };
             getFiles("/upload/getFiles");
@@ -419,9 +425,15 @@
                     $( ".price" ).each(function( index ) {
                         totalPrice += parseFloat($( this ).text())
                     });
-                    $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
-                },1000);
-
+                    if(totalPrice == 0){
+                        $("#payButton").attr("disabled", true);
+                        $("#payButton").html("Payer et convertir");
+                    }
+                    else{
+                        $("#payButton").html("Payer ( "+totalPrice.toFixed(2)+"€ ) et convertir");
+                    }
+                    document.getElementById("payButton").setAttribute("price",  totalPrice.toFixed(2));
+                },300);
             });
         });
 
