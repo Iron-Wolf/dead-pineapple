@@ -128,7 +128,6 @@ public class UploadController extends HttpServlet {
         return "upload";
     }
 
-    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void uploadVideo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!ServletFileUpload.isMultipartContent(request)) {

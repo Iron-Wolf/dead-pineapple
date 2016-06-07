@@ -247,16 +247,12 @@
     <script src="<spring:url value='/resources/js/vendor/jquery.ui.widget.js'/>"></script>
     <script src="<spring:url value='/resources/js/tmpl.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/load-image.min.js'/>"></script>
-    <script src="<spring:url value='/resources/js/canvas-to-blob.min.js'/>"></script>
-    <script src="<spring:url value='/resources/js/bootstrap-image-gallery.min.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.iframe-transport.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.fileupload.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.fileupload-fp.js'/>"></script>
     <script src="<spring:url value='/resources/js/jquery.fileupload-ui.js'/>"></script>
     <script src="<spring:url value='/resources/js/locale.js'/>"></script>
     <script src="<spring:url value='/resources/js/main.js'/>"></script>
-    <script src="<spring:url value='/resources/js/jquery.easing.js'/>"></script>
-    <script src="<spring:url value='/resources/js/jqueryFileTree.js"'/>"></script>
     <script type="text/javascript">
 
         function setFormat(format, fileName){
@@ -279,16 +275,18 @@
             setFormat(format, filename);
 
         });
-        function setEncodage(){
+        $(document).on('change', '.encodage', function() {
+            var encodage = $('option:selected',this).text();
+            var filename = $('option:selected',this).parent().attr("filename");
+            setEncodage(encodage, filename);
+
+        });
+        function setEncodage(encodage, fileName){
             // When user choose a format for the file, send it to the bdd
-            console.log("Envoi format vers serveur ");
-            var format = $(".encodage option:selected").val();
-            var fileName = $(".encodage option:selected").parent().attr("filename");
-            console.log(format, fileName);
             $.ajax({
                 type:"GET",
-                url: "/upload/setFormat",
-                data: {     format: format,
+                url: "/upload/setEncodage",
+                data: {     encodage: encodage,
                     file: fileName}
             }).done(function(msg){
                 // Format set (display price)
@@ -328,74 +326,106 @@
                     var totalPrice = 0;
                     var fileRow = "";
                     for(var i = 0;i < data.length;i++){
-                        fileRow = "<div class='row template-download fade in'>";
-                        var preview, name, size, duration, price, deleteurl, priceValue;
+                        fileRow = document.createElement('div');
+                        $(fileRow).addClass('row template-download fade in');
+                        var downloadContent = document.createElement('div');
+                        $(downloadContent).addClass('download-content');
+
+                        var col1, col2, col3, col4, col5, col6, col7, col8;
+                        var separateLine = document.createElement('div');
+                        $(separateLine).addClass('col-sm-12').html('<hr>');
                         var fileName = "";
                         for(var attr in data[i]){
-                            console.log("key"+attr+"|"+data[i][attr]);
                             if(attr == "thumbnail_url") {
-                                preview = "<div class='col-sm-1'>";
-                                preview += "<span class='preview'>";
-                                preview += "<img src='"+data[i][attr]+"' style='margin-top: 5px;'/>";
-                                preview += "</span></div>";
+                                // Create thumbnail element
+                                col1 = document.createElement('div');
+                                var previewSpan = document.createElement('span');
+                                var previewImg = document.createElement('img');
+                                $(previewImg).attr('src',data[i][attr]);
+                                $(previewImg).attr('style','margin-top: 5px;');
+                                $(previewSpan).addClass('preview').html(previewImg);
+                                $(col1).addClass('col-sm-1').html(previewSpan);
                             }
                             else if(attr == "name"){
+                                // Create name html element
                                 fileName = data[i][attr];
-                                name = "<div class='download-content'>";
-                                name += "<div class='col-sm-3 filename'>";
-                                name += "<span class='name'>"+data[i][attr]+"</span></div>";
+                                var col2 = document.createElement('div');
+                                var fileNameSpan = document.createElement('span');
+                                $(fileNameSpan).addClass('name').html(data[i][attr]);
+                                $(col2).addClass('col-sm-3 filename').html(fileNameSpan);
                             }
                             else if(attr == "size") {
-                                size = "<div class='col-sm-1'><span class='"+attr+"'>"+formatFileSize(parseFloat(data[i][attr])*1000000)+"</span></div>";
+                                // Create size html element
+                                col3 = document.createElement('div');
+                                var spanSize = document.createElement('span');
+                                $(spanSize).addClass(attr).html(formatFileSize(parseFloat(data[i][attr])*1000000));
+                                $(col3).addClass('col-sm-1').html(spanSize);
                             }
                             else if(attr == "duration") {
-                                duration = "<div class='col-sm-1'><span class='"+attr+"'>"+data[i][attr]+"</span></div>";
+                                // Create duration html element
+                                col4 = document.createElement('div');
+                                var spanDuration = document.createElement('span');
+                                $(spanDuration).addClass(attr).html(data[i][attr]);
+                                $(col4).addClass('col-sm-1').html(spanDuration);
                             }
                             else if(attr == "price"){
-                                priceValue = data[i][attr]
+                                // Create price html element
+                                priceValue = data[i][attr];
+                                // Create price html element
+                                col5 = document.createElement('div');
+                                var priceSpan = document.createElement('span');
+                                $(priceSpan).addClass('price').html(priceValue+"€");
+                                $(col5).addClass('col-sm-1').html(priceSpan);
+
+                                // Save the total price
                                 totalPrice += parseFloat(priceValue);
                             }
                             else if(attr == "delete_url") {
-                                deleteurl = "<div class='col-sm-2 delete'>";
-                                deleteurl += "<button class='btn btn-danger' data-type='GET' data-url='"+data[i][attr]+"'>";
-                                deleteurl += "<i class='glyphicon glyphicon-trash'></i>";
-                                deleteurl += "<span>Supprimer</span>";
-                                deleteurl += "</button>";
-                                deleteurl += "</div></div>";
-
+                                // Create delete html button
+                                col8 = document.createElement('div');
+                                var deleteButton = document.createElement('button');
+                                var deleteI = document.createElement('i');
+                                $(deleteI).addClass('glyphicon glyphicon-trash').html('<span>Supprimer</span>');
+                                $(deleteButton).attr('data-type','GET');
+                                $(deleteButton).attr('data-url', data[i][attr]);
+                                $(deleteButton).addClass('btn btn-danger').html(deleteI);
+                                $(col8).addClass('col-sm-2 delete').html(deleteButton);
                             }
                         }
-                        // Create price, format & encodage
-                        price = "<div class='col-sm-1'><span class='price'>"+priceValue+"€</span></div>";
-                        price += "<div class='col-sm-1'>";
-                        price += "<div class='form-group'>";
-                        price += "<select class='form-control formats' filename='"+fileName+"' required>";
-                        price += "<option value='avi'>.avi</option>";
-                        price += "<option value='mp4'>.mp4</option>";
-                        price += "<option value='mp3'>.mp3</option>";
-                        price += "<option value='aac'>.aac</option>";
-                        price += "<option value='wav'>.wav</option>";
-                        price += "<option value='wma'>.wma</option>";
-                        price += "<option value='wmv'>.wmv</option>";
-                        price += "<option value='ogg'>.ogg</option>";
-                        price += "<option value='flv'>.flv</option>";
-                        price += "<option value='swf'>.swf</option>";
-                        price += "<option value='dv'>.dv</option>";
-                        price += "<option value='mov'>.mov</option>";
-                        price += "</select></div></div>";
-                        price += "<div class='col-sm-2'>";
-                        price += "<div class='form-group'>";
-                        price += "<select class='form-control' filename='"+fileName+"' required>"
-                        price += "<option>Encodage</option>";
-                        price += "<option>ffv1</option>";
-                        price += "<option>h.264</option>";
-                        price += "<option>vp8</option>";
-                        price += "<option>vp9</option>";
-                        price += "<option>xvid</option>";
-                        price += "</select></div></div>";
-                        fileRow += preview + name + size + duration + price + deleteurl;
-                        fileRow += "<div class='col-sm-12'><hr> </div></div>";
-                        $(".files").append(fileRow);
+
+
+                        // Create format element
+                        var formatArray = [ "avi", "mp4", "mp3", "aac", "wav", "wma", 'wmv','ogg','flv','swf','dv','mov'];
+                        col6 = document.createElement('div');
+                        var formatDiv = document.createElement('div');
+                        var formatSelect = document.createElement('select');
+                        $(formatSelect).addClass('form-control formats').attr('fileName', fileName);
+                        jQuery.each( formatArray, function( i, val ) {
+                            var option = document.createElement('option');
+                            $(option).attr('value', val);
+                            $(option).html('.'+val);
+                            $(formatSelect).append(option);
+                        });
+                        $(formatDiv).addClass('form-group').html(formatSelect);
+                        $(col6).addClass('col-sm-1').html(formatDiv);
+
+                        // Create encodage select element
+                        col7 = document.createElement('div');
+                        var encodageArray = [ 'ffv1','h.264', 'vp8', 'vp9', 'xvid' ];
+                        var encodageDiv = document.createElement('div');
+                        var encodageSelect = document.createElement('select');
+                        $(encodageSelect).addClass('form-control encodage').attr('fileName', fileName);
+                        jQuery.each( encodageArray, function( i, val ) {
+                            var option = document.createElement('option');
+                            $(option).attr('value', val);
+                            $(option).html(val);
+                            $(encodageSelect).append(option);
+                        });
+                        $(encodageDiv).addClass('form-group').html(encodageSelect);
+                        $(col7).addClass('col-sm-2').html(encodageDiv);
+
+                        $(downloadContent).append(col2, col3, col4, col5, col6, col7, col8, separateLine)
+                        $(fileRow).append(col1, downloadContent).appendTo(".files");
                     }
                     if(totalPrice > 0){
                         $("#payButton").attr("price", totalPrice.toFixed(2));
