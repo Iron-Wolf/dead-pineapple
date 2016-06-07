@@ -396,7 +396,6 @@ public class UploadController extends HttpServlet {
             priceTotal += vf.getPrice();
         }
         priceTotal = Math.round(priceTotal * 100.0) / 100.0;
-        //test price : 0.10
         ps = new PayPalService(priceTotal);
         String serverUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 
