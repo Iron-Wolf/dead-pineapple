@@ -321,22 +321,24 @@ public class DashboardController {
     }
 
     private String generateFacture(Invoice invoice) {
-        String str = "<html><head><title>Facture numero :" + invoice.getInvoiceId() + "</title></head>" +
-                "<body>" +
-                "<h1>Facture numero " + invoice.getInvoiceId() + "</h1>" +
-                "<p>Dead pineapple</p>" +
-                "<p>25 rue du sapin</p>" +
-                "<p>75016 Paris</p>" +
-                "<p></p><p>" + user.getLastName() + " " +
-                "" + user.getLastName() + "</p>" +
-                "<p></p>" +
-                "<table>";
+        String str = "<html><head><title></title></head>"
+                + "<body>"
+                + "<h1>Facture numero " + invoice.getInvoiceId() + "</h1>"
+                + "<br/><p>Dead pineapple</p>"
+                + "<p>25 rue du sapin</p>"
+                + "<p>75016 Paris</p><br/><br/><br/>"
+                + "<p></p><p>"
+                + user.getLastName() + " " + "" + user.getFirstName() + "</p>"
+                + "<p>" + (user.getAdresse() == null ? "" : user.getAdresse()) + "</p>"
+                + "<p>" +( user.getCodePostal() == 0 ? "" : user.getCodePostal())
+                + "<br/><p><strong>Méthode de payment:</strong> Paypal</p><br/><br/></p>"
+                + "<table border=\"1\" style=\"border-color:#DDD;margin-top:30px;\" >";
         str += "<tr><th>Name</th><th>Convertion</th><th>Encoding</th><th>Prix</th></tr>";
         for (ConvertedFile file : invoice.getConvertedFiles()) {
             str += "<tr>";
             str += "<td>" + file.getOriginalName() + "</td>";
             str += "<td>" + file.getOldType() + " -> " + file.getNewType() + "</td>";
-            str += "<td>" + file.getNewEncoding() + "</td>";
+            str += "<td>" + (file.getNewEncoding()==null?"":file.getNewEncoding()) + "</td>";
             str += "<td>" + "</td>";
             str += "</tr>";
         }
