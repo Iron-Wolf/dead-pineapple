@@ -119,8 +119,11 @@ legend {
     margin-top: 5px;
     margin-bottom: 5px;
 }
-.download-content{
+.download-content div{
     margin-top: 22px;
+}
+.download-content .image{
+    margin-top: 5px;
 }
 
 #uploadedFiles {
