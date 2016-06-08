@@ -56,7 +56,6 @@
 
     <script src="<spring:url value='/resources/js/loginAPI/facebookLogin.js'/>"></script>
     <script src="<spring:url value='/resources/js/loginAPI/googleLogin.js'/>"></script>
-    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <script src="<spring:url value='/resources/js/globalfront.js'/>"></script>
     <script src="<spring:url value='/resources/js/leftbar.js'/>"></script>
     <script src="<spring:url value='/resources/js/dashboard.js'/>"></script>

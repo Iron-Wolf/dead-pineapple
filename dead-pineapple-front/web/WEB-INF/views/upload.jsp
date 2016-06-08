@@ -180,11 +180,11 @@
             <td ><span class="size">{%=o.formatFileSize(file.size)%}</span></td>
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
             {% } else { %}
-            <div class="col-sm-1">
+            <div class='download-content'>
+            <div class="col-sm-1 image">
             <span class="preview">{% if (file.thumbnail_url) { %}
                 <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}" style="margin-top: 5px;"></a>
                 {% } %}</span></div>
-            <div class='download-content'>
             <div class="col-sm-3 filename">
                 <span class="name">{%=file.name%}</span>
             </div>
@@ -223,7 +223,7 @@
                   </div>
             </div>
             {% } %}
-            <div class="col-sm-2 delete">
+            <div class="col-sm-2 col-xs-1 delete">
                 <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                         <i class="glyphicon glyphicon-trash"></i>
                     <span>Supprimer</span>
@@ -344,7 +344,7 @@
                                 $(previewImg).attr('src',data[i][attr]);
                                 $(previewImg).attr('style','margin-top: 5px;');
                                 $(previewSpan).addClass('preview').html(previewImg);
-                                $(col1).addClass('col-sm-1').html(previewSpan);
+                                $(col1).addClass('col-lg-1 col-sm-3 col-xs-6 image').html(previewSpan);
                             }
                             else if(attr == "name"){
                                 // Create name html element
@@ -352,21 +352,21 @@
                                 var col2 = document.createElement('div');
                                 var fileNameSpan = document.createElement('span');
                                 $(fileNameSpan).addClass('name').html(data[i][attr]);
-                                $(col2).addClass('col-sm-3 filename').html(fileNameSpan);
+                                $(col2).addClass('col-lg-3 col-sm-4 col-xs-6 filename').html(fileNameSpan);
                             }
                             else if(attr == "size") {
                                 // Create size html element
                                 col3 = document.createElement('div');
                                 var spanSize = document.createElement('span');
                                 $(spanSize).addClass(attr).html(formatFileSize(parseFloat(data[i][attr])*1000000));
-                                $(col3).addClass('col-sm-1').html(spanSize);
+                                $(col3).addClass('col-lg-1 col-sm-4 col-xs-6').html(spanSize);
                             }
                             else if(attr == "duration") {
                                 // Create duration html element
                                 col4 = document.createElement('div');
                                 var spanDuration = document.createElement('span');
                                 $(spanDuration).addClass(attr).html(data[i][attr]);
-                                $(col4).addClass('col-sm-1').html(spanDuration);
+                                $(col4).addClass('col-lg-1 col-sm-4 col-xs-6').html(spanDuration);
                             }
                             else if(attr == "price"){
                                 // Create price html element
@@ -375,7 +375,7 @@
                                 col5 = document.createElement('div');
                                 var priceSpan = document.createElement('span');
                                 $(priceSpan).addClass('price').html(priceValue+"€");
-                                $(col5).addClass('col-sm-1').html(priceSpan);
+                                $(col5).addClass('col-lg-1 col-sm-4 col-xs-6').html(priceSpan);
 
                                 // Save the total price
                                 totalPrice += parseFloat(priceValue);
@@ -389,7 +389,7 @@
                                 $(deleteButton).attr('data-type','GET');
                                 $(deleteButton).attr('data-url', data[i][attr]);
                                 $(deleteButton).addClass('btn btn-danger').html(deleteI);
-                                $(col8).addClass('col-sm-2 delete').html(deleteButton);
+                                $(col8).addClass('col-lg-2 col-sm-1 col-xs-1 delete').html(deleteButton);
                             }
                         }
 
@@ -397,7 +397,6 @@
                         // Create format element
                         var formatArray = [ "avi", "mp4", "mp3", "aac", "wav", "wma", 'wmv','ogg','flv','swf','dv','mov'];
                         col6 = document.createElement('div');
-                        var formatDiv = document.createElement('div');
                         var formatSelect = document.createElement('select');
                         $(formatSelect).addClass('form-control formats').attr('fileName', fileName);
                         jQuery.each( formatArray, function( i, val ) {
@@ -406,8 +405,7 @@
                             $(option).html('.'+val);
                             $(formatSelect).append(option);
                         });
-                        $(formatDiv).addClass('form-group').html(formatSelect);
-                        $(col6).addClass('col-sm-1').html(formatDiv);
+                        $(col6).addClass('col-lg-1 col-sm-4 col-xs-6 form-group').html(formatSelect);
 
                         // Create encodage select element
                         col7 = document.createElement('div');
@@ -421,11 +419,10 @@
                             $(option).html(val);
                             $(encodageSelect).append(option);
                         });
-                        $(encodageDiv).addClass('form-group').html(encodageSelect);
-                        $(col7).addClass('col-sm-2').html(encodageDiv);
+                        $(col7).addClass('col-lg-1 col-sm-4 col-xs-6 form-group').html(encodageSelect);
 
-                        $(downloadContent).append(col2, col3, col4, col5, col6, col7, col8, separateLine)
-                        $(fileRow).append(col1, downloadContent).appendTo(".files");
+                        $(downloadContent).append(col1, col2, col3, col4, col5, col6, col7, col8, separateLine)
+                        $(fileRow).append(downloadContent).appendTo(".files");
                     }
                     if(totalPrice > 0){
                         $("#payButton").attr("price", totalPrice.toFixed(2));

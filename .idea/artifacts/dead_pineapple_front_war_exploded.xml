@@ -57,6 +57,7 @@
           <element id="library" level="project" name="Maven: com.rabbitmq:amqp-client:3.6.1" />
           <element id="library" level="project" name="Maven: org.jdom:jdom2:2.0.6" />
           <element id="file-copy" path="$PROJECT_DIR$/dead-pineapple-front/web/WEB-INF/lib/iText-2.0.8.jar" />
+          <element id="library" level="project" name="Maven: com.paypal.sdk:rest-api-sdk:1.5.0" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="dead-pineapple-front/web/Web" />
