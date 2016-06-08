@@ -48,8 +48,8 @@
     <script src="http://code.jquery.com/jquery-2.2.2.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>-->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="/resources/js/jquery_1.12.2.min.js"></script>
+    <script src="/resources/js/bootstrap_3.3.6.min.js"></script>
 
     <!--Register Google Api-->
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
@@ -61,7 +61,7 @@
     <script src="<spring:url value='/resources/js/leftbar.js'/>"></script>
     <script src="<spring:url value='/resources/js/dashboard.js'/>"></script>
     <script src="<spring:url value='/resources/js/loading.js'/>"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="/resources/js/jquery-ui.min.js"></script>
     <title>deadpineapple</title>
 </head>
 <body>

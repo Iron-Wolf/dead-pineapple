@@ -128,7 +128,6 @@ public class UploadController extends HttpServlet {
         return "upload";
     }
 
-    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void uploadVideo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!ServletFileUpload.isMultipartContent(request)) {
@@ -201,8 +200,9 @@ public class UploadController extends HttpServlet {
         history = new JSONArray();
         List<ConvertedFile> cfs = convertedFileDao.findByUser(user);
         for (ConvertedFile cf : cfs) {
-            if ((cf.getConverted() == null || !cf.getConverted() || cf.getInConvertion() == null || !cf.getInConvertion()) && !cf.getConverted()) {
+            if ( (cf.getConverted() == null || !cf.getConverted()) && (cf.getInConvertion() == null || !cf.getInConvertion()) && (cf.getFilePath() != null || cf.getFilePath() == "")) {
                 // Generate video Information for the uploaded file (ffmpeg)
+                videoInformation = new VideoInformation(cf.getFilePath());
                 videoInformation = new VideoInformation(cf.getFilePath());
                 // Link the converted file with it's video information
                 VideoFile video = new VideoFile();
@@ -396,7 +396,6 @@ public class UploadController extends HttpServlet {
             priceTotal += vf.getPrice();
         }
         priceTotal = Math.round(priceTotal * 100.0) / 100.0;
-        //test price : 0.10
         ps = new PayPalService(priceTotal);
         String serverUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 
